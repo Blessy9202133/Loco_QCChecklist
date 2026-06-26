@@ -1,0 +1,285 @@
+<?php
+session_start(); 
+if (isset($_SESSION['loco_id'])) {
+    // Locomotive data available in session variables.
+    $locoID = $_SESSION['loco_id'];
+    $locoType = $_SESSION['loco_type'];
+    $brakeType = $_SESSION['brake_type'];
+    $railwayDivision = $_SESSION['railway_division'];
+    $shedName = $_SESSION['shed_name'];
+    $inspectionDate = $_SESSION['inspection_date'];
+} else {
+    echo "No locomotive data available.";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic QA Form</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src = "script.js" defer></script>
+   <!-- 3rd‑party libraries (all local) -->
+  <script src="libs/jquery-3.6.0.min.js"></script>
+  <script src="libs/zxing-browser.min.js"></script>
+  <script src="libs/jspdf.umd.min.js"></script>
+  <script src="libs/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- your application logic -->
+
+  <style>
+    footer {
+      position: fixed;
+      bottom: 5px;
+      right: 20px;
+      z-index: 1000;
+    }
+    footer .action-buttons button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+    footer .action-buttons button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo and Logout -->
+  <div class="logo-container">
+    <img src="hbl_logo.jpg" alt="Logo" class="logo">
+  </div>
+  <div class="acto-buttons">
+    <i class="fas fa-sign-out-alt"></i> Logout
+    <button class="logout-button" type="button" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="sidebar">
+    <button class="button" onclick="showSection('0.0')" id="loco-info-button">Loco Info</button>
+    <button class="button" onclick="showSection('1_0')" id="button-1" disabled>1.0 Document Verification</button>
+    <button class="button" onclick="showSection('2.0')" id="button-2" disabled>2.0 Verify Serial Numbers Of Equipment as per IC</button>
+    <button class="button" onclick="showSection('3.0')" id="button-3" disabled>3.0 Loco Kavach</button>
+    <button class="button" onclick="showSection('4.0')" id="button-4" disabled>4.0 EMI Filter Box</button>
+    <button class="button" onclick="showSection('5.0')" id="button-5" disabled>5.0 RIB & CAB INPUT BOX</button>
+    <button class="button" onclick="showSection('6.0')" id="button-6" disabled>6.0 DMI (LP-OCIP)</button>
+    <button class="button" onclick="showSection('7.0')" id="button-7" disabled>7.0 RFID PS Unit</button>
+    <button class="button" onclick="showSection('8.0')" id="button-8" disabled>8.0 LOCO Antenna and GPS_GSM Antenna</button>
+    <button class="button" onclick="showSection('9.0')" id="button-9" disabled>9.0 Pneumatic Fittings and Ep Valve,Cocks Fixing</button>
+    <button class="button" onclick="showSection('10.0')" id="button-10" disabled>10.0 Pressure sensors Installation in LOCO</button>
+    <button class="button" onclick="showSection('11.0')" id="button-11" disabled>11.0 IRU (Faviely) Units Fixing For E70 Type Loco</button>
+    <button class="button" onclick="showSection('12.0')" id="button-12" disabled>12.0 PSJB, TPM Units Fixing For CCB Type Loco</button>
+    <button class="button" onclick="showSection('13.0')" id="button-13" disabled>13.0 IRAB (Indian Railway Air-Break)</button>
+    <button class="button" onclick="showSection('14.0')" id="button-14" disabled>14.0 PG's and Speedo Meter Units Fixing</button>
+    <button class="button" onclick="showSection('15.0')" id="button-15" disabled>15.0 RFID Reader Assembly</button>
+    <button class="button" onclick="showSection('16.0')" id="button-16" disabled>16.0 Auto Horn Installation </button>
+  </div>
+
+  
+  <script>
+    window.addEventListener('load', function() {
+      // Clear all relevant stored data to ensure a fresh page each time.
+      sessionStorage.removeItem("locoDetails");
+      sessionStorage.removeItem("observationsData");
+      // Optionally, clear all of sessionStorage (caution: if you have other data you want to keep)
+      // sessionStorage.clear();
+      // Also clear localStorage if you use it:
+      // localStorage.removeItem("selectedLocoId");
+      // localStorage.removeItem("locoDetails");
+      
+      // Read the URL hash to determine which section to show (e.g., "#0.0")
+      const hash = window.location.hash;
+      if (hash) {
+        const sectionId = hash.substring(1);  // removes the '#' character
+        if (typeof showSection === 'function') {
+          showSection(sectionId);
+        } else {
+          console.log("showSection function is not defined. Default section:", sectionId);
+        }
+      }
+    });
+  </script>
+  
+
+  <!-- Your additional scripts (for handling loco info fetching, etc.) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      // If you don't want to prefill based on a query parameter, skip this part
+      const locoId = urlParams.get("loco_id");
+      if (locoId) {
+        // Optionally remove these lines if you always want a fresh form
+        localStorage.setItem("selectedLocoId", locoId);
+        // Fetch and fill details if desired. Otherwise, don't populate:
+        // fetch(`getReportById.php?loco_id=${locoId}`)
+        //   .then(response => response.json())
+        //   .then(data => { /* populate form fields if needed */ })
+        //   .catch(error => console.error("Fetch error:", error));
+      } else {
+        // No query parameter - ensure stored data is not used.
+        localStorage.removeItem("locoDetails");
+      }
+    });
+</script>
+<script>
+ window.addEventListener('load', function() {
+  // Clear only the keys specific to the form data.
+  sessionStorage.removeItem("locoDetails");
+  sessionStorage.removeItem("observationsData");
+  
+  localStorage.removeItem("selectedLocoId");
+  localStorage.removeItem("locoDetails");
+  // Do not remove "user_id" so that the user id remains stored.
+
+  // Clear form fields explicitly
+  const fieldIds = ["loco-id", "loco-type", "brake-type", "railway-division", "shed-name", "inspection-date"];
+  fieldIds.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.value = "";
+    }
+  });
+
+  // Check the URL hash to show the default section if present.
+  const hash = window.location.hash; // e.g., "#0.0"
+  if (hash) {
+    const sectionId = hash.substring(1);  // removes the '#' character
+    if (typeof showSection === 'function') {
+      showSection(sectionId);
+    } else {
+      console.log("showSection function is not defined. Default section:", sectionId);
+    }
+  }
+});
+
+</script>
+
+  
+
+  
+  
+  <!-- Success Modal -->
+  <div id="success-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #4CAF50; color: white; border-radius: 5px;">
+    Data saved successfully!
+  </div>
+  <!-- Main Content Section -->
+  <div class="main-content">
+    <div id="main-content">
+      <div id="dynamic-content">
+        <p>Select a section from the left to view details.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Image Section (optional, not modified here) -->
+  <div id="add-image-section" style="display: none;">
+    <!-- Code for image capture / upload -->
+    <!-- ... -->
+  </div>
+  
+  <!-- Footer with Generate Report button -->
+ <footer>
+  <div class="action-buttons">
+    <button type="button" onclick="confirmGenerateReport()">Generate Report</button>
+  </div>
+</footer>
+
+
+  <script>
+
+function confirmGenerateReport() {
+  const userConfirmed = confirm("Do you want to generate the report?");
+  if (userConfirmed) {
+    generateReport(); // Call your actual function
+  }
+}
+
+ function beforeUnloadHandler(event) {
+  event.returnValue = "Please generate report before closing.";
+  return event.returnValue;
+}
+window.addEventListener("beforeunload", beforeUnloadHandler);
+
+
+
+  </script>
+  
+  <!-- Additional scripts (for loco info handling, etc.) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const locoId = urlParams.get("loco_id");
+      if (locoId) {
+        localStorage.setItem("selectedLocoId", locoId);
+        // Set current date if necessary.
+        const dateElem = document.getElementById("date");
+        if (dateElem) {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, "0");
+          const day = String(now.getDate()).padStart(2, "0");
+          dateElem.value = `${year}-${month}-${day}`;
+        }
+        fetch(`getReportById.php?loco_id=${locoId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const locoInfo = data.data.locoDetails;
+              if (locoInfo) {
+                localStorage.setItem("locoDetails", JSON.stringify(locoInfo));
+                const locoIdElem = document.getElementById("loco-id");
+                if (locoIdElem) locoIdElem.value = locoInfo.locoID || "";
+                const locoTypeElem = document.getElementById("loco-type");
+                if (locoTypeElem) locoTypeElem.value = locoInfo.locoType || "";
+                const brakeTypeElem = document.getElementById("brake-type");
+                if (brakeTypeElem) brakeTypeElem.value = locoInfo.brakeType || "";
+                const divisionElem = document.getElementById("railway-division");
+                if (divisionElem) divisionElem.value = locoInfo.railwayDivision || "";
+                const shedElem = document.getElementById("shed-name");
+                if (shedElem) shedElem.value = locoInfo.shedName || "";
+              }
+            } else {
+              console.error("Error fetching report details:", data.message);
+            }
+          })
+          .catch(error => console.error("Fetch error:", error));
+      } else {
+        localStorage.removeItem("locoDetails");
+        const stored = localStorage.getItem("locoDetails");
+        if (stored) {
+          const locoInfo = JSON.parse(stored);
+          const locoIdElem = document.getElementById("loco-id");
+          if (locoIdElem) locoIdElem.value = locoInfo.locoID || "";
+          const locoTypeElem = document.getElementById("loco-type");
+          if (locoTypeElem) locoTypeElem.value = locoInfo.locoType || "";
+          const brakeTypeElem = document.getElementById("brake-type");
+          if (brakeTypeElem) brakeTypeElem.value = locoInfo.brakeType || "";
+          const divisionElem = document.getElementById("railway-division");
+          if (divisionElem) divisionElem.value = locoInfo.railwayDivision || "";
+          const shedElem = document.getElementById("shed-name");
+          if (shedElem) shedElem.value = locoInfo.shedName || "";
+          const dateElem = document.getElementById("date");
+          if (dateElem && locoInfo.inspectionDate) {
+            const d = new Date(locoInfo.inspectionDate);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            dateElem.value = `${year}-${month}-${day}`;
+          }
+        }
+      }
+    });
+  </script>
+
+<div id="messageBox" style="color: green; font-weight: bold; margin-top: 10px;"></div>
+
+</body>
+</html>

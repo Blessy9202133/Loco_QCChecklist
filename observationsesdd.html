@@ -1,0 +1,1289 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Observations</title>
+
+  <!-- Font Awesome for Eye Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+   <!-- 3rd‑party scripts, in exactly this order -->
+  <script src="libs/jquery-3.6.0.min.js"></script>
+  <script src="libs/zxing-browser.min.js"></script>
+  <script src="libs/jspdf.umd.min.js"></script>
+  <script src="libs/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- your own code that calls $, ZXing, jsPDF, etc. -->
+  <script src="js/script.js"></script>
+<script>
+function formatDescription(description) {
+  return (
+    (description || "")
+      // 1) remove all HTML tags
+      .replace(/<[^>]*>/g, "")
+      // 2) collapse whitespace
+      .trim()
+      .replace(/\s+/g, " ")
+      // 3) strip any run of colons that (after optional space) precedes a digit
+      .replace(/:+(?=\s*\d)/g, "")
+      // 4) cleanup any stray trailing colons
+      .replace(/:+$/, "")
+      // 5) insert “ - ” before the last run of digits at the end of the string
+      .replace(/ (\d+)$/, " - $1")
+  );
+}
+
+const specificOptions = {
+    "2.1": ["Present", "Not Present"],
+"2.38,2.39" : ["Matching", "Not Matching", "Not Installed", "Not Applicable"],    "2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.14,2.15,2.16,2.17,2.18,2.19,2.20,2.21,2.22,2.23,2.24,2.25,2.26,2.27,2.28,2.29,2.30,2.31,2.32,2.33,2.34,2.35,2.36,2.37": ["Matching", "Not Matching", "Not Installed"],
+    "3.6,14.13": ["Matching", "Not Matching"],
+    "3.3,3.4,3.5,3.5.1,3.5.2,3.12,3.13,6.2,6.4,6.7,7.2,8.1,8.2,8.3,8.7.1,8.7.2,8.7.3,8.7.4,9.1-9.6,14.2,14.6,15.2,15.4,15.10,15.11,16.2,15.6.1,15.6.2,3.12,3.13,5.7,6.10,6.11,5.1,8.4,14.8,5.2,5.3,9.7,5.8,5.7,5.4": ["Yes", "No"],
+    "3.1,3.8,6.8,6.9,8.5,8.6,14.2,14.15.1,14.18,14.18.1,14.19,15.9,14.15,14.17,16.5,5.6": ["Connected", "Not Connected"],
+    "1.1,1.2,3.2,6.1": ["Available", "Not Available"],
+    "6.5,8.8,15.5": ["Applied", "Not Applied"],
+    "4.2,6.6,6.10,7.3,8.7,11.7,14.20,16.3,3.9,3.14,5.8,14.14,15.8,6.12,5.5": ["Routing Done", "Routing Not Done"],
+    "4.1,15.7": ["Fixed", "Not Fixed"],
+    "6.3,7.1,14.3,14.12,15.3,14.7,3.7,14.15.2": ["Torquing done", "Torquing Not done"],
+    "10.1-10.3,14.1,14.11,15.1,15.6,11.7": ["Installed", "Not Installed"],
+    "14.10,14.9": ["Aligned", "Not Aligned"],
+    "14.4,14.5": ["Positioning done", "Positioning not done"],
+    "14.16": ["Welding done", "Welding Not done"],
+    "16.1": ["Earthing done", "Earthing Not done"],
+    "15.12,7.4,14.21":["Locked" , "Not Locked"],
+    "3.11" :["Cables Connected", "Cables Not Connected"],
+    "13.4,13.2,11.4,11.2,11.1,11.1.1" : ["Yes", "No", "Not Applicable"],
+    "13.3" :["Fixed", "Not Fixed", "Not Applicable"],
+    "13.1,12.2,12.1" :["Installed", "Not Installed", "Not Applicable"],
+    "12.5,11.6" :["Routing Done", "Routing Not Done", "Not Applicable"], 
+    "12.4,11.5" :["Connected", "Not Connected", "Not Applicable"],
+    "12.3" :["Matching", "Not Matching", "Not Applicable"],
+    "11.3" :["Applied", "Not Applied", "Not Applicable"],
+    "3.10" : ["Metal clamps implemented","Metal clamps not implemented"]
+    
+  };
+
+
+
+
+</script>  <style>
+    .status-green {
+      background-color: green;
+      color: white;
+    }
+
+    .status-red {
+      background-color: red;
+      color: white;
+    }
+
+    .status-blue {
+      background-color: blue;
+      color: white;
+    }
+
+    .status-yellow {
+      background-color: yellow;
+      color: black;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: left;
+    }
+
+    img {
+      max-width: 50px;
+      cursor: pointer;
+    }
+
+    .green {
+      color: green;
+      font-weight: bold;
+    }
+
+    .red {
+      color: red;
+      font-weight: bold;
+    }
+
+    .btn-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .btn-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .loco-details table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .loco-details td {
+      padding: 10px;
+      border: 1px solid black;
+      text-align: left;
+      width: 16%;
+    }
+
+    .loco-details strong {
+      font-weight: bold;
+    }
+
+    .eye-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      color: #007bff;
+      font-size: 18px;
+    }
+
+    /* Container for buttons */
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      /* Space out buttons to left, center, and right */
+      align-items: center;
+      /* Vertically align the buttons */
+      margin: 20px;
+      /* Optional margin */
+    }
+
+    /* Styling for Back Button (left side) */
+    #back-btn {
+      background-color: #f44336;
+      /* Red color */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    #back-btn:hover {
+      background-color: #d32f2f;
+      /* Darker red on hover */
+    }
+
+    /* Styling for Convert to PDF Button (centered) */
+    #convert-pdf-btn {
+      background-color: #4CAF50;
+      /* Green color */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    #convert-pdf-btn:hover {
+      background-color: #388e3c;
+      /* Darker green on hover */
+    }
+
+    /* Styling for Go to Report Link (right side) */
+    #go-to-report-btn {
+      background-color: #2196F3;
+      /* Blue color */
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      /* Remove underline from link */
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    #go-to-report-btn:hover {
+      background-color: #1976D2;
+      /* Darker blue on hover */
+    }
+
+    /* Optional additional styling for the observations container */
+    #observations-container {
+      margin-bottom: 20px;
+      /* Optional space below the table */
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Observations</h1>
+
+  <!-- Loco Details -->
+  <div class="loco-details">
+    <h2>Loco Details</h2>
+    <table>
+      <tr>
+        <td><strong>Loco ID:</strong> <span id="loco-id"></span></td>
+        <td><strong>Type:</strong> <span id="loco-type"></span></td>
+        <td><strong>Brake Type:</strong> <span id="brake-type"></span></td>
+        <td><strong>Railway Division:</strong> <span id="railway-division"></span></td>
+        <td><strong>Shed Name:</strong> <span id="shed-name"></span></td>
+        <td><strong>Inspection Date:</strong> <span id="inspection-date"></span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Dynamic Observations Tables -->
+  <div id="observations-container"></div>
+
+  <div class="btn-container">
+    <!-- Back Button (left side) -->
+    <button id="back-btn" onclick="window.history.back()">Back</button>
+  
+   <!-- Button to convert to PDF (centered) -->
+<button id="convert-pdf-btn" onclick="createNewReport()">Convert to PDF</button>
+
+<!-- Success Message (Hidden by default) -->
+<div id="success-message" style="display: none; color: green; margin-top: 10px;">
+  PDF successfully created! Click <strong>Go to Report</strong> to view.
+</div>
+
+<!-- Link to go to index.html (Home Page) (right side) -->
+<a href="viewReports.php" id="go-to-report-btn" class="btn-link" style="display: none;">Go to Report</a>
+
+  </div>
+  
+
+  <script>
+    // Load loco details from sessionStorage
+    // Load loco details from sessionStorage
+    const locoDetails = JSON.parse(sessionStorage.getItem('locoDetails'));
+
+    if (locoDetails) {
+      // Get current date and format it
+      const currentDate = new Date();
+      const formattedCurrentDate = `${currentDate.getDate().toString().padStart(2, '0')}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getFullYear()}`;
+
+      document.getElementById("loco-id").textContent = locoDetails.loco_id || 'N/A';
+      document.getElementById("loco-type").textContent = locoDetails.loco_type || 'N/A';
+      document.getElementById("brake-type").textContent = locoDetails.brake_type || 'N/A';
+      document.getElementById("railway-division").textContent = locoDetails.railway_division || 'N/A';
+      document.getElementById("shed-name").textContent = locoDetails.shed_name || 'N/A';
+      document.getElementById("inspection-date").textContent = formattedCurrentDate || 'N/A';
+    } else {
+      console.error('Loco details not found in sessionStorage');
+    }
+
+    /*if (locoDetails) {
+      // Format the inspection date to dd-mm-yyyy
+      const inspectionDate = new Date(locoDetails.inspection_date);
+      const formattedDate = `${inspectionDate.getDate().toString().padStart(2, '0')}-${(inspectionDate.getMonth() + 1).toString().padStart(2, '0')}-${inspectionDate.getFullYear()}`;
+
+      document.getElementById("loco-id").textContent = locoDetails.loco_id || 'N/A';
+      document.getElementById("loco-type").textContent = locoDetails.loco_type || 'N/A';
+      document.getElementById("brake-type").textContent = locoDetails.brake_type || 'N/A';
+      document.getElementById("railway-division").textContent = locoDetails.railway_division || 'N/A';
+      document.getElementById("shed-name").textContent = locoDetails.shed_name || 'N/A';
+      document.getElementById("inspection-date").textContent = formattedDate || 'N/A';
+    } else {
+      console.error('Loco details not found in sessionStorage');
+    } */
+
+   
+   async function fetchObservations() {
+  let loco_id = locoDetails?.loco_id;
+  if (!loco_id) {
+    console.error("Loco ID is missing.");
+    return { status: 'error', message: 'Loco ID is missing' };
+  }
+
+  try {
+    const response = await fetch(`fetch_observations.php?loco_id=${loco_id}`);
+    const text = await response.text(); // fetch raw text response first for debugging
+    console.log("Raw backend response:", text);
+
+    let data;
+    try {
+      data = JSON.parse(text); // now explicitly parse JSON
+    } catch (parseError) {
+      console.error("JSON parsing error:", parseError, "Raw text:", text);
+      return { status: 'error', message: 'Invalid JSON format from backend' };
+    }
+
+    if (data.status === 'success' && Array.isArray(data.data)) {
+      // ✅ Filter out rows with empty observation status
+      const filteredData = data.data.filter(row => row.observation_status && row.observation_status.trim() !== '' && row.observation_status.trim() !== 'Select');
+      data.data = filteredData;
+    }
+
+    return data;
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { status: 'error', message: error.message || 'Network error occurred' };
+  }
+}
+
+
+
+    function createObservationsTable(observations) {
+      const table = document.createElement("table");
+      table.innerHTML = `
+    <thead>
+      <tr>
+        <th>S_no</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Remarks</th>
+        <th>Images</th>
+      </tr>
+    </thead>`;
+
+      const tbody = document.createElement("tbody");
+
+      let closedPoints = 0;
+      const totalPoints = 159;  // Total points will always be 123
+
+      observations.forEach(obs => {
+        if (!obs.observation_status || obs.observation_status.trim() === '' || obs.observation_status.trim() === 'Select') {
+      return; // 🚫 Skip rows with empty or 'Select' observation status
+    }
+
+        const formattedDescription = formatDescription(obs.observation_text);
+
+        // Get the status to apply the color to the text
+        let statusText = obs.observation_status.trim();
+        let statusColor = '';
+
+        // Apply color based on the status
+        switch (statusText) {
+          case 'Available':
+          case 'Present':
+          case 'Yes':
+          case 'Routing Done':
+          case 'Fixed':
+          case 'Secured':
+          case 'Installed':
+          case 'Connected':
+          case 'Aligned':
+          case 'Torquing done':
+          case 'Positioning done':
+          case 'Configured':
+          case 'Welding done':
+          case 'Earthing done':
+          case 'Matching':
+          case 'Coating done':
+          case 'Locked':
+          case 'Applied':
+          case 'Cables Connected':
+          case 'Metal clamps implemented':
+          case 'Not Applicable':
+            statusColor = 'green'; // Green for positive status
+            closedPoints++; // Increment closed points
+            break;
+          case 'Not Available':
+          case 'Not Present':
+          case 'No':
+          case 'Not Applied':
+          case 'Routing Not Done':
+          case 'Not Fixed':
+          case 'Not Secured':
+          case 'Not Installed':
+          case 'Not Connected':
+          case 'Not Aligned':
+          case 'Torquing Not done':
+          case 'Positioning Not done':
+          case 'Not Configured':
+          case 'Welding not done':
+          case 'Earthing Not done':
+          case 'Coating Not done':
+          case 'Not Locked':
+          case 'Not Matching':
+          case 'Cables Not Connected':
+          case 'Metal clamps not implemented':
+            statusColor = 'red'; // Red for negative status
+            break;
+          case 'Not Installed':
+            statusColor = 'blue'; // Blue for specific status
+            break;
+          default:
+            statusColor = 'yellow'; // Yellow for undefined or neutral status
+        }
+
+        const tr = document.createElement("tr");
+        let imageHTML = 'No Image';
+
+        // Log the observation image paths
+        console.log('Image Paths:', obs.image_paths);
+
+        if (obs.image_paths && obs.image_paths.length > 0) {
+          imageHTML = obs.image_paths.map(path =>
+            `<img src="${path}" onclick="window.open('${path}', '_blank')" style="max-width: 100px; cursor: pointer; margin-right:5px;" />`
+          ).join('');
+        }
+        else {
+          console.log('No Image Path Provided');
+        }
+
+        tr.innerHTML = `
+      <td>${obs.S_no}</td>
+      <td>${formattedDescription}</td>
+      <td style="color: ${statusColor};">${statusText}</td>
+      <td>${obs.remarks}</td>
+      <td>${imageHTML}</td>`;
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+
+      // Calculate open points based on total points and closed points
+      const openPoints = totalPoints - closedPoints;
+
+      // Create summary table
+      const summaryTable = document.createElement("table");
+      summaryTable.innerHTML = `
+    <thead>
+      <tr>
+        <th>Total Points</th>
+        <th>Closed Points</th>
+        <th>Open Points</th>
+        <th>Completion Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${totalPoints}</td>
+        <td>${closedPoints}</td>
+        <td>${openPoints}</td>
+         <td>
+        <div style="
+          display: inline-flex; 
+          align-items: center;
+          gap: 5px;
+          border: 2px solid black; 
+          border-radius: 5px; 
+          padding: 3px 8px;
+          color: ${closedPoints === totalPoints ? 'green' : 'red'};
+          font-weight: bold;
+        ">
+          ${closedPoints === totalPoints ? '✅ Completed' : '❌ Not Completed'}
+        </div>
+      </td>
+      </tr>
+    </tbody>
+  `;
+
+      // Append both the observations table and summary table to the observations container
+      const observationsContainer = document.getElementById("observations-container");
+      observationsContainer.appendChild(table);
+      observationsContainer.appendChild(summaryTable);
+
+      return table;
+    }
+
+
+
+    // Modify the groupObservationsBySection function to work with the correct data format
+    function groupObservationsBySection(observations) {
+      if (!Array.isArray(observations)) {
+        console.error('Expected an array of observations, but got:', observations);
+        return {}; // Return an empty object if observations is not an array
+      }
+
+      const grouped = {};
+
+      observations.forEach(observation => {
+        const section = observation.S_no.split('.')[0];  // Group by the first part of S_no (e.g., '1', '2', etc.)
+
+        if (!grouped[section]) {
+          grouped[section] = [];
+        }
+
+        grouped[section].push(observation);
+      });
+
+      console.log('Grouped Obs:', grouped);  // Log the grouped data to check
+
+      return grouped;
+    }
+
+    async function renderObservations() {
+      const observationsData = await fetchObservations();
+
+      if (observationsData.status === 'success' && Array.isArray(observationsData.data)) {
+        createObservationsTable(observationsData.data);
+      } else {
+        const container = document.getElementById('observations-container');
+        container.innerHTML = `<p>${observationsData.message || 'No observations available for this loco.'}</p>`;
+      }
+    }
+
+
+
+    // Helper function to format inspection date
+    function formatDateString(dateString) {
+      // Assuming format "DD-MM-YYYY"
+      const dateParts = dateString.split('-');
+      return `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
+    }
+    async function createNewReport() {
+    console.log("🚀 Starting createNewReport function...");
+
+    const observationsData = await fetchObservations();
+    console.log('📦 Creating PDF with observations:', observationsData);
+
+    const locoId = document.getElementById("loco-id")?.textContent || "N/A";
+    const inspectionDate = document.getElementById("inspection-date")?.textContent || "N/A";
+    const formattedInspectionDate = formatDateString(inspectionDate);
+    const employeeName = localStorage.getItem("employee_name") || "N/A";
+    console.log("Retrieved Employee Name:", employeeName);
+
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    // Only keep observations with valid statuses
+const observationsArray = observationsData.data.filter(obs => 
+    obs.observation_status && obs.observation_status.trim() !== '' && obs.observation_status.trim() !== 'Select'
+);
+
+
+    console.log("📋 Observations Array Loaded: ", observationsArray);
+
+    const imagePromises = observationsArray.map(async (obs) => {
+        const imageList = [];
+        if (obs.image_paths && obs.image_paths.length > 0) {
+            for (const path of obs.image_paths) {
+                console.log(`🌄 Loading image: ${path}`);
+                const base64 = await getBase64Image(path);
+                if (base64) {
+                    console.log(`✅ Successfully converted image to base64: ${path}`);
+                    imageList.push(base64);
+                } else {
+                    console.warn(`⚠️ Failed to convert image to base64: ${path}`);
+                }
+            }
+        }
+        return { S_no: obs.S_no, images: imageList };
+    });
+
+    console.log("📤 Initiating Image Loading...");
+
+    const imageDataArray = await Promise.all(imagePromises);
+
+    console.log("✅ Images Loaded Successfully:", imageDataArray);
+
+    const imageData = {};
+    imageDataArray.forEach(entry => {
+        imageData[entry.S_no] = entry.images;
+    });
+
+    console.log("📁 Processed Image Data:", imageData); 
+
+     // Add Logo to the PDF (top-right)
+     const logoPath = 'hbl_logo.jpg';
+     const logoBase64 = await getBase64Image(logoPath);
+     if (logoBase64) {
+     const logoWidth = 30;
+     const logoHeight = 20;
+     const pageWidth = pdf.internal.pageSize.width;
+
+    // Position the logo on the right side
+     const xPosition = pageWidth - logoWidth - 10; // 10 units from right margin
+     const yPosition = 10;
+
+    pdf.addImage(logoBase64, 'JPEG', xPosition, yPosition, logoWidth, logoHeight);
+  }
+
+
+      // Add Header Information
+     pdf.setFont("helvetica", "bold"); // Set to bold for the title
+     pdf.setFontSize(14);
+     pdf.text("HBL Engineering Limited", pdf.internal.pageSize.width / 2, 15, { align: "center" });
+
+     pdf.setFont("helvetica", "normal"); // Switch back to normal
+     pdf.setFontSize(12);
+     pdf.text("Electronics Group", pdf.internal.pageSize.width / 2, 22, { align: "center" });
+
+     pdf.setFont("helvetica", "bold"); // Bold for this heading again
+     pdf.text("In-Process QC CheckList Of Onboard Kavach Installation", pdf.internal.pageSize.width / 2, 30, { align: "center" });
+
+     pdf.setFont("helvetica", "normal"); // Normal for the rest
+     pdf.text(`Employee: ${employeeName}`, 10, 36);
+     pdf.line(10, 38, pdf.internal.pageSize.width - 10, 38);
+ 
+
+
+      
+
+      // Add Loco Details Table
+      const locoDetailsRow = [
+        document.getElementById("loco-id")?.textContent || "N/A",
+        document.getElementById("loco-type")?.textContent || "N/A",
+        document.getElementById("brake-type")?.textContent || "N/A",
+        document.getElementById("railway-division")?.textContent || "N/A",
+        document.getElementById("shed-name")?.textContent || "N/A",
+        document.getElementById("inspection-date")?.textContent || "N/A"
+      ];
+
+      pdf.autoTable({
+        head: [["Loco ID", "Loco Type", "Brake Type", "Railway Division", "Shed Name", "Inspection Date"]],
+        body: [locoDetailsRow],
+        startY: 40,
+        theme: "grid",
+        styles: {
+          fontSize: 10,
+          cellPadding: 2,
+          overflow: 'linebreak',
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+          halign: 'center'
+        },
+        headStyles: {
+          fillColor: [102, 102, 255],
+          textColor: [255, 255, 255],
+          lineWidth: 0.5,
+          lineColor: [0, 0, 0]
+        },
+        bodyStyles: {
+          lineWidth: 0.5,
+          lineColor: [0, 0, 0],
+          textColor: [0, 0, 0]
+        }
+      });
+
+      // Use pdf.lastAutoTable to update Y position
+      let finalY = pdf.lastAutoTable.finalY + 10;
+
+      // Calculate open points based on total points and closed points
+      const totalPointsFixed = 159; // Fixed total points
+      const closedPoints = observationsArray.filter(obs =>
+  [
+    "Available", "Present", "Yes", "Routing Done", "Fixed", "Secured",
+    "Installed", "Connected", "Aligned", "Torquing done", "Positioning done",
+    "Configured", "Welding done", "Earthing done", "Matching","Not Applicable",
+    "Coating done", "Applied","Cables Connected","Metal clamps implemented","Locked",
+  ].includes(obs.observation_status.trim())
+).length;
+
+
+
+      const openPoints = totalPointsFixed - closedPoints;
+
+      // Add debug logging
+      console.log("Total Points:", totalPointsFixed);
+      console.log("Closed Points:", closedPoints);
+      console.log("Open Points:", openPoints);
+      console.log("Observations Array Length:", observationsArray.length);
+
+      // Compute the completion status based on open points and add more detailed logging
+      const completionStatus = (openPoints === 0) ? "Completed" : "NotCompleted";
+      console.log("Completion Status:", completionStatus);
+      console.log("Observations with statuses:", observationsArray.map(obs => ({
+        S_no: obs.S_no,
+        status: obs.observation_status
+      })));
+      
+
+      // Now generate the versioned file name using completionStatus
+      const fileName = await getVersionedFileName(locoId, formattedInspectionDate, completionStatus);
+
+      if (!fileName) {
+        alert("File name is required to save the report.");
+        return;
+      }
+
+      // Summary Table for Open, Closed, and Total Points
+      pdf.autoTable({
+        startY: finalY,
+        head: [["Total Points", "Closed Points", "Open Points"]],
+        body: [[totalPointsFixed, closedPoints, openPoints]],
+        theme: "grid",
+        styles: {
+          fontSize: 10,
+          cellPadding: 2,
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+          halign: 'center'
+        },
+        headStyles: {
+          fillColor: [102, 102, 255],
+          textColor: [255, 255, 255],
+          lineWidth: 0.5,
+          lineColor: [0, 0, 0]
+        },
+        bodyStyles: {
+          lineWidth: 0.5,
+          lineColor: [0, 0, 0],
+          textColor: [0, 0, 0]
+        }
+      });
+
+      finalY = pdf.lastAutoTable.finalY + 10; // Update Y position
+
+      // Add Completion Status Checkboxes
+      pdf.setFontSize(12).text("Completion Status:", 10, finalY);
+      finalY += 8;
+      // Load images for checkboxes (tick and cross)
+      const tickImage = "tick.png";
+      const crossImage = "cross.png";
+      finalY = pdf.lastAutoTable.finalY + 10; // Update Y position for completion status
+
+      pdf.setFontSize(12).text("Completion Status:", 10, finalY);
+      // Completed checkbox
+      pdf.setLineWidth(0.5);
+      pdf.rect(90, finalY, 6, 6);
+      if (openPoints === 0) {
+        pdf.addImage(tickImage, "PNG", 91, finalY + 1, 4, 4);
+      }
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("Completed", 100, finalY + 5);
+      // Not Completed checkbox
+      pdf.setLineWidth(0.5);
+      pdf.rect(150, finalY, 6, 6);
+      if (openPoints !== 0) {
+        pdf.addImage(crossImage, "PNG", 151, finalY + 1, 4, 4);
+      }
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("Not Completed", 160, finalY + 5);
+      finalY += 20; // Space after checkboxes
+
+      // Group observations by section
+      const groupedObservations = groupObservationsBySection(observationsData.data);
+      console.log('Grouped Observations:', groupedObservations);
+
+      // Loop through grouped observations and add tables for each section
+      for (let sectionId in groupedObservations) {
+        const sectionObservations = groupedObservations[sectionId];
+        if (!sectionObservations.length) continue; // Skip empty sections
+
+        
+
+        // Prepare all images beforehand
+const imageData = {};
+
+for (const obs of sectionObservations) {
+  imageData[obs.S_no] = [];
+  if (obs.image_paths && obs.image_paths.length > 0) {
+    for (const imgPath of obs.image_paths) {
+      const base64 = await getBase64Image(imgPath);
+      if (base64) {
+        imageData[obs.S_no].push(base64);
+      }
+    }
+  }
+}
+
+
+
+        const sectionCaptions = {
+          1: "1.0 DOCUMENT VERIFICATION",
+          2: "2.0 VERIFY SERIAL NUMBERS OF EQUIPMENT AS PER IC",
+          3: "3.0 LOCO KAVACH",
+          4: "4.0 EMI FILTER BOX",
+          5: "5.0 RIB CAB INPUT BOX",
+          6: "6.0 DMI (LP-OCIP)",
+          7: "7.0 RFID PS UNIT",
+          8: "8.0 LOCO ANTENNA AND GPS GSM ANTENNA",
+          9: "9.0 PNEUMATIC FITTINGS AND EP VALVE COCKS FIXING",
+          10: "10.0 PRESSURE SENSORS INSTALLATION IN LOCO",
+          11: "11.0 IRU FAVIELY UNITS FIXING FOR E70 TYPE LOCO",
+          12: "12.0 PSJB TPM UNITS FIXING FOR CCB TYPE LOCO",
+          13: "13.0 SIFA VALVE FIXING FOR CCB TYPE LOCO",
+          14: "14.0 PGS AND SPEEDO METER UNITS FIXING",
+          15: "15.0 RFID READER ASSEMBLY",
+          16: "16.0 AUTO HORN INSTALLATION",
+          17: "17.0 RADIO POWER"
+        };
+
+const sectionCaption = sectionCaptions[sectionId] || `Observations for Section ${sectionId}`;
+const pageHeight = pdf.internal.pageSize.height;
+const sectionHeaderHeight = 8;
+const bottomMargin = 20;
+const defaultY = 10;
+
+const rows = sectionObservations.map(obs => {
+  const imagesCount = imageData[obs.S_no].length;
+  const calculatedHeight = Math.max(30, imagesCount * 28);
+  return {
+    S_no: obs.S_no,
+    Description: formatDescription(obs.observation_text),
+    Status: obs.observation_status,
+    Remarks: obs.remarks,
+    imageBase64: imageData[obs.S_no][0] || "",
+    calculatedHeight
+  };
+});
+
+let isFirstPage = pdf.internal.getNumberOfPages() === 1;
+let availableHeight = pageHeight - finalY;
+
+if (!isFirstPage && availableHeight < sectionHeaderHeight + bottomMargin + 30) {
+  pdf.addPage();
+  finalY = defaultY;
+}
+
+// Draw header
+pdf.setFont("helvetica", "bold")
+   .setFontSize(12)
+   .setTextColor(0, 0, 255)
+   .text(sectionCaption, 10, finalY);
+
+finalY += sectionHeaderHeight; 
+// …after you draw your sectionCaption and bump finalY…
+const captionPadding = 4;              // extra breathing room
+const tableTop       = finalY + captionPadding;
+const usableHeight   = pageHeight
+                     - tableTop
+                     - bottomMargin;
+
+// Build & clamp your rows so nothing exceeds one page:
+const dataRows = rows
+  .map(r => ({
+    ...r,
+    calculatedHeight: Math.min(r.calculatedHeight, usableHeight)
+  }))
+  .filter(r =>
+    r.Description.trim() ||
+    r.Status.trim()      ||
+    r.Remarks.trim()     ||
+    r.imageBase64
+  );
+
+// now draw the table:
+pdf.autoTable({
+startY: tableTop,
+  // dynamic top‐margin:
+  margin: {
+    bottom: bottomMargin
+  },
+  head: [["S_no", "Description", "Status", "Remarks", "Images"]],
+  body: dataRows.map(r => [
+    r.S_no,
+    r.Description,
+    r.Status,
+    r.Remarks,
+    {
+      content: "",
+      raw: r.imageBase64,
+      styles: {
+        minCellHeight: r.calculatedHeight
+      }
+    }
+  ]),
+  theme: "grid",
+  showHead: 'everyPage',
+  rowPageBreak: "avoid",
+  styles: {
+    fontSize: 10,
+    cellPadding: 2,
+    overflow: 'linebreak',
+    lineWidth: 0.1,
+    lineColor: [0, 0, 0],
+    halign: 'center',
+    valign: 'middle'
+  },
+  headStyles: {
+    textColor: [255, 255, 255],
+    fillColor: [0, 102, 204],
+    lineWidth: 0.5,
+    lineColor: [0, 0, 0]
+  },
+  bodyStyles: {
+    lineWidth: 0.5,
+    lineColor: [0, 0, 0],
+    valign: 'middle',
+    textColor: [0, 0, 0]
+  },
+  columnStyles: {
+    0: { cellWidth: 15 },  // S_no
+    1: { cellWidth: 65 },  // Description
+    2: { cellWidth: 30 },  // ✅ Status (wider)
+    3: { cellWidth: 45 },  // ✅ Remarks (narrower)
+    4: { cellWidth: 30 }   // Images
+  },
+  
+
+  didParseCell: function (data) {
+    if (data.row.section === 'body' && data.column.index === 2) {
+      const statusText = String(data.cell.raw).trim();
+      const s_no = String(data.row.raw[0]);
+
+
+
+
+
+function matchesSno(sno, pattern) {
+        return pattern.split(',').some(part => {
+          if (part.includes('-')) {
+            const [start, end] = part.split('-').map(p => parseFloat(p));
+            const num = parseFloat(sno);
+            return !isNaN(num) && num >= start && num <= end;
+          }
+          return sno === part.trim();
+        });
+      }
+
+      let textColor = [0, 0, 0];
+      for (const key in specificOptions) {
+        if (matchesSno(s_no, key)) {
+          const values = specificOptions[key];
+          if (values.includes(statusText)) {
+            if (statusText.includes("Not") || statusText.includes("No")) {
+              textColor = [255, 0, 0];
+            } else if (statusText.includes("NA")) {
+              textColor = [128, 128, 128];
+            } else {
+              textColor = [0, 128, 0];
+            }
+          }
+        }
+      }
+
+      data.cell.styles.textColor = textColor;
+    }
+  },
+
+  didDrawCell: function (data) {
+    try {
+      if (data.row.section === 'body' && data.column.index === 4) {
+        const row = rows[data.row.index];
+        if (!row) return;
+
+        const S_no = row.S_no;
+        const images = imageData[S_no] || [];
+
+        if (images.length === 0) return;
+
+        const imgX = data.cell.x + 2;
+        let imgY = data.cell.y + 2;
+        const maxWidth = data.cell.width - 4;
+
+        // Calculate height per image so that all fit in current cell
+        const maxCellHeight = data.cell.height - 4;
+        const individualHeight = Math.min(25, (maxCellHeight / images.length) - 2);
+
+        for (const base64 of images) {
+          pdf.addImage(base64, 'JPEG', imgX, imgY, maxWidth, individualHeight);
+          imgY += individualHeight + 2;
+        }
+      }
+    } catch (error) {
+      console.error("🚨 Error in didDrawCell function:", error.message);
+    }
+  },
+
+  didCalculateCellHeight: function (data) {
+    if (data.row.section === 'body' && data.column.index === 4) {
+      const images = imageData[data.row.raw[0]] || [];
+      if (images.length === 0) return;
+
+      if (images.length > 0) {
+        const imageHeight = 25;
+        const spacing = 2;
+        const padding = 6;
+
+        const totalImageHeight = (imageHeight + spacing) * images.length - spacing;
+        const requiredHeight = totalImageHeight + padding;
+
+        if (requiredHeight > data.cell.height) {
+          data.cell.height = requiredHeight;
+        }
+      }
+    }
+  }
+});
+
+        // Update finalY after the autoTable is done:
+        finalY = pdf.lastAutoTable.finalY + 10;
+      }
+
+
+    const totalPages = pdf.internal.getNumberOfPages();
+pdf.setPage(totalPages);
+const tableEndY = pdf.lastAutoTable.finalY || (pdf.internal.pageSize.height / 2);
+const noteY = tableEndY + 10;
+pdf.setFont("helvetica", "bold").setFontSize(12);
+pdf.text(
+  "Note : This QC report is generated by the system and does not need a physical signature.",
+  pdf.internal.pageSize.width / 2,
+  noteY,
+  { align: "center" }
+);
+
+// === Add missing S.No summary in a box on the last page ===
+function getAllPossibleSnoBySection(specificOptions) {
+  const sectionMap = {};
+  for (const key in specificOptions) {
+    key.split(',').forEach(part => {
+      part = part.trim();
+      if (part.includes('-')) {
+        const [start, end] = part.split('-').map(Number);
+        if (!isNaN(start) && !isNaN(end)) {
+          const prefix = part.split('.')[0] + '.';
+          const startSuffix = parseFloat(part.split('-')[0].split('.')[1]);
+          const endSuffix = parseFloat(part.split('-')[1].split('.')[1]);
+          for (let i = startSuffix; i <= endSuffix; i++) {
+            const sno = prefix + i;
+            const section = sno.split('.')[0];
+            if (!sectionMap[section]) sectionMap[section] = [];
+            sectionMap[section].push(sno);
+          }
+        }
+      } else {
+        const section = part.split('.')[0];
+        if (!sectionMap[section]) sectionMap[section] = [];
+        sectionMap[section].push(part);
+      }
+    });
+  }
+  for (const section in sectionMap) {
+    sectionMap[section] = Array.from(new Set(sectionMap[section])).sort((a, b) => {
+      const aParts = a.split('.').map(Number);
+      const bParts = b.split('.').map(Number);
+      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+        if ((aParts[i] || 0) !== (bParts[i] || 0)) return (aParts[i] || 0) - (bParts[i] || 0);
+      }
+      return 0;
+    });
+  }
+  return sectionMap;
+}
+
+const allPossibleSnoBySection = getAllPossibleSnoBySection(specificOptions);
+const presentSnoSet = new Set(observationsArray.map(obs => obs.S_no.trim()));
+const missingBySection = {};
+for (const section in allPossibleSnoBySection) {
+  const missing = allPossibleSnoBySection[section].filter(sno => !presentSnoSet.has(sno));
+  if (missing.length > 0) {
+    missingBySection[section] = missing;
+  }
+}
+if (Object.keys(missingBySection).length > 0) {
+  // Add a new page for the summary box
+  pdf.addPage();
+  const boxX = 15, boxY = 30, boxW = pdf.internal.pageSize.width - 30, boxH = pdf.internal.pageSize.height - 60;
+  pdf.setDrawColor(0, 0, 200);
+  pdf.setLineWidth(0.8);
+  pdf.rect(boxX, boxY, boxW, boxH, "S");
+
+  let boxContentY = boxY + 10;
+  pdf.setFont("helvetica", "bold").setFontSize(12);
+  pdf.text("The following are the pending items to be verified during the next inspection", boxX + 8, boxContentY);
+  boxContentY += 10;
+  pdf.setFont("helvetica", "normal").setFontSize(11);
+
+  for (const section of Object.keys(missingBySection).sort((a, b) => Number(a) - Number(b))) {
+    const missingList = missingBySection[section].join(", ");
+    const splitLines = pdf.splitTextToSize(`Section ${section}: ${missingList}`, boxW - 16);
+    pdf.text(splitLines, boxX + 8, boxContentY);
+    boxContentY += splitLines.length * 7;
+
+    if (boxContentY > boxY + boxH - 15) {
+      pdf.addPage();
+      pdf.rect(boxX, boxY, boxW, boxH, "S");
+      boxContentY = boxY + 10;
+    }
+  }
+}
+// ► Finally: draw footers on each page
+const totalPagesFinal = pdf.internal.getNumberOfPages();
+for (let i = 1; i <= totalPagesFinal; i++) {
+  pdf.setPage(i)
+    .setFont("helvetica", "normal")
+    .setFontSize(10);
+
+  // left footer
+  pdf.text("EG-IC-FT-34 Rev3", 10, pdf.internal.pageSize.height - 10);
+
+  // right footer (page x of y)
+  pdf.text(
+    `Page ${i} of ${totalPagesFinal}`,
+    pdf.internal.pageSize.width - 10,
+    pdf.internal.pageSize.height - 10,
+    { align: "right" }
+  );
+}
+
+// Upload the final PDF
+const pdfBlob = pdf.output('blob');
+await uploadPDF(pdfBlob, fileName);
+}
+
+    async function getVersionedFileName(locoId, inspectionDate, completionStatus) {
+  try {
+    const response = await fetch(`getNextVersion.php?loco_id=${locoId}`);
+    const data = await response.json();
+
+    if (data.success) {
+      const version = data.version;
+      return `${locoId}_${inspectionDate}_Report_${completionStatus}_Version-${version}.pdf`;
+    } else {
+      alert('Error fetching version: ' + data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching version:', error);
+    alert('Error fetching version');
+    return null;
+  }
+}
+
+
+
+
+    async function getBase64Image(imgUrl) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = imgUrl;
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const maxWidth = 100;
+          const maxHeight = 100;
+          let width = img.width;
+          let height = img.height; 
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+          const scale = 6;
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          const ctx = canvas.getContext("2d");
+          ctx.scale(scale, scale);
+          ctx.drawImage(img, 0, 0, width, height);
+          const base64 = canvas.toDataURL("image/jpeg", 1.0);
+          resolve(base64);
+        };
+        img.onerror = function (error) {
+          console.error("Error loading image:", imgUrl, error);
+          resolve(null);
+        };
+      });
+    }
+
+    async function fetchReports() {
+      const username = localStorage.getItem("user_id");
+
+      if (!username) {
+        alert("User ID not found. Cannot fetch reports.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`fetchReports.php?user_id=${username}`);
+        const text = await response.text(); // Read raw response for debugging
+        console.log("Raw response:", text);
+
+        const data = JSON.parse(text);
+        if (data.success) {
+          console.log("Reports:", data.reports);
+          displayReports(data.reports);
+        } else {
+          alert("Error: " + data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+        alert("An error occurred while fetching reports.");
+      }
+    }
+
+
+    function displayReports(reports) {
+      const reportContainer = document.getElementById("reportList");
+
+      if (!reportContainer) {
+        console.error("Element with ID 'reportList' not found!");
+        return;
+      }
+
+      reportContainer.innerHTML = ""; // Clear previous content
+
+      if (reports.length === 0) {
+        reportContainer.innerHTML = "<p>No reports available.</p>";
+        return;
+      }
+
+      reports.forEach(report => {
+        const reportItem = document.createElement("div");
+        reportItem.innerHTML = `
+            <p><strong>Uploaded By:</strong> ${report.user_id}</p>
+            <p><strong>File:</strong> <a href="/uploads/reports/${report.file_name}" target="_blank">${report.file_name}</a></p>
+            <p><strong>Uploaded On:</strong> ${report.upload_date}</p>
+            <hr>
+        `;
+        reportContainer.appendChild(reportItem);
+      });
+    }
+
+
+    // Call fetchReports on page load (optional)
+    document.addEventListener("DOMContentLoaded", fetchReports);
+
+
+
+
+
+
+    async function uploadPDF(pdfBlob, fileName) {
+  const formData = new FormData();
+ let cleanFileName = fileName.trim();
+  if (!cleanFileName.toLowerCase().endsWith(".pdf")) {
+    cleanFileName += ".pdf";
+  }
+
+  formData.append('file', pdfBlob, cleanFileName);
+
+  const userId = localStorage.getItem("user_id"); // Get user_id from localStorage or session
+  if (userId) {
+    formData.append('user_id', userId);
+  } else {
+    alert("User ID is missing. Cannot upload report.");
+    return;
+  }
+
+  const response = await fetch('uploadReport.php', { method: 'POST', body: formData });
+  const data = await response.json();
+  
+  if (data.success) {
+    alert(data.message);
+
+    // ✅ Show success message
+    const successMessage = document.getElementById("success-message");
+    const goToReportBtn = document.getElementById("go-to-report-btn");
+
+    if (successMessage && goToReportBtn) {
+      successMessage.style.display = "block";
+      goToReportBtn.style.display = "inline-block"; // Enable the button
+    }
+  } else {
+    alert("Error uploading report: " + data.message);
+  }
+}
+
+
+
+
+    // Call renderObservations on page load
+    renderObservations();
+
+
+
+  </script>
+</body>
+
+</html>

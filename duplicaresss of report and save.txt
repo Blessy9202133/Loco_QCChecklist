@@ -1,0 +1,241 @@
+GenerateReort.php 
+¬=================
+
+<?php
+header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Headers: Content-Type");
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    exit;
+}
+
+if (!isset($_POST['loco-id'], $_POST['railway-division'], $_POST['shed-name'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Missing necessary POST data']);
+    exit;
+}
+
+$locoID = htmlspecialchars($_POST['loco-id']);
+$railwayDivision = htmlspecialchars($_POST['railway-division']);
+$shedName = htmlspecialchars($_POST['shed-name']);
+
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=loco_info', 'root', 'Hbl@1234', [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+
+    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date
+                  FROM loco
+                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
+    $locoStmt = $pdo->prepare($locoQuery);
+    $locoStmt->execute([$locoID, $railwayDivision, $shedName]);
+    $locoDetails = $locoStmt->fetch();
+
+    if (!$locoDetails) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Loco details not found.']);
+        exit;
+    }
+
+    $tableNames = [
+        'document_verification_table', 'verify_serial_numbers_of_equipment_as_per_ic',
+        'loco_kavach', 'emi_filter_box', 'rib_cab_input_box', 'dmi_lp_ocip',
+        'rfid_ps_unit', 'loco_antenna_and_gps_gsm_antenna', 'pneumatic_fittings_and_ep_valve_cocks_fixing',
+        'pressure_sensors_installation_in_loco', 'iru_faviely_units_fixing_for_e70_type_loco',
+        'psjb_tpm_units_fixing_for_ccb_type_loco', 'sifa_valve_fixing_for_ccb_type_loco',
+        'pgs_and_speedo_meter_units_fixing', 'rfid_reader_assembly', 'earthing', 'radio_power'
+    ];
+
+    $observations = [];
+
+    foreach ($tableNames as $tableName) {
+        $query = "SELECT S_no, observation_text, remarks, observation_status AS observation_status, section_id
+                  FROM $tableName
+                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([$locoID, $railwayDivision, $shedName]);
+        $tableObservations = $stmt->fetchAll();
+
+        foreach ($tableObservations as &$obs) {
+            $imageQuery = "SELECT image_path FROM images WHERE loco_id = ? AND S_no = ?";
+            $imageStmt = $pdo->prepare($imageQuery);
+            $imageStmt->execute([$locoID, $obs['S_no']]);
+            $images = $imageStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // ✅ Only add valid image paths
+            $validImages = [];
+            foreach ($images as $imagePath) {
+                if (file_exists(__DIR__ . '/' . $imagePath) && strpos($imagePath, 'uploads/') === 0) {
+                    $validImages[] = "http://localhost/Qcchecklist/" . $imagePath; // Provide full URL path
+                }                
+                
+            }
+            $obs['images'] = $validImages ?: []; // Ensure empty array if no valid images
+        }
+
+        $observations = array_merge($observations, $tableObservations);
+    }
+
+    echo json_encode([
+        'success' => true,
+        'locoDetails' => $locoDetails,
+        'observations' => $observations
+    ]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+}
+?>
+===================
+
+Save observation.php
+====================
+<?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: application/json'); // Ensure JSON response
+
+
+
+// Database Connection
+$servername = "localhost";
+$username = "root";
+$password = "Hbl@1234";
+$dbname = "loco_info";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    echo json_encode(["success" => false, "message" => "Database connection failed"]);
+    exit;
+}
+
+// Validate Required POST Data
+$required_fields = ['S_no', 'observation_text', 'observation_status', 'remarks', 'section_id', 'loco_id'];
+foreach ($required_fields as $field) {
+    if (!isset($_POST[$field])) {
+        echo json_encode(["success" => false, "message" => "Missing required field: $field"]);
+        exit;
+    }
+}
+
+// Fetch Data
+$S_no = intval($_POST['S_no']);
+$observation_text = $_POST['observation_text'];
+$observation_status = $_POST['observation_status'];
+$remarks = $_POST['remarks'];
+$section_id = intval($_POST['section_id']);
+$loco_id = intval($_POST['loco_id']);
+
+// Section-to-Table Mapping
+$table_mapping = [
+    1 => "document_verification_table",
+    2 => "verify_serial_numbers_of_equipment_as_per_ic",
+    3 => "loco_kavach",
+    4 => "emi_filter_box",
+    5 => "rib_cab_input_box",
+    6 => "dmi_lp_ocip",
+    7 => "rfid_ps_unit",
+    8 => "loco_antenna_and_gps_gsm_antenna",
+    9 => "pneumatic_fittings_and_ep_valve_cocks_fixing",
+    10 => "pressure_sensors_installation_in_loco",
+    11 => "iru_faviely_units_fixing_for_e70_type_loco",
+    12 => "psjb_tpm_units_fixing_for_ccb_type_loco",
+    13 => "sifa_valve_fixing_for_ccb_type_loco",
+    14 => "pgs_and_speedo_meter_units_fixing",
+    15 => "rfid_reader_assembly",
+    16 => "earthing",
+    17 => "radio_power"
+];
+
+if (!isset($table_mapping[$section_id])) {
+    echo json_encode(["success" => false, "message" => "Invalid section ID"]);
+    exit;
+}
+
+$table_name = $table_mapping[$section_id];
+
+// Fetch Current Image Path (If Exists)
+$sql = "SELECT image_path FROM $table_name WHERE S_no = ? AND loco_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $S_no, $loco_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$existing_image_path = $row ? $row['image_path'] : null;
+$stmt->close();
+
+// Handle Image Upload
+// Ensure $_FILES['image'] exists before accessing it
+$image_path = $existing_image_path;
+
+if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
+    if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+        echo json_encode(["success" => false, "message" => "File upload error: " . $_FILES['image']['error']]);
+        exit;
+    }
+
+    // Ensure upload directory exists
+    $upload_dir = "uploads/";
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+
+    $image_name = time() . "_" . basename($_FILES['image']['name']);
+    $new_image_path = $upload_dir . $image_name;
+
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $new_image_path)) {
+        // Delete old image if it exists
+        if ($existing_image_path && file_exists($existing_image_path)) {
+            unlink($existing_image_path);
+        }
+        $image_path = $new_image_path;
+    } else {
+        echo json_encode(["success" => false, "message" => "Image upload failed"]);
+        exit;
+    }
+}
+
+
+
+// Handle Image Deletion Request
+if (isset($_POST['delete_image']) && $_POST['delete_image'] === "true") {
+    if ($existing_image_path && file_exists($existing_image_path)) {
+        unlink($existing_image_path);
+    }
+    $image_path = null;
+}
+
+// Prepare SQL Query
+$sql = "UPDATE $table_name SET 
+        observation_text = ?, 
+        observation_status = ?, 
+        remarks = ? " .
+        ($image_path !== null ? ", image_path = ?" : "") . 
+        " WHERE S_no = ? AND loco_id = ?";
+
+$stmt = $conn->prepare($sql);
+
+// Bind Parameters Dynamically
+if ($image_path !== null) {
+    $stmt->bind_param("ssssii", $observation_text, $observation_status, $remarks, $image_path, $S_no, $loco_id);
+} else {
+    $stmt->bind_param("ssii", $observation_text, $observation_status, $remarks, $S_no, $loco_id);
+}
+
+// Execute Query
+if ($stmt->execute()) {
+    echo json_encode(["success" => true, "message" => "Observation updated successfully"]);
+} else {
+    echo json_encode(["success" => false, "message" => "Update failed: " . $stmt->error]);
+}
+
+// Close Connections
+$stmt->close();
+$conn->close();
+?>

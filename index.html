@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Audit Report</title>
+  <style>
+    /* General Body Style */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+    }
+
+    /* Background image and left side style */
+    .background {
+      background-image: url('audit.jpg'); /* Adjust with correct path */
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      width: 60%;
+      filter: brightness(0.7);
+    }
+
+    /* Content Section on the Right */
+    .content {
+      width: 40%;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    /* Button Styling */
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    button {
+      padding: 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Logout Button Style */
+    .acto-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logout-button {
+      background-color: blue;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background-color: darkblue;
+    }
+
+    /* Modal Overlay Style */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    /* PDF option buttons in modal */
+    .pdf-option {
+      display: block;
+      margin: 15px auto;
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 80%;
+      max-width: 400px;
+    }
+    
+    .pdf-option:hover {
+      background-color: #0056b3;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .background {
+        width: 100%;
+        height: 50%;
+      }
+      .content {
+        width: 100%;
+        height: 50%;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      button {
+        font-size: 16px;
+      }
+      .acto-buttons {
+        top: 10px;
+        right: 10px;
+      }
+      .logout-button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+    }
+
+.modal-flex-container {
+  background: white;
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.pdf-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 5px;
+  font-family: sans-serif;
+  font-size: 14px;
+  white-space: normal;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+  <!-- Logout Button (Top Right) -->
+  <header>
+    <div class="acto-buttons">
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Background Image Section (Left Side) -->
+  <div class="background"></div>
+
+  <!-- Content Section (Right Side) -->
+  <div class="content">
+    <h1>QA Audit Report</h1>
+    <p>Select an option to proceed:</p>
+    <div class="container">
+      <button onclick="createNewReport()">Create Report</button>
+      <button onclick="viewReport()">View/Edit Report</button>
+      <!-- Manuals Button -->
+      <button onclick="showManualModal()">Manuals</button>
+    </div>
+  </div>
+<!-- Modal for Manuals -->
+<div id="manualModal" class="modal" style="display: none;">
+  <div class="modal-flex-container">
+     <div class = "column">     
+       <h2>Installation Manuals</h2>
+<button class="pdf-option"
+  onclick="window.open('Manual_Documents/Installation/1.%205%2053%2076%200014%20Loco%20Kavach%20V2.0%20Installation_Manual.pdf', '_blank')">
+  Loco Kavach Installation Manual
+</button>
+
+ <button class="pdf-option"
+  onclick="openManual('Manual_Documents/Installation/1.1%20CoE%20IRISET%20Ltr%2020230803%20-%20Standard%20Drawings%20for%20Kavach%20Fitment%20WAP7%20WAG9%20WAP5%20WAP-5%20WAP-7%20WAG-9.pdf')">
+  1. Standard Drawings for Kavach Fitment
+</button>
+
+     <button class="pdf-option"
+  onclick="openManual('Manual_Documents/Installation/1.2_5%2016%2076%200014%20Personal%20Safety%20Instructions_V1.0.pdf')">
+  2. Personal Safety Instructions
+</button>
+
+     <button class="pdf-option"
+  onclick="openManual('Manual_Documents/Installation/1.3_5%2053%2075%200003%20WFMS%20Operational%20Manual.pdf')">
+  3. WFMS Operational Manual 
+</button>
+
+<button class="pdf-option"
+  onclick="openManual('Manual_Documents/Installation/1.4_5%2016%2049%200426%20LOCO%20KAVACH%20POWER%20SUPPLY%20CONNECTIVITY%20DIAGRAM.pdf')">
+  4. Loco Kavach Power Supply Connectivity Diagram
+</button>
+
+    <button class="pdf-option"
+  onclick="openManual('Manual_Documents/Installation/1.5_5%2016%2049%200608_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20E-70-16102024_V1.0.pdf')">
+  5. Interconnectivity Diagram (E-70)
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.6_5%2016%2049%200618_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20CCB_V1.0.pdf')">
+  6. Interconnectivity Diagram (CCB)
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.7_5%2016%2049%200619_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20IRAB_V1.0.pdf')">
+  7. Interconnectivity Diagram (IRAB)
+</button>
+
+<button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.8_5%2016%2049%200620%20LOCO%20KAVACH%20CABLE%20ROUTING%20DRAWING%20IN%20WAP-7%20E-70%20LOCO_V1.0.pdf')">
+  8. Cable Routing Drawing WAP-7 E-70
+</button>
+<button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.9_5%2016%2049%200621%20LOCO%20KAVACH%20CABLE%20ROUTING%20DRAWING%20IN%20CCB%20LOCO_V1.0.pdf')">
+  9. Cable Routing Drawing CCB LOCO
+</button>
+ <button class="pdf-option"
+  onclick="window.open('Manual_Documents/Installation/1.12_CoE%20Ltr%20Circulation%20of%20Kavach%20Interfacing%20E-70%20Scheme%20to%20OEMs%20and%20Zonal%20Railways%2020231226.pdf', '_blank')">
+  12.CoE Ltr Circulation of Kavach Interfacing E-70 Scheme to OEMs and Zonal Railways 
+</button>
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.14_5%2016%2067%200854%20BIU%20Schematic%20Interfaced%20with%20IRAB_Rev0.pdf')">
+  14. BIU Schematic Interfaced with IRAB
+</button>
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.15_5%2016%2049%200624_INTER-CONNECTION%20DRAWING%20FROM%20CAB%20TERMINATION%20UNIT%20AND%20SB%20PANELS%20E-70_V1.0.pdf')">
+  15. Interconnection Drawing Cab Termination (E-70)
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.16_5%2016%2049%200625_INTER-CONNECTION%20DRAWING%20FROM%20CAB%20TERMINATION%20UNIT%20AND%20SB%20PANELS%20CCB_Rev1.0.pdf')">
+  16. Interconnection Drawing Cab Termination (CCB)
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.18_EG-IC-FT-57%20Rev1%20Loco%20KAVACH%20Configuration%20File%20Request%20Form.pdf')">
+  18. Loco Kavach Configuration File Request Form
+</button>
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.19_EG-EN-FT-21%20Rev1%20Loco%20Configuration%20file%20generation%20report.pdf')">
+  19. Loco Configuration File generation report
+</button>
+
+<button class="pdf-option" 
+    onclick="window.open('Manual_Documents/Installation/1.20_5%2053%2053%200059_In-process%20QC%20procedure%20for%20On%20Board%20KAVACH%20in%20Electric%20Locomotives_V1.4.pdf.pdf', '_blank')">
+  20. In-process QC Onboard KAVACH
+</button>
+
+
+
+
+<button class="pdf-option" onclick="openManual('Manual_Documents/Installation/1.21_EG-IC-FT-62%20Rev2%20In-Process%20QC%20Checklist%20for%20Loco%20KAVACH%20Installation.pdf')">
+  21. Loco KAVACH In-Process QC Checklist
+</button>
+
+
+</div>
+
+    <!-- Maintenance Manuals Column -->
+     <div class = "column">
+      <h2>Maintenance Manuals</h2>
+     <button class="pdf-option"
+  onclick="window.open('Manual_Documents/Maintenance/2.%205%2053%2076%200005%20Loco%20Kavach%20Maintenance%20and%20Troubleshooting%20Manual_V1.0.pdf', '_blank')">
+  Loco Kavach Maintenance and Troubleshooting Manual
+</button>
+
+   <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.1_5%2016%2076%200014%20Personal%20Safety%20Instructions_V1.0.pdf')">
+  1. Personal Safety Instructions
+</button>
+
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.2_5%2016%2049%200426%20LOCO%20KAVACH%20POWER%20SUPPLY%20CONNECTIVITY%20DIAGRAM_Rev1.1.pdf')">
+  2. Loco Kavach Power Supply Connectivity Diagram
+</button>
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.3_5%2016%2049%200608_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20E-70-16102024_V1.0.pdf')">
+  3. Interconnectivity E-70
+</button>
+
+    <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.4_5%2016%2049%200618_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20CCB_V1.0.pdf')">
+  4. Interconnectivity CCB
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.5_5%2016%2049%200619_LOCO%20KAVACH%20INTER%20CONNECTIVITY%20DIAGRAM%20FOR%20IRAB_V1.0.pdf')">
+  5. Interconnectivity IRAB
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.6_5%2016%2049%200628_Block%20Diagram%20of%20Loco%20KAVACH%20Vital%20Computer_Rev1.0.pdf')">
+  6. Block Diagram of Loco KAVACH Vital Computer
+</button>
+
+     <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.7_5%2016%2049%200629_Block%20Diagram%20of%20Radio%20Unit_Rev1.0.pdf')">
+  7. Block Diagram of Radio Unit
+</button>
+
+    <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.8_5%2016%2049%200630_Block%20Diagram%20of%20Interface%20Modules_Rev1.0.pdf')">
+  8. Block Diagram of Interface Modules
+</button>
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.9_5%2016%2049%200624_INTER-CONNECTION%20DRAWING%20FROM%20CAB%20TERMINATION%20UNIT%20AND%20SB%20PANELS%20E-70_V1.0.pdf')">
+  9. Interconnection E70
+</button>
+
+    <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.10_6_5%2016%2049%200625_INTER-CONNECTION%20DRAWING%20FROM%20CAB%20TERMINATION%20UNIT%20AND%20SB%20PANELS%20CCB_Rev1.0.pdf')">
+  10. Interconnection CCB
+</button>
+
+
+      <button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.12_5%2053%2076%200014%20Loco%20Kavach%20V2.0%20Installation_Manual.pdf')">
+  12.Loco Kavach V2.0 Installation_Manual
+</button>
+<button class="pdf-option" onclick="openManual('Manual_Documents/Maintenance/2.14_14_CoE%20Lr.%20to%20RDSO%20wrt%20Draft%20Maintenance%20Activities%20of%20Onboard%20Kavach%20with%20Annexures%2020240131.pdf')">
+  14. Draft Maintenance Activities
+</button>
+
+  
+<script>
+  function openManual(filePath) {
+    const fullPath = decodeURIComponent(filePath); 
+    window.open(fullPath, '_blank');
+  }
+</script>
+
+  </div>
+</div>
+</div>
+
+
+  <script>
+
+
+
+ 
+function createNewReport() {
+  // Preserve the user ID and employee name before clearing storage.
+  const storedUserId = localStorage.getItem("user_id");
+  const storedEmployeeName = localStorage.getItem("employee_name");
+
+  // Clear all storage.
+  sessionStorage.clear();
+  localStorage.clear();
+
+  // Restore the preserved values.
+  if (storedUserId) {
+    localStorage.setItem("user_id", storedUserId);
+  }
+  if (storedEmployeeName) {
+    localStorage.setItem("employee_name", storedEmployeeName);
+  }
+
+  // Redirect to create.html with the default section.
+  window.location.href = 'create.html#0.0';
+}
+
+
+
+
+
+    function viewReport() {
+      window.location.href = 'viewReports.php';
+    }
+
+    function logout() {
+      alert("Logging out...");
+      window.location.href = 'login.html';
+    }
+
+    // Open the manual PDF in a new tab
+    function openManual(filePath) {
+      window.open(filePath, '_blank');
+    }
+
+    // Show the modal with manual options
+    function showManualModal() {
+      document.getElementById('manualModal').style.display = 'flex';
+    }
+
+    // Hide the modal
+    function hideManualModal() {
+      document.getElementById('manualModal').style.display = 'none';
+    }
+
+    // Hide modal if user clicks outside the modal content
+    window.onclick = function(event) {
+      const modal = document.getElementById('manualModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

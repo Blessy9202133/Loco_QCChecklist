@@ -1,0 +1,325 @@
+<?php
+session_start(); 
+if (isset($_SESSION['loco_id'])) {
+    // You can now use the session variables wherever needed
+    $locoID = $_SESSION['loco_id'];
+    $locoType = $_SESSION['loco_type'];
+    $brakeType = $_SESSION['brake_type'];
+    $railwayDivision = $_SESSION['railway_division'];
+    $shedName = $_SESSION['shed_name'];
+    $inspectionDate = $_SESSION['inspection_date'];
+} else {
+    echo "No locomotive data available.";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic QA Form</title>
+    <link rel="stylesheet" type="text/css" href="style (1).css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="new_script.js" defer></script>
+    <!-- Link to the external JS file -->
+    <style>
+      /* Add your styles here (optional) */
+    </style>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <button class="button" onclick="setSection('0.0')">Loco Info</button>
+      <button class="button" onclick="setSection('1.0')">
+        1.0 Document Verification
+      </button>
+      <button class="button" onclick="setSection('2.0')">
+        2.0 Verify Serial Numbers Of Equipment as per IC
+      </button>
+      <button class="button" onclick="setSection('3.0')">
+        3.0 Loco Kavach
+      </button>
+      <button class="button" onclick="setSection('4.0')">
+        4.0 EMI Filter Box
+      </button>
+      <button class="button" onclick="setSection('5.0')">
+        5.0 RIB & CAB INPUT BOX
+      </button>
+      <button class="button" onclick="setSection('6.0')">
+        6.0 DMI (LP-OCIP)
+      </button>
+      <button class="button" onclick="setSection('7.0')">
+        7.0 RFID PS Unit
+      </button>
+      <button class="button" onclick="setSection('8.0')">
+        8.0 LOCO Antenna and GPS_GSM Antenna
+      </button>
+      <button class="button" onclick="setSection('9.0')">
+        9.0 Pneumatic Fittings and Ep Valve,Cocks Fixing
+      </button>
+      <button class="button" onclick="setSection('10.0')">
+        10.0 Pressure sensors Installation in LOCO
+      </button>
+      <button class="button" onclick="setSection('11.0')">
+        11.0 IRU (Faviely) Units Fixing For E70 Type Loco
+      </button>
+      <button class="button" onclick="setSection('12.0')">
+        12.0 PSJB, TPM Units Fixing For CCB Type Loco
+      </button>
+      <button class="button" onclick="setSection('13.0')">
+        13.0 SIFA Valve Fixing For CCB Type Loco
+      </button>
+      <button class="button" onclick="setSection('14.0')">
+        14.0 PG's and Speedo Meter Units Fixing
+      </button>
+      <button class="button" onclick="setSection('15.0')">
+        15.0 RFID Reader Assembly
+      </button>
+      <button class="button" onclick="setSection('16.0')">
+        16.0 Earthing
+      </button>
+      <button class="button" onclick="setSection('17.0')">
+        17.0 Radio Power
+      </button>
+    </div>
+
+    <div
+      id="success-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 5px;
+      "
+    >
+      Data saved successfully!
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="successModal" class="modal">
+      <div class="modal-content">
+        <h4>Success</h4>
+        <p>Loco Info Saved Successfully!</p>
+      </div>
+    </div>
+
+    <!-- Main Content Section for Dynamic Content and Loco Info Form -->
+    <div class="main-content">
+      <div id="main-content">
+        <!-- The Loco Info form -->
+        <div id="top-section">
+          <section>
+            <form id="locoForm" action="connect.php" method="POST">
+              <table class="detail-box">
+                <tr>
+                  <td>
+                    <strong>Loco ID:</strong
+                    ><input
+                      type="text"
+                      id="loco-id"
+                      placeholder="Enter Loco ID"
+                      value=""
+                    />
+                  </td>
+                  <td>
+                    <strong>Loco Type:</strong>
+                    <div>
+                      <label
+                        ><input
+                          type="radio"
+                          class="locomotive"
+                          name="loco-type"
+                          value="WAP-7"
+                          onclick="onlyOneChecked(this,
+                        'locomotive')"
+                        />
+                        WAP-7</label
+                      ><br />
+                      <label
+                        ><input
+                          type="radio"
+                          class="locomotive"
+                          name="loco-type"
+                          value="WAP-5"
+                          onclick="onlyOneChecked(this,
+                        'locomotive')"
+                        />
+                        WAP-5</label
+                      ><br />
+                      <label
+                        ><input
+                          type="radio"
+                          class="locomotive"
+                          name="loco-type"
+                          value="WAP-9"
+                          onclick="onlyOneChecked(this,
+                        'locomotive')"
+                        />
+                        WAP-9</label
+                      ><br />
+                    </div>
+                  </td>
+                  <td>
+                    <strong>Brake Type:</strong>
+                    <div>
+                      <label
+                        ><input
+                          type="radio"
+                          class="brake-type"
+                          name="brake-type"
+                          value="E-70"
+                          onclick="onlyOneChecked(this, 'brake-type')"
+                        />E-70 </label
+                      ><br />
+                      <label
+                        ><input
+                          type="radio"
+                          class="brake-type"
+                          name="brake-type"
+                          value="CCB"
+                          onclick="onlyOneChecked(this, 'brake-type')"
+                        />
+                        CCB</label
+                      ><br />
+                    </div>
+                  </td>
+
+                  <td>
+                    <strong>Railway Division:</strong
+                    ><input
+                      type="text"
+                      id="railway-division"
+                      placeholder="Enter Railway Division"
+                      value=""
+                    />
+                  </td>
+                  <td>
+                    <strong>Shed Name:</strong
+                    ><input
+                      type="text"
+                      id="shed-name"
+                      placeholder="Enter Shed Name"
+                      value=""
+                    />
+                  </td>
+                  <td>
+                    <strong>Inspection Date:</strong
+                    ><input type="date" id="date" value="" />
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="6"
+                    class="reference-row"
+                    style="
+                      text-align: left;
+                      padding: 0;
+                      border-left: 1px solid black;
+                      border-right: 1px solid black;
+                      font-weight: bold;
+                    "
+                  >
+                    Refer to Document: 5 16 76 0035 V1.3 In-process QC Procedure
+                    for On-board KAVACH INSTALLATION IN Electrical Locomotives.
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </section>
+        </div>
+        <div class="action-buttons">
+          <button type="button" onclick="saveLocoInfo()">Save Loco Info</button>
+          <button type="button" onclick="getObservations()">
+            Get Observations
+          </button>
+        </div>
+        <div id="dynamic-content">
+          <!-- Dynamic content will be added here -->
+          <p>Select a section from the left to view details.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Image Section -->
+    <div id="add-image-section" style="display: none">
+      <button class="add-image" onclick="showUploadOptions(this)">
+        Add Image
+      </button>
+
+      <!-- Upload Options Section (Camera and File Upload) -->
+      <div class="upload-options" style="display: none">
+        <button class="start-camera" onclick="startCamera(this)">Camera</button>
+        <input type="file" accept="image/*" onchange="displayImage(this)" />
+      </div>
+
+      <div class="upload-options" style="display: none">
+        <button class="upload-image" onclick="triggerFileInput()">
+          Camera
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          onchange="displayImage(this)"
+          id="fileInput"
+          style="display: none"
+        />
+      </div>
+
+      <!-- Camera Container (This will hold the webcam feed and capture image button) -->
+      <div id="camera-container" style="display: none">
+        <video id="camera" width="100%" height="auto" autoplay></video>
+        <button onclick="captureImage()">Capture Image</button>
+        <button onclick="stopCamera()">Stop Camera</button>
+        <canvas id="canvas" style="display: none"></canvas>
+        <!-- Canvas to capture the image -->
+      </div>
+
+      <!-- Modal -->
+      <div
+        id="modal"
+        style="
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.8);
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <span
+          onclick="closeModal()"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+          "
+          >&times;</span
+        >
+        <img
+          id="modal-image"
+          style="max-width: 80%; max-height: 80%; object-fit: contain"
+        />
+      </div>
+
+      <!-- Display Captured or Uploaded Image -->
+      <img
+        class="captured-image"
+        src=""
+        alt="Captured/Uploaded Image"
+        style="display: none; width: 100%; max-width: 100%; margin-top: 10px"
+      />
+    </div>
+  </body>
+</html>

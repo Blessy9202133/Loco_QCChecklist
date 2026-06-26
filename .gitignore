@@ -1,0 +1,12 @@
+# Logs
+*.log
+debug_log.txt
+error_log.txt
+upload_debug.log
+upload_errors.log
+
+# Windows shortcuts
+*.lnk
+
+# User uploads & generated reports
+uploads/
