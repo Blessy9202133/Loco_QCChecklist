@@ -86,82 +86,94 @@ if (isset($_SESSION['loco_id'])) {
   
   <script>
     window.addEventListener('load', function() {
-      // Clear all relevant stored data to ensure a fresh page each time.
-      sessionStorage.removeItem("locoDetails");
-      sessionStorage.removeItem("observationsData");
-      // Optionally, clear all of sessionStorage (caution: if you have other data you want to keep)
-      // sessionStorage.clear();
-      // Also clear localStorage if you use it:
-      // localStorage.removeItem("selectedLocoId");
-      // localStorage.removeItem("locoDetails");
-      
-      // Read the URL hash to determine which section to show (e.g., "#0.0")
-      const hash = window.location.hash;
-      if (hash) {
-        const sectionId = hash.substring(1);  // removes the '#' character
-        if (typeof showSection === 'function') {
-          showSection(sectionId);
+      const urlParams = new URLSearchParams(window.location.search);
+      const locoId = urlParams.get("loco_id");
+
+      if (locoId) {
+        // Edit mode: fetch details and populate
+        fetch(`getReportById.php?loco_id=${encodeURIComponent(locoId)}`)
+          .then(response => response.json())
+          .then(res => {
+            if (res.success && res.data && res.data.locoDetails) {
+              const details = res.data.locoDetails;
+              localStorage.setItem("locoDetails", JSON.stringify(details));
+              localStorage.setItem("selectedLocoId", locoId);
+              
+              showSection("0.0").then(() => {
+                document.getElementById("loco-id").value = details.locoID || "";
+                document.getElementById("loco-type").value = details.locoType || "";
+                document.getElementById("brake-type").value = details.brakeType || "";
+                document.getElementById("railway-division").value = details.railwayDivision || "";
+                
+                if (typeof window.updateShedNames === 'function') {
+                  window.updateShedNames();
+                }
+                document.getElementById("shed-name").value = details.shedName || "";
+                document.getElementById("date").value = details.inspectionDate || "";
+
+                // Automatically trigger getDetails() to load observations & highlight sidebar
+                getDetails();
+              });
+            } else {
+              alert(res.message || "Failed to load locomotive details.");
+              showSection("0.0");
+            }
+          })
+          .catch(error => {
+            console.error("Fetch error:", error);
+            showSection("0.0");
+          });
+      } else {
+        // Create/Back Navigation Mode: Check if we have active unsaved details to restore
+        const storedLocoInfo = sessionStorage.getItem("locoInfo") || localStorage.getItem("locoDetails");
+        
+        if (storedLocoInfo) {
+          const details = JSON.parse(storedLocoInfo);
+          const normalized = {
+            locoID: details.locoID || details.locoId || details.loco_id || "",
+            locoType: details.locoType || details.loco_type || "",
+            brakeType: details.brakeType || details.brake_type || "",
+            railwayDivision: details.railwayDivision || details.railway_division || "",
+            shedName: details.shedName || details.shed_name || "",
+            inspectionDate: details.inspectionDate || details.inspection_date || details.inspection_Date || ""
+          };
+
+          const hash = window.location.hash || "#0.0";
+          const sectionId = hash.substring(1);
+
+          showSection(sectionId).then(() => {
+            if (document.getElementById("loco-id")) document.getElementById("loco-id").value = normalized.locoID;
+            if (document.getElementById("loco-type")) document.getElementById("loco-type").value = normalized.locoType;
+            if (document.getElementById("brake-type")) document.getElementById("brake-type").value = normalized.brakeType;
+            if (document.getElementById("railway-division")) document.getElementById("railway-division").value = normalized.railwayDivision;
+            
+            if (typeof window.updateShedNames === 'function') {
+              window.updateShedNames();
+            }
+            if (document.getElementById("shed-name")) document.getElementById("shed-name").value = normalized.shedName;
+            if (document.getElementById("date")) document.getElementById("date").value = normalized.inspectionDate;
+          });
         } else {
-          console.log("showSection function is not defined. Default section:", sectionId);
+          // Clean fresh start (no saved details)
+          sessionStorage.removeItem("locoDetails");
+          sessionStorage.removeItem("observationsData");
+          localStorage.removeItem("selectedLocoId");
+          localStorage.removeItem("locoDetails");
+          sessionStorage.removeItem("locoInfo");
+
+          const hash = window.location.hash || "#0.0";
+          const sectionId = hash.substring(1);
+          showSection(sectionId).then(() => {
+            const fieldIds = ["loco-id", "loco-type", "brake-type", "railway-division", "shed-name", "date"];
+            fieldIds.forEach(id => {
+              const element = document.getElementById(id);
+              if (element) element.value = "";
+            });
+          });
         }
       }
     });
   </script>
-  
-
-  <!-- Your additional scripts (for handling loco info fetching, etc.) -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      // If you don't want to prefill based on a query parameter, skip this part
-      const locoId = urlParams.get("loco_id");
-      if (locoId) {
-        // Optionally remove these lines if you always want a fresh form
-        localStorage.setItem("selectedLocoId", locoId);
-        // Fetch and fill details if desired. Otherwise, don't populate:
-        // fetch(`getReportById.php?loco_id=${locoId}`)
-        //   .then(response => response.json())
-        //   .then(data => { /* populate form fields if needed */ })
-        //   .catch(error => console.error("Fetch error:", error));
-      } else {
-        // No query parameter - ensure stored data is not used.
-        localStorage.removeItem("locoDetails");
-      }
-    });
-</script>
-<script>
- window.addEventListener('load', function() {
-  // Clear only the keys specific to the form data.
-  sessionStorage.removeItem("locoDetails");
-  sessionStorage.removeItem("observationsData");
-  
-  localStorage.removeItem("selectedLocoId");
-  localStorage.removeItem("locoDetails");
-  // Do not remove "user_id" so that the user id remains stored.
-
-  // Clear form fields explicitly
-  const fieldIds = ["loco-id", "loco-type", "brake-type", "railway-division", "shed-name", "inspection-date"];
-  fieldIds.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.value = "";
-    }
-  });
-
-  // Check the URL hash to show the default section if present.
-  const hash = window.location.hash; // e.g., "#0.0"
-  if (hash) {
-    const sectionId = hash.substring(1);  // removes the '#' character
-    if (typeof showSection === 'function') {
-      showSection(sectionId);
-    } else {
-      console.log("showSection function is not defined. Default section:", sectionId);
-    }
-  }
-});
-
-</script>
-
   
 
   

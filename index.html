@@ -226,7 +226,22 @@
   white-space: normal;
   border: none;
   cursor: pointer;
-}
+    /* Loader Spinner */
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #6f42c1;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 2s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 </style>
 </head>
 <body>
@@ -250,6 +265,8 @@
       <button onclick="viewReport()">View/Edit Report</button>
       <!-- Manuals Button -->
       <button onclick="showManualModal()">Manuals</button>
+      <!-- Check for Updates Button -->
+      <button onclick="triggerDBMigration()" style="background-color: #6f42c1;">Check for Updates</button>
     </div>
   </div>
 <!-- Modal for Manuals -->
@@ -410,8 +427,39 @@
 </div>
 </div>
 
+<!-- Modal for Update Status -->
+<div id="updateModal" class="modal" style="display: none;">
+  <div class="modal-content" style="max-width: 600px;">
+    <span class="close" onclick="hideUpdateModal()">&times;</span>
+    <h2 style="color: #6f42c1; margin-bottom: 15px;">System Update Status</h2>
+    <div id="updateStatusText" style="text-align: left; padding: 15px; max-height: 350px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; line-height: 1.5; white-space: pre-line;">
+      Checking for updates...
+    </div>
+    <button onclick="hideUpdateModal()" style="margin-top: 15px; background-color: #6c757d; width: auto; padding: 10px 20px; display: inline-block;">Close</button>
+  </div>
+</div>
 
   <script>
+    function triggerDBMigration() {
+      const modal = document.getElementById('updateModal');
+      const statusText = document.getElementById('updateStatusText');
+      modal.style.display = 'flex';
+      statusText.innerHTML = '<span class="loader"></span> Running database migration and checklist sync... Please wait.';
+      
+      fetch('db_migration.php')
+        .then(response => response.text())
+        .then(data => {
+          statusText.innerHTML = data;
+        })
+        .catch(error => {
+          statusText.innerHTML = '<span style="color: red;">Failed to run updates: ' + error + '</span>';
+        });
+    }
+
+    function hideUpdateModal() {
+      document.getElementById('updateModal').style.display = 'none';
+    }
+
 
 
 

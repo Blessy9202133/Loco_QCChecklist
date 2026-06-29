@@ -1,6 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
+// Force Git to run in non-interactive mode and never prompt for credentials
+putenv('GIT_TERMINAL_PROMPT=0');
+putenv('GIT_ASKPASS=echo');
+
 $repo = "C:\\xampp\\htdocs\\Qcchecklist";
 $git = 'git';
 
@@ -9,8 +13,14 @@ chdir($repo);
 // Fix git dubious ownership error for the web server user
 exec("$git config --global --add safe.directory C:/xampp/htdocs/Qcchecklist");
 
+// Get current branch name dynamically (e.g. 'auto_update' or 'main')
+$currentBranch = trim(shell_exec("$git rev-parse --abbrev-ref HEAD"));
+if (!$currentBranch) {
+    $currentBranch = 'main'; // default fallback
+}
+
 // fetch
-exec("$git fetch origin 2>&1", $fetchOutput, $fetchCode);
+exec("$git fetch origin $currentBranch 2>&1", $fetchOutput, $fetchCode);
 
 if ($fetchCode !== 0) {
     echo json_encode([
@@ -21,9 +31,9 @@ if ($fetchCode !== 0) {
     exit;
 }
 
-// compare
+// compare local HEAD with remote tracking branch
 $local = trim(shell_exec("$git rev-parse HEAD"));
-$remote = trim(shell_exec("$git rev-parse origin/main"));
+$remote = trim(shell_exec("$git rev-parse origin/$currentBranch"));
 
 if ($local === $remote) {
     echo json_encode(["status" => "uptodate"]);
@@ -41,12 +51,12 @@ if (file_exists($mysqldump)) {
     exec("\"$mysqldump\" -u root -pHbl@1234 loco_info > \"$filename\"");
 }
 
-// pull
+// pull from the current active branch
 $commitBefore = trim(shell_exec("$git rev-parse HEAD"));
 
 exec("$git reset --hard 2>&1", $r1, $c1);
 exec("$git clean -fd 2>&1", $r2, $c2);
-exec("$git pull origin main 2>&1", $pullOutput, $pullCode);
+exec("$git pull origin $currentBranch 2>&1", $pullOutput, $pullCode);
 
 $commitAfter = trim(shell_exec("$git rev-parse HEAD"));
 
@@ -79,3 +89,4 @@ if ($pullCode === 0) {
         "output" => $pullOutput
     ]);
 }
+?>

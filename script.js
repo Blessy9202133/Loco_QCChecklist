@@ -3156,7 +3156,6 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-
     <tr id="row-35">
       <td>4.2</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps.</td>
@@ -9595,4 +9594,4 @@ window.addEventListener('online', checkForUpdates);
 // Also check immediately when the page loads if already online
 if (navigator.onLine) {
   checkForUpdates();
-}
+}

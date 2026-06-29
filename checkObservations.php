@@ -76,8 +76,12 @@ if (!isset($tableNames[$sectionId])) {
 
 $table = $tableNames[$sectionId];
 
-// Prepare SQL query to check if observations exist in the table
-$checkQuery = "SELECT COUNT(*) as count FROM $table WHERE loco_id = ? AND shed_name = ? AND railway_division = ?";
+// Prepare SQL query to check if observations exist in the table and are actually filled
+$checkQuery = "SELECT COUNT(*) as count FROM $table 
+               WHERE loco_id = ? AND shed_name = ? AND railway_division = ? 
+               AND observation_status IS NOT NULL 
+               AND observation_status != '' 
+               AND observation_status != 'Select'";
 $checkStmt = $conn->prepare($checkQuery);
 $checkStmt->bind_param("sss", $locoId, $shedName, $railwayDivision);
 $checkStmt->execute();
