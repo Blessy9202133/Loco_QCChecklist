@@ -3158,12 +3158,12 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 
     <tr id="row-35">
       <td>4.2</td>
-      <td class="observation_text"><b>Cable routing:</b>Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps. XYZ</td>
+      <td class="observation_text"><b>Cable routing:</b>Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps.</td>
         <td class = "select">
         <select id="status-dropdown" onchange="highlightSelect(this)">
           <option value="Select">Select</option>
-          <option value="Routing XYZ">Routing XYZ</option>
-          <option value="Routing Not XYZ">Routing Not XYZ</option>
+          <option value="Routing Done">Routing Done</option>
+          <option value="Routing Not Done">Routing Not Done</option>
         </select>
       </td>
       <td class="remarks">
