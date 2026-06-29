@@ -158,6 +158,15 @@ $s_no_ranges = [
     "17.0" => [17.1, 17.2],
 ];
 
+// Status Mapping for updating old statuses to new statuses (e.g. "Yes" to "OK")
+// Now supports point-specific mapping for safety!
+$status_mapping = [
+    "4.2" => [
+        "Routing Done" => "Routing XYZ",
+        "Routing Not Done" => "Routing Not XYZ"
+    ]
+];
+
 // Description texts per S_no
 $observation_text = [
     "1.1" => "Is the annexure of the IC (Inspection Certificate) issued by RDSO available?",
@@ -195,7 +204,7 @@ $observation_text = [
     "3.11" => "Are all wires routed correctly, ensuring no stress is applied and there are no sharp bends?",
     "3.12" => "Are the peripheral cables of the LOCO KAVACH unit properly secured with metal clamps to ensure stability and safety?",
     "4.1" => "Fix M5x16mm Bolts on the EMI Filter Box to the loco stand with torque of 6 N-m and mark with green/yellow paint.?",
-    "4.2" => "Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps.",
+    "4.2" => "Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps. XYZ",
     "5.1" => "Is the RIB & CAB IP box stand made with the required thickness of 5 mm?",
     "5.2" => "Is there sufficient space between the RIB unit and CAB input box for smooth cable handling and easy access?",
     "5.3" => "Is the welding on the RIB and CAB input box stand free from gaps, cracks, or joint breaks?",
@@ -285,6 +294,23 @@ $observation_text = [
     "17.2" => "Has the RADIO-2 Power been configured to 10 Watts if the radio shows 1 Watt?",
 ];
 
+// 4. CLEANUP: Hard delete S_no's that are no longer in the checklist
+echo "<b>Running Checklist Cleanup (Deletions)...</b><br>";
+foreach ($tables_and_sections as $table => $sections) {
+    $valid_snos = [];
+    foreach ($sections as $section_id) {
+        if (isset($s_no_ranges[$section_id])) {
+            foreach ($s_no_ranges[$section_id] as $s_no) {
+                $valid_snos[] = "'" . (string)$s_no . "'";
+            }
+        }
+    }
+    if (!empty($valid_snos)) {
+        $valid_sno_str = implode(',', $valid_snos);
+        $conn->query("DELETE FROM `$table` WHERE `S_no` NOT IN ($valid_sno_str)");
+    }
+}
+
 // Fetch all unique locomotives
 $locos_res = $conn->query("SELECT Loco_Id, Loco_type, Brake_type, Railway_Division, Shed_name, inspection_Date FROM loco");
 if (!$locos_res) {
@@ -308,15 +334,32 @@ while ($loco = $locos_res->fetch_assoc()) {
             if (isset($s_no_ranges[$section_id])) {
                 foreach ($s_no_ranges[$section_id] as $s_no) {
                     $s_no_str = (string)$s_no;
-                    // Check if observation already exists for this loco & S_no
-                    $check_obs = $conn->query("SELECT 1 FROM `$table` WHERE `loco_id` = '$loco_id' AND `S_no` = '$s_no_str'");
+                    $desc = isset($observation_text[$s_no_str]) ? $observation_text[$s_no_str] : "No description available";
+                    $desc_esc = $conn->real_escape_string($desc);
                     
-                    if ($check_obs && $check_obs->num_rows == 0) {
-                        // Standard description
-                        $desc = isset($observation_text[$s_no_str]) ? $observation_text[$s_no_str] : "No description available";
+                    // Check if observation already exists for this loco & S_no
+                    $check_obs = $conn->query("SELECT observation_text, observation_status FROM `$table` WHERE `loco_id` = '$loco_id' AND `S_no` = '$s_no_str'");
+                    
+                    if ($check_obs && $check_obs->num_rows > 0) {
+                        $row = $check_obs->fetch_assoc();
+                        $updates = [];
                         
+                        if ($row['observation_text'] !== $desc) {
+                            $updates[] = "`observation_text` = '$desc_esc'";
+                        }
+                        
+                        $current_status = $row['observation_status'];
+                        if (isset($status_mapping[$s_no_str][$current_status])) {
+                            $new_status = $conn->real_escape_string($status_mapping[$s_no_str][$current_status]);
+                            $updates[] = "`observation_status` = '$new_status'";
+                        }
+                        
+                        if (!empty($updates)) {
+                            $update_sql = "UPDATE `$table` SET " . implode(", ", $updates) . ", `updated_at` = NOW() WHERE `loco_id` = '$loco_id' AND `S_no` = '$s_no_str'";
+                            $conn->query($update_sql);
+                        }
+                    } else {
                         // Escape inputs safely
-                        $desc_esc = $conn->real_escape_string($desc);
                         $type_esc = $conn->real_escape_string($loco_type);
                         $brake_esc = $conn->real_escape_string($brake_type);
                         $div_esc = $conn->real_escape_string($railway_division);

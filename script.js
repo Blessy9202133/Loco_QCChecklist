@@ -21,42 +21,42 @@ let inspectionDate = "";
 
 var data = [];
 
-let initialTimingDict={
-  "1_0":null,
-  "2.0":null,
-  "3.0":null,
-  "4.0":null,
-  "5.0":null,
-  "6.0":null,
-  "7.0":null,
-  "8.0":null,
-  "9.0":null,
-  "10.0":null,
-  "11.0":null,
-  "12.0":null,
-  "13.0":null,
-  "14.0":null,
-  "15.0":null,
-  "16.0":null,
+let initialTimingDict = {
+  "1_0": null,
+  "2.0": null,
+  "3.0": null,
+  "4.0": null,
+  "5.0": null,
+  "6.0": null,
+  "7.0": null,
+  "8.0": null,
+  "9.0": null,
+  "10.0": null,
+  "11.0": null,
+  "12.0": null,
+  "13.0": null,
+  "14.0": null,
+  "15.0": null,
+  "16.0": null,
 }
 
-let updatedTimingDict={
-  "1_0":null,
-  "2.0":null,
-  "3.0":null,
-  "4.0":null,
-  "5.0":null,
-  "6.0":null,
-  "7.0":null,
-  "8.0":null,
-  "9.0":null,
-  "10.0":null,
-  "11.0":null,
-  "12.0":null,
-  "13.0":null,
-  "14.0":null,
-  "15.0":null,
-  "16.0":null,
+let updatedTimingDict = {
+  "1_0": null,
+  "2.0": null,
+  "3.0": null,
+  "4.0": null,
+  "5.0": null,
+  "6.0": null,
+  "7.0": null,
+  "8.0": null,
+  "9.0": null,
+  "10.0": null,
+  "11.0": null,
+  "12.0": null,
+  "13.0": null,
+  "14.0": null,
+  "15.0": null,
+  "16.0": null,
 }
 
 // ----------------------------------------------------------------------------
@@ -82,8 +82,8 @@ async function showSection(section) {
       unsavedChanges = false;
     }
   }
-  
-  
+
+
 
   // 2) Now it's safe to switch sections AND highlight the new button
   const buttons = document.querySelectorAll(".sidebar .button");
@@ -103,31 +103,31 @@ async function showSection(section) {
   }
 
   // 4) Finally, do the rest of your code that actually loads the new section's content
-  if(section!=="0.0"){
+  if (section !== "0.0") {
 
     console.log("Showing section:", section);
-    const sectionMapping={
-      "1_0": "1_0","2.0":"2_0","3.0":"3_0","4.0":"4_0","5.0":"5_0","6.0":"6_0","7.0":"7_0","8.0":"8_0","9.0":"9_0","10.0":"10_0","11.0":"11_0","12.0":"12_0","13.0":"13_0","14.0":"14_0","15.0":"15_0",
-      "16.0":"16_0",
+    const sectionMapping = {
+      "1_0": "1_0", "2.0": "2_0", "3.0": "3_0", "4.0": "4_0", "5.0": "5_0", "6.0": "6_0", "7.0": "7_0", "8.0": "8_0", "9.0": "9_0", "10.0": "10_0", "11.0": "11_0", "12.0": "12_0", "13.0": "13_0", "14.0": "14_0", "15.0": "15_0",
+      "16.0": "16_0",
     }
-    
-    const locoId=document.getElementById("loco-id").value;
-    const responseTime=await fetch("checkInitialTiming.php",
-      {
-        method:"POST",
-        headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      "locoId":locoId,
-      "sectionId":sectionMapping[section],
-       }),
-   });
 
-   const data=await responseTime.json();
-    
+    const locoId = document.getElementById("loco-id").value;
+    const responseTime = await fetch("checkInitialTiming.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "locoId": locoId,
+          "sectionId": sectionMapping[section],
+        }),
+      });
+
+    const data = await responseTime.json();
+
     console.log(data.message);
-    console.log(data.initial_time);  
+    console.log(data.initial_time);
   }
 
 
@@ -160,9 +160,9 @@ async function showSection(section) {
     };
   }
 
- 
 
-  
+
+
   // Get current loco details to check if observations exist
   const locoId = document.getElementById("loco-id")?.value;
   const shedName = document.getElementById("shed-name")?.value;
@@ -170,7 +170,7 @@ async function showSection(section) {
 
   // Check if observations exist for this section
   const exists = await checkExistingObservations(locoId, shedName, railwayDivision, section);
-  
+
   // Set button visibility based on whether observations exist
   setTimeout(() => {
     const actionButtons = document.querySelector('.action-buttons');
@@ -178,7 +178,7 @@ async function showSection(section) {
       const saveBtn = actionButtons.querySelector('#save-btn');
       const getDetailsBtn = actionButtons.querySelector('#get-details-btn');
       const updateBtn = actionButtons.querySelector('#update-btn');
-      
+
       if (exists) {
         // If observations exist, show Get Details button and hide Save button
         if (saveBtn) saveBtn.style.display = 'none';
@@ -283,7 +283,7 @@ async function showSection(section) {
     }>IRAB</option>
                   <option value="Conventional" ${locoInfo && locoInfo.brakeType === "Conventional" ? "selected" : ""
     }>Conventional</option>
-                  <option value="RCCB" ${locoInfo && locoInfo.brakeType === "RCCB" ? "selected" : ""  
+                  <option value="RCCB" ${locoInfo && locoInfo.brakeType === "RCCB" ? "selected" : ""
     }>RCCB</option>
                   <option value="ESCORT" ${locoInfo && locoInfo.brakeType === "ESCORT" ? "selected" : ""
     }>ESCORT</option>
@@ -398,10 +398,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Lucknow(AMVD)</option>
-                <option value="BLW Factory(BLW)" data-division="NR" ${locoInfo && locoInfo.shedName === "BLW Factory(BLW)" 
-      ? "selected" 
+                <option value="BLW Factory(BLW)" data-division="NR" ${locoInfo && locoInfo.shedName === "BLW Factory(BLW)"
+      ? "selected"
       : ""
-   }>BLW Factory(BLW)</option>
+    }>BLW Factory(BLW)</option>
 
                 <!-- For NCR Division -->
                 <option value="Jhansi(JHSE)" data-division="NCR" ${locoInfo && locoInfo.shedName === "Jhansi(JHSE)"
@@ -457,7 +457,7 @@ async function showSection(section) {
 
       // Optionally, log the date in dd-MM-yyyy format
       const formattedDateForDisplay = `${day}-${month}-${year}`;
-      
+
     } else {
       console.error('Input with id="date" not found.');
     }
@@ -468,11 +468,11 @@ async function showSection(section) {
   if (section === "0.0") {
     let saveBtnDisplay = "inline-block";
     let getDetailsBtnDisplay = "none";
-    
+
     // Check if we came from the Edit button in viewReports.php
     const urlParams = new URLSearchParams(window.location.search);
     const locoIdFromUrl = urlParams.get('loco_id');
-    
+
     // If we came from the Edit button, show Get Details and hide Save
     if (locoIdFromUrl) {
       saveBtnDisplay = "none";
@@ -499,7 +499,7 @@ async function showSection(section) {
         
       </div>
     `;
-  }else if (section === "1_0") {
+  } else if (section === "1_0") {
     // For section 1_0
     mainContent.innerHTML += `
       <h3 class="document-heading"><b>Document verification:</b> Verify availability of the following documents:</h3>
@@ -2575,7 +2575,7 @@ async function showSection(section) {
 
 
   } else if (section === "3.0") {
-   // For all other sections, add Save Observation button
+    // For all other sections, add Save Observation button
     mainContent.innerHTML += `
       <h3 class="section-heading" > Loco Kavach Observations</h3>
        <div class="table-container">
@@ -4709,7 +4709,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
       </div>
 
     ;`
-  }  else if (section === "9.0") {
+  } else if (section === "9.0") {
     // For all other sections, add Save Observation button
     mainContent.innerHTML += `
       <h3 class="section-heading">Pneumatic Fittings and Ep Valve Cocks Fixing Observations</h3>
@@ -7319,8 +7319,8 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
        <button id="get-details-btn" onclick="getDetails()">Get Details</button>
       </div>
     ;`
-  }  
-else if (section === "16.0") {
+  }
+  else if (section === "16.0") {
     // For all other sections, add Save Observation button
     mainContent.innerHTML += `
       <h3 class="section-heading"> Auto Horn Installation </h3>
@@ -7525,7 +7525,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If they don't exist yet (because the form is injected later), re-check soon
     if (!divisionSelect || !shedSelect) {
-      
+
       setTimeout(initShedLogic, 100);
       return;
     }
@@ -7540,7 +7540,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!divisionSelect || !shedSelect) return;
 
       const selectedDivision = divisionSelect.value;
-      
+
 
       // Reset to a single 'Select' placeholder
       shedSelect.innerHTML = '<option value="" disabled selected>Select</option>';
@@ -7608,7 +7608,7 @@ async function generateReport() {
 
   if (data.success) {
     // Optional: Display Loco Details and Observations on console
-    
+
   } else {
     alert(data.message);
   }
@@ -7674,11 +7674,11 @@ function highlightSelect(selectElement) {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Not Locked") {
     selectElement.style.backgroundColor = "red";
-  }else if (selectElement.value === "Metal clamps implemented") {
+  } else if (selectElement.value === "Metal clamps implemented") {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Metal clamps not implemented") {
     selectElement.style.backgroundColor = "red";
-  }else if (selectElement.value === "Cables Connected") {
+  } else if (selectElement.value === "Cables Connected") {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Cables Not Connected") {
     selectElement.style.backgroundColor = "red";
@@ -7720,7 +7720,7 @@ function handleHeightInput(inputElement) {
     select.value = 'Yes';
   }
   highlightSelect(select);
-  
+
   if (typeof markDataAsUnsaved === 'function') {
     markDataAsUnsaved();
   }
@@ -7797,7 +7797,7 @@ async function saveLocoInfo(section) {
     });
 
     const data = await response.json();
-    
+
 
     if (data.success) {
       showModal("Loco info saved successfully!");
@@ -7870,7 +7870,7 @@ async function checkExistingObservations(locoId, shedName, railwayDivision, sect
   try {
     const requestData = { locoId, shedName, railwayDivision, sectionId };
 
-    
+
 
     const response = await fetch("checkObservations.php", {
       method: "POST",
@@ -7881,7 +7881,7 @@ async function checkExistingObservations(locoId, shedName, railwayDivision, sect
     if (!response.ok) throw new Error("Network response was not ok");
 
     const data = await response.json();
-    
+
 
     return data.exists;
   } catch (error) {
@@ -7935,7 +7935,7 @@ async function saveObservation(section) {
 
   for (const row of rows) {
     const S_no = row.querySelector("td:first-child")?.innerText.trim() || "";
-  
+
     const obsField = row.querySelector(".observation_text");
 
     if (!obsField) {
@@ -8022,7 +8022,7 @@ async function saveObservation(section) {
       if (saveBtn) saveBtn.style.display = 'none';
       if (getDetailsBtn) getDetailsBtn.style.display = 'inline-block';
       if (updateBtn) updateBtn.style.display = 'none';
-      updatedTimingDict[section]=new Date().toLocaleString();
+      updatedTimingDict[section] = new Date().toLocaleString();
       console.log(updatedTimingDict[section], "Updated timing of section:", section);
     } else {
       alert(data.message || "❌ Server returned failure.");
@@ -8051,7 +8051,7 @@ function getSectionIDWithSno(observations) {
 
 // Function to populate loco details
 function populateLocoDetails(locoDetails) {
-  
+
 
   // Check if session storage already contains loco details
   sessionStorage.setItem("locoDetails", JSON.stringify(locoDetails));
@@ -8063,7 +8063,7 @@ function populateLocoDetails(locoDetails) {
 
   if (locoTypeInput) locoTypeInput.value = locoDetails.loco_type || "";
   if (brakeTypeInput) brakeTypeInput.value = locoDetails.brake_type || "";
-  
+
   // Always use current date when editing
   if (inspectionDateInput) {
     const now = new Date();
@@ -8155,7 +8155,7 @@ function updateSections(observations, sectionID, sno) {
  */
 // Call this on input so the updated value is saved globally.
 function updateEditedBarcode(rowId, value) {
-  
+
   window.editedBarcodes[rowId] = value;
 }
 
@@ -8182,7 +8182,7 @@ function updateObservationsTable(sectionID, observations, sno) {
 
     // Only for section "2_0", override the barcode with any edited value.
     if (sectionID === "2_0" && S_no !== "2.1" && window.editedBarcodes && window.editedBarcodes[rowId] !== undefined) {
-      
+
       observation.barcode = window.editedBarcodes[rowId];
     }
 
@@ -8315,7 +8315,7 @@ oninput="
       </td>
       ${sectionID !== "1_0" ? `<td>${imageUploadBlock}</td>` : ""}
     `;
-        // ❌ Skip appending the row if description is empty or "N/A"
+    // ❌ Skip appending the row if description is empty or "N/A"
     if (!observationContent || observationContent.trim() === "N/A") {
       console.warn(`❌ Skipping row ${S_no} due to invalid description`);
       return;
@@ -8328,11 +8328,11 @@ oninput="
       const statusDropdown = document.getElementById(`status-${rowId}`);
       if (statusDropdown) {
         let valueToSet = observation.observation_status?.trim() || "Select";
-        
+
         statusDropdown.value = valueToSet;
 
         const optionsArray = Array.from(statusDropdown.options).map(opt => opt.value);
-        
+
 
         highlightSelect(statusDropdown);
       }
@@ -8354,28 +8354,28 @@ function deleteImage(event, sectionID, s_no, imgPath) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ loco_id: locoId, s_no, imgPath: relativePath })
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert("Image deleted successfully.");
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Image deleted successfully.");
 
-      // Remove the image element from DOM directly
-      const imgContainer = event.target.closest('.image-container');
-      if (imgContainer) {
-        imgContainer.remove();
+        // Remove the image element from DOM directly
+        const imgContainer = event.target.closest('.image-container');
+        if (imgContainer) {
+          imgContainer.remove();
+        }
+
+        // Also update the observation object to remove this image
+        const obs = observations.find(o => o.S_no === s_no && o.section_id === sectionID);
+        if (obs && obs.images) {
+          obs.images = obs.images.filter(path => path !== imgPath);
+        }
+
+      } else {
+        alert("Failed to delete image: " + data.message);
       }
-
-      // Also update the observation object to remove this image
-      const obs = observations.find(o => o.S_no === s_no && o.section_id === sectionID);
-      if (obs && obs.images) {
-        obs.images = obs.images.filter(path => path !== imgPath);
-      }
-
-    } else {
-      alert("Failed to delete image: " + data.message);
-    }
-  })
-  .catch(error => console.error('Error deleting image:', error));
+    })
+    .catch(error => console.error('Error deleting image:', error));
 }
 
 
@@ -8417,7 +8417,7 @@ function enableUpdateButton() {
 function trackChanges(element, isFile = false) {
   let initialValue = element.getAttribute("data-initial");
   let currentValue = isFile ? element.files.length > 0 : element.value;
-  
+
   if (initialValue != currentValue) {
     document.getElementById("update-button").disabled = false;
   }
@@ -8461,7 +8461,7 @@ function toggleNotInstalledOption(inputElement) {
 // Example dummy function for the select change event
 function highlightSelect(selectElement) {
   // Dummy function; add your highlighting code here if needed.
-  
+
 }
 // Function to format observation description
 function formatDescription(observationText) {
@@ -8495,7 +8495,7 @@ function getDetails() {
     return;
   }
 
-  
+
 
   $.ajax({
     url: "generateReport.php",
@@ -8507,7 +8507,7 @@ function getDetails() {
     },
     dataType: "json",
     success: async function (response) {
-      
+
 
       if (!response.success) {
         console.warn("⚠️ No details found:", response.message);
@@ -8515,7 +8515,7 @@ function getDetails() {
         return;
       }
 
-      
+
       populateLocoDetails(response.locoDetails);
 
       let sectionWiseSno = {};
@@ -8550,7 +8550,7 @@ function getDetails() {
       setTimeout(() => {
         response.observations.forEach((observation) => {
           if (observation.images && observation.images.length > 0) {
-            
+
             displayImagesWithDelete(observation.images, observation.rowId);
           }
         });
@@ -8600,15 +8600,15 @@ function displayImagesWithDelete(images, rowId) {
 async function updateObservation(section) {
   // 1) Section mapping (optional index)
   const sectionMapping = {
-    "1_0": 0,  "2_0": 1,  "3_0": 2,  "4_0": 3,
-    "5_0": 4,  "6_0": 5,  "7_0": 6,  "8_0": 7,
-    "9_0": 8, "10_0": 9, "11_0":10, "12_0":11,
-   "13_0":12, "14_0":13, "15_0":14, "16_0":15
+    "1_0": 0, "2_0": 1, "3_0": 2, "4_0": 3,
+    "5_0": 4, "6_0": 5, "7_0": 6, "8_0": 7,
+    "9_0": 8, "10_0": 9, "11_0": 10, "12_0": 11,
+    "13_0": 12, "14_0": 13, "15_0": 14, "16_0": 15
   };
 
   // 2) Section‐level fields
-  const locoId          = document.getElementById("loco-id").value;
-  const shedName        = document.getElementById("shed-name").value;
+  const locoId = document.getElementById("loco-id").value;
+  const shedName = document.getElementById("shed-name").value;
   const railwayDivision = document.getElementById("railway-division").value;
 
   if (sectionMapping[section] === undefined) {
@@ -8621,15 +8621,15 @@ async function updateObservation(section) {
 
   // 4) Build base FormData
   const formData = new FormData();
-  formData.append("loco-id",          locoId);
-  formData.append("loco-type",        document.getElementById("loco-type").value);
-  formData.append("brake-type",       document.getElementById("brake-type").value);
+  formData.append("loco-id", locoId);
+  formData.append("loco-type", document.getElementById("loco-type").value);
+  formData.append("brake-type", document.getElementById("brake-type").value);
   formData.append("railway-division", railwayDivision);
-  formData.append("shed-name",        shedName);
-  formData.append("inspection-date",  document.getElementById("date").value);
-  formData.append("section-id",       section);
-  formData.append("action",           "update");
-  formData.append("section_index",    sectionMapping[section]);
+  formData.append("shed-name", shedName);
+  formData.append("inspection-date", document.getElementById("date").value);
+  formData.append("section-id", section);
+  formData.append("action", "update");
+  formData.append("section_index", sectionMapping[section]);
 
   // 5) Gather per-row observations
   const observations = [];
@@ -8638,11 +8638,11 @@ async function updateObservation(section) {
 
   for (const row of rows) {
     const rowId = row.id.replace("row-", "");
-    const S_no  = row.querySelector("td:nth-child(1)")?.innerText.trim() || "";
+    const S_no = row.querySelector("td:nth-child(1)")?.innerText.trim() || "";
 
     // 5a) Text, barcode (for 2_0), remarks, status
     let observationText = row.querySelector(".observation_text")?.textContent.trim() || "";
-    let barcodeValue    = "";
+    let barcodeValue = "";
     if (section === "2_0") {
       const bcInput = row.querySelector("input[name='barcode_kavach_main_unit']");
       if (bcInput) {
@@ -8657,15 +8657,15 @@ async function updateObservation(section) {
       }
     }
 
-    const remarks           = row.querySelector(".remarks textarea")?.value.trim() || "";
+    const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const observationStatus = row.querySelector("select")?.value || "";
     if (observationStatus && observationStatus !== "Select") hasChanges = true;
-    if (observationText || remarks || barcodeValue)        hasChanges = true;
+    if (observationText || remarks || barcodeValue) hasChanges = true;
     if (!observationStatus && !remarks && !barcodeValue && !observationText) continue;
 
     // 5b) Gather ALL images currently in the container
     const existingPaths = [];
-    const imgContainer  = document.getElementById(`image-container-${rowId}`);
+    const imgContainer = document.getElementById(`image-container-${rowId}`);
     if (imgContainer) {
       imgContainer.querySelectorAll("img").forEach(img => {
         const rel = img.src.replace(/^.*\/uploads\//, "uploads/");
@@ -8697,12 +8697,12 @@ async function updateObservation(section) {
 
     observations.push({
       S_no,
-      observation_text:  observationText,
-      barcode:           barcodeValue,
+      observation_text: observationText,
+      barcode: barcodeValue,
       remarks,
       observation_status: observationStatus,
-      image_paths:       allImages,
-      deleted_images:    deletedPaths
+      image_paths: allImages,
+      deleted_images: deletedPaths
     });
   }
 
@@ -8726,7 +8726,7 @@ async function updateObservation(section) {
     if (data.success) {
       alert("✅ Observations updated successfully!");
       unsavedChanges = false;
-      updatedTimingDict[section]=new Date().toLocaleString();
+      updatedTimingDict[section] = new Date().toLocaleString();
       console.log(updatedTimingDict[section], "Updated timing of section:", section);
       getDetails();
     } else {
@@ -8754,21 +8754,22 @@ function enableSectionButtons(sectionID) {
 function getDropdownOptions(sno, observationStatus) {
   let isSelected = !observationStatus || observationStatus.trim() === "" || observationStatus.trim() === "Select";
   let defaultOption = `<option value="Select" ${isSelected ? "selected" : ""}>Select</option>`;
-  
+
   if (!sno || typeof sno !== "string") {
     console.error("Invalid S_no value:", sno);
     return defaultOption;
   }
-const specificOptions = {
+  const specificOptions = {
     "2.1": ["Present", "Not Present"],
-"2.38,2.39,2.40,2.3" : ["Matching", "Not Matching", "Not Installed", "Not Applicable"],    "2.2,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.14,2.15,2.16,2.17,2.18,2.19,2.20,2.21,2.22,2.23,2.24,2.25,2.26,2.27,2.28,2.29,2.30,2.31,2.32,2.33,2.34,2.35,2.36,2.37": ["Matching", "Not Matching", "Not Installed"],
+    "2.38,2.39,2.40,2.3": ["Matching", "Not Matching", "Not Installed", "Not Applicable"], "2.2,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.14,2.15,2.16,2.17,2.18,2.19,2.20,2.21,2.22,2.23,2.24,2.25,2.26,2.27,2.28,2.29,2.30,2.31,2.32,2.33,2.34,2.35,2.36,2.37": ["Matching", "Not Matching", "Not Installed"],
     "3.6,14.13": ["Matching", "Not Matching"],
     "8.1,8.2,8.3,8.4,8.5,8.6": ["Yes", "No", "Accepted with Deviation", "No but accepted"],
     "3.3,3.4,3.5,3.5.1,3.5.2,3.12,3.13,6.2,6.4,6.7,7.2,9.1-9.6,14.2,14.6,15.2,15.4,15.10,16.2,15.5,15.5.1,3.12,3.13,5.7,6.10,6.11,5.1,14.8,5.2,5.3,9.7,16.1,16.2,16.3,16.4,5.8,5.7,15.9,8.7,8.8,8.9,8.10,8.13.1,8.13.2,8.13.3,8.13.4": ["Yes", "No"],
     "3.1,3.8,6.8,6.9,14.2,14.15.1,14.18,14.18.1,14.19,15.8,14.15,14.17,16.5,5.6,10.4,8.11,8.12": ["Connected", "Not Connected"],
     "1.1,1.2,3.2,6.1": ["Available", "Not Available"],
     "6.5,8.14": ["Applied", "Not Applied"],
-    "4.2,6.6,6.10,7.3,14.20,16.3,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
+    "6.6,6.10,7.3,14.20,16.3,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
+    "4.2": ["Routing XYZ", "Routing Not XYZ"],
     "4.1,15.6": ["Fixed", "Not Fixed"],
     "6.3,7.1,14.3,14.12,15.3,14.7,3.7,14.15.2": ["Torquing done", "Torquing Not done"],
     "10.1-10.3,14.1,14.11,15.1": ["Installed", "Not Installed"],
@@ -8776,18 +8777,18 @@ const specificOptions = {
     "14.4,14.5": ["Positioning done", "Positioning not done"],
     "14.16": ["Welding done", "Welding Not done"],
     "16.1": ["Earthing done", "Earthing Not done"],
-    "15.11,7.4,14.21":["Locked" , "Not Locked"],
-    "3.11" :["Cables Connected", "Cables Not Connected"],
-    "12.9,12.7,11.4,11.2,11.1,11.1.1,15.2.1,5.4" : ["Yes", "No", "Not Applicable"],
-    "12.8" :["Fixed", "Not Fixed", "Not Applicable"],
-    "12.6,12.2,12.1,11.7,11.10" :["Installed", "Not Installed", "Not Applicable"],
-    "12.5,11.6,11.8,11.9,11.11" :["Routing Done", "Routing Not Done", "Not Applicable"], 
-    "12.4,11.5,13.1,13.4,13.5,13.6" :["Connected", "Not Connected", "Not Applicable"],
-    "12.3" :["Matching", "Not Matching", "Not Applicable"],
-    "11.3" :["Applied", "Not Applied", "Not Applicable"],
-    "13.2,13.3" :["Verified and ok", "Not ok", "Not Applicable"],
-    "3.10" : ["Metal clamps implemented","Metal clamps not implemented"]
-    
+    "15.11,7.4,14.21": ["Locked", "Not Locked"],
+    "3.11": ["Cables Connected", "Cables Not Connected"],
+    "12.9,12.7,11.4,11.2,11.1,11.1.1,15.2.1,5.4": ["Yes", "No", "Not Applicable"],
+    "12.8": ["Fixed", "Not Fixed", "Not Applicable"],
+    "12.6,12.2,12.1,11.7,11.10": ["Installed", "Not Installed", "Not Applicable"],
+    "12.5,11.6,11.8,11.9,11.11": ["Routing Done", "Routing Not Done", "Not Applicable"],
+    "12.4,11.5,13.1,13.4,13.5,13.6": ["Connected", "Not Connected", "Not Applicable"],
+    "12.3": ["Matching", "Not Matching", "Not Applicable"],
+    "11.3": ["Applied", "Not Applied", "Not Applicable"],
+    "13.2,13.3": ["Verified and ok", "Not ok", "Not Applicable"],
+    "3.10": ["Metal clamps implemented", "Metal clamps not implemented"]
+
   };
 
 
@@ -8979,7 +8980,7 @@ function captureImage(rowId) {
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   console.log("📸 Capturing image...");
-  
+
   canvas.toBlob((blob) => {
     if (!blob) {
       console.error("⚠️ Failed to create image blob.");
@@ -8988,7 +8989,7 @@ function captureImage(rowId) {
 
     // Log the blob size and type to confirm it was created correctly
     console.log("📝 Image blob created. Size:", blob.size, "Type:", blob.type);
-    
+
     // Upload the captured image
     uploadCapturedImage(blob, rowId, imageContainer);
   }, "image/png");
@@ -9010,7 +9011,7 @@ function uploadCapturedImage(blob, rowId, imageContainer) {
     .then((response) => response.json())
     .then((data) => {
       console.log("📜 Upload response:", data);
-      
+
       if (data.success && data.file_paths && data.file_paths.length > 0) {
         const imageUrl = data.file_paths[0];
 
@@ -9422,11 +9423,11 @@ function highlightSelect(selectElement) {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Not Locked") {
     selectElement.style.backgroundColor = "red";
-  }else if (selectElement.value === "Metal clamps implemented") {
+  } else if (selectElement.value === "Metal clamps implemented") {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Metal clamps not implemented") {
     selectElement.style.backgroundColor = "red";
-  }else if (selectElement.value === "Cables Connected") {
+  } else if (selectElement.value === "Cables Connected") {
     selectElement.style.backgroundColor = "green";
   } else if (selectElement.value === "Cables Not Connected") {
     selectElement.style.backgroundColor = "red";
@@ -9441,7 +9442,7 @@ function highlightSelect(selectElement) {
   } else {
     selectElement.style.backgroundColor = "";
   }
-  
+
 }
 
 const deletedImagesMap = {}; // Tracks deleted image URLs for each observationID
@@ -9465,22 +9466,22 @@ const deletedImagesMap = {}; // Tracks deleted image URLs for each observationID
 
 // 1) define per‑section lists of S_no that require an image
 const mandatoryImageRowsBySection = {
-  "3_0": ["3.1","3.5","3.7","3.8","3.11"],
-  "4_0": ["4.1","4.2"],
-  "5_0": ["5.2","5.3","5.5"],
-  "6_0": ["6.2","6.3","6.6","6.8","6.9","6.10"],
-  "7_0": ["7.1","7.3"],
-  "8_0": ["8.1","8.2","8.5","8.7"],
+  "3_0": ["3.1", "3.5", "3.7", "3.8", "3.11"],
+  "4_0": ["4.1", "4.2"],
+  "5_0": ["5.2", "5.3", "5.5"],
+  "6_0": ["6.2", "6.3", "6.6", "6.8", "6.9", "6.10"],
+  "7_0": ["7.1", "7.3"],
+  "8_0": ["8.1", "8.2", "8.5", "8.7"],
   "9_0": ["9.2"],
-  "10_0": ["10.1","10.2"],
-  "14_0": ["14.1","14.16","14.17","14.19","14.21","14.22"],
-  "15_0": ["15.1","15.3","15.4","15.9","15.10","15.6"]
+  "10_0": ["10.1", "10.2"],
+  "14_0": ["14.1", "14.16", "14.17", "14.19", "14.21", "14.22"],
+  "15_0": ["15.1", "15.3", "15.4", "15.9", "15.10", "15.6"]
 
 };
 function validateMandatoryImages(sectionID) {
   const mandatory = mandatoryImageRowsBySection[sectionID] || [];
-  const tbody     = document.querySelector(`#observations-tbody-${sectionID}`);
-  const missing   = [];
+  const tbody = document.querySelector(`#observations-tbody-${sectionID}`);
+  const missing = [];
 
   if (!tbody) return true;
 
@@ -9493,7 +9494,7 @@ function validateMandatoryImages(sectionID) {
 
     // **NEW**: look for any <img> in the 5th cell
     const imgCell = tr.cells[4];
-    const imgs    = imgCell?.querySelectorAll("img") || [];
+    const imgs = imgCell?.querySelectorAll("img") || [];
 
     if (imgs.length === 0) {
       missing.push(sno);

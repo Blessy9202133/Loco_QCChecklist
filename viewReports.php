@@ -151,7 +151,7 @@ try {
     
     <!-- Search Bar on the Right -->
     <div style="text-align: right;">
-      <input type="text" id="search-input" placeholder="Search by Loco ID...">
+      <input type="text" id="search-input" placeholder="Search by Loco ID..." autocomplete="new-password" name="search_loco_no_autofill">
     </div>
     
     <h2>Your Uploaded Reports</h2>
@@ -170,8 +170,8 @@ try {
             <tbody>
             <?php foreach ($reports as $report): ?>
                 <?php
-                // Extract Loco ID from the beginning of the file name (digits)
-                preg_match('/^\d+/', $report['file_name'], $locoMatches);
+                // Extract Loco ID from the file name (first sequence of digits)
+                preg_match('/\d+/', $report['file_name'], $locoMatches);
                 $loco_id = $locoMatches[0] ?? null;
 
                 // Modified regex to handle:
@@ -193,9 +193,9 @@ try {
                     <?php endif; ?>
                     <td><?php echo $statusLabel; ?></td>
                     <td>
-                        <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" class="btn view-btn">View</a>
-                        <a href="create.html?loco_id=<?php echo htmlspecialchars($loco_id); ?>" class="btn edit-btn">Edit</a>
-                        <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" download class="btn download-btn">Download</a>
+                        <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" class="btn view-btn" target="_blank">View</a>
+                        <a href="create.html?loco_id=<?php echo htmlspecialchars($loco_id); ?>" class="btn edit-btn" target="_blank">Edit</a>
+                        <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" download class="btn download-btn" target="_blank">Download</a>
                         <button class="btn upload-btn" onclick="openWFMSLogin(event, '<?php echo htmlspecialchars($report['id']); ?>', '<?php echo htmlspecialchars($loco_id); ?>')">Push to WFMS</button>
                     </td>
                 </tr>
@@ -208,6 +208,16 @@ try {
 </div>
 
 <script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const searchInput = document.getElementById('search-input');
+    // Forcefully clear the search box in case Chrome autofills it with the User ID
+    setTimeout(() => {
+        searchInput.value = '';
+        // Manually trigger the input event so the table rows reappear
+        searchInput.dispatchEvent(new Event('input'));
+    }, 100);
+  });
+
   document.getElementById('search-input').addEventListener('input', function() {
     const searchValue = this.value.toLowerCase();
     const rows = document.querySelectorAll('#report-table tbody tr');
