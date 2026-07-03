@@ -356,8 +356,8 @@ async function showSection(section) {
 <option value="Barddhaman(BWNX)" data-division="ER" ${locoInfo && locoInfo.shedName === "Barddhaman(BWNX)" ? "selected" : ""}>Barddhaman(BWNX)</option>
 <option value="CLW-Dankuni" data-division="ER" ${locoInfo && locoInfo.shedName === "CLW-Dankuni" ? "selected" : ""}>CLW-Dankuni</option>
                <!-- For WR Division -->
-              <option value="Vadodara Loco Shed(BRC)" data-division="WR" ${locoInfo && locoInfo.shedName === "Vadodara Loco Shed(BRC)" ? "selected" : ""}>Vadodara Loco Shed(BRC)</option>
-              <option value="Vatva Loco Shed(VTA)" data-division="WR" ${locoInfo && locoInfo.shedName === "Vatva Loco Shed(VTA)" ? "selected" : ""}>Vatva Loco Shed(VTA)</option>
+              <option value="Vadodara Loco Shed(BRC)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vadodara Loco Shed(BRC)" || locoInfo.shedName.toLowerCase().includes("vadodara") || locoInfo.shedName.toLowerCase().includes("vadodhara")) ? "selected" : ""}>Vadodara Loco Shed(BRC)</option>
+              <option value="Vatva Loco Shed(VTA)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vatva Loco Shed(VTA)" || locoInfo.shedName.toLowerCase().includes("vatva")) ? "selected" : ""}>Vatva Loco Shed(VTA)</option>
                 
               <!-- For NFR Division -->
                 <option value="Malda(MLDD)" data-division="NFR" ${locoInfo && locoInfo.shedName === "Malda(MLDD)"
@@ -2503,7 +2503,6 @@ async function showSection(section) {
   <canvas id="canvas-239" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
           </tr>
-
           
           <tr id="row-2390">
             <td>2.40</td>

@@ -196,7 +196,7 @@ try {
                         <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" class="btn view-btn" target="_blank">View</a>
                         <a href="create.html?loco_id=<?php echo htmlspecialchars($loco_id); ?>" class="btn edit-btn" target="_blank">Edit</a>
                         <a href="uploads/reports/<?php echo htmlspecialchars($report['file_name']); ?>" download class="btn download-btn" target="_blank">Download</a>
-                        <button class="btn upload-btn" onclick="openWFMSLogin(event, '<?php echo htmlspecialchars($report['id']); ?>', '<?php echo htmlspecialchars($loco_id); ?>')">Push to WFMS</button>
+                        <button class="btn upload-btn" onclick="openWFMSLogin(event, '<?php echo htmlspecialchars($report['id']); ?>', '<?php echo htmlspecialchars($loco_id); ?>')">Push to Loco WFMS</button>
                     </td>
                 </tr>
             <?php endforeach; ?>
