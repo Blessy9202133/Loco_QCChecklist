@@ -10,3 +10,4 @@ upload_errors.log
 
 # User uploads & generated reports
 uploads/
+/db_backups/ 
