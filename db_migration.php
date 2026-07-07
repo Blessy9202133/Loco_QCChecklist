@@ -189,6 +189,7 @@ $observation_text = [
     "2.8" => "LPOCIP (DMI) 2:",
     "2.9" => "Speedometer 1:",
     "2.10" => "Speedometer 2:",
+    "2.11" => "GPS/GSM Antenna 1:",
     "2.12" => "GPS/GSM Antenna 2:",
     "2.13" => "UHF Radio Antenna 1:",
     "2.14" => "UHF Radio Antenna 2:",
@@ -392,11 +393,22 @@ foreach ($tables_and_sections as $table => $sections) {
 // Renumber S_no values after deletions to keep sequences continuous
 // ---------------------------------------------------------------------------
 function renumber_section($conn, $table, $section_id) {
-    // Fetch rows for this table/section ordered by numeric S_no
-    $result = $conn->query("SELECT id, S_no FROM `$table` WHERE section_id = '$section_id' ORDER BY CAST(SUBSTRING_INDEX(S_no, '.', -1) AS UNSIGNED)");
-    if (!$result) { echo "Error fetching rows for renumbering: " . $conn->error . "<br>"; return; }
-    $i = 1;
+    // Fetch rows for this table/section ordered by natural order of S_no (handles 8.1, 8.10, 8.13.1 etc.)
+    $result = $conn->query("SELECT id, S_no FROM `$table` WHERE section_id = '$section_id'");
+    if (!$result) {
+        echo "Error fetching rows for renumbering: " . $conn->error . "<br>";
+        return;
+    }
+    $rows = [];
     while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    // Natural order sort
+    usort($rows, function($a, $b) {
+        return strnatcmp($a['S_no'], $b['S_no']);
+    });
+    $i = 1;
+    foreach ($rows as $row) {
         $new_sno = $section_id . '.' . $i;
         if ($row['S_no'] !== $new_sno) {
             $conn->query("UPDATE `$table` SET S_no = '" . $conn->real_escape_string($new_sno) . "' WHERE id = " . (int)$row['id']);
@@ -438,6 +450,13 @@ while ($loco = $locos_res->fetch_assoc()) {
     foreach ($tables_and_sections as $table => $sections) {
         foreach ($sections as $section_id) {
             if (isset($s_no_ranges[$section_id])) {
+                // BACKUP SECTION 8
+                $backup_data = [];
+                if ($section_id === '8.0') {
+                    $res = $conn->query("SELECT * FROM `$table` WHERE `loco_id` = '$loco_id' AND `section_id` = '8.0'");
+                    while($r = $res->fetch_assoc()) $backup_data[$r['S_no']] = $r;
+                }
+                
                 foreach ($s_no_ranges[$section_id] as $s_no) {
                     $s_no_str = (string)$s_no;
                     $desc = isset($observation_text[$s_no_str]) ? $observation_text[$s_no_str] : "No description available";
@@ -457,9 +476,12 @@ while ($loco = $locos_res->fetch_assoc()) {
                             // If this is the verify_serial_numbers_of_equipment_as_per_ic table, attempt to extract barcode
                             if ($table === 'verify_serial_numbers_of_equipment_as_per_ic') {
                                 // e.g. "Loco KAVACH Main Unit: 1234567890" -> 1234567890
-                                if (preg_match('/:\s*([\d\w-]+)$/', trim($row['observation_text']), $matches)) {
-                                    $extractedBarcode = $conn->real_escape_string($matches[1]);
+                                if (preg_match('/:\s*([\d\w\-\s]+)$/', trim($row['observation_text']), $matches)) {
+                                    // Remove any whitespace/newlines from the captured barcode to get a clean value
+                                    $extractedBarcode = $conn->real_escape_string(preg_replace('/\s+/', '', $matches[1]));
                                     $updates[] = "`barcode` = '$extractedBarcode'";
+                                    // Skip the original addition below
+                                    continue;
                                 }
                             }
                         }
