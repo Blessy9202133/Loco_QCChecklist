@@ -34,7 +34,8 @@ $tableNames = [
 $observations = [];
 
 foreach ($tableNames as $tableName) {
-    $sql = "SELECT S_no, observation_text, observation_status, remarks, created_at, updated_at FROM $tableName WHERE loco_id = ?";
+    $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
+    $sql = "SELECT S_no, observation_text, observation_status, remarks, created_at, updated_at $barcodeSelect FROM $tableName WHERE loco_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $locoId);
     $stmt->execute();
@@ -60,6 +61,7 @@ foreach ($tableNames as $tableName) {
     'observation_status' => $row['observation_status'],
     'remarks' => $row['remarks'],
     'image_paths' => $imagePaths,
+    'barcode' => $row['barcode'] ?? null,
     'created_at' => $row['created_at'],
     'updated_at' => $row['updated_at']
 ];

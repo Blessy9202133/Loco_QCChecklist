@@ -7955,7 +7955,7 @@ async function saveObservation(section) {
 
     const barcodeInput = row.querySelector("input[type='text'], input[type='number']");
     const barcode = barcodeInput ? barcodeInput.value.trim() : "";
-    const text = (descriptionHtml + " " + barcode).trim();
+    const text = descriptionHtml.trim(); // DO NOT append barcode to text
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const status = row.querySelector("select")?.value || "";
 
@@ -7981,6 +7981,7 @@ async function saveObservation(section) {
       remarks,
       observation_status: status,
       image_paths: imagePaths,
+      barcode_kavach_main_unit: barcode
     });
   }
 
@@ -8767,8 +8768,7 @@ function getDropdownOptions(sno, observationStatus) {
     "3.1,3.8,6.8,6.9,14.2,14.15.1,14.18,14.18.1,14.19,15.8,14.15,14.17,16.5,5.6,10.4,8.11,8.12": ["Connected", "Not Connected"],
     "1.1,1.2,3.2,6.1": ["Available", "Not Available"],
     "6.5,8.14": ["Applied", "Not Applied"],
-    "6.6,6.10,7.3,14.20,16.3,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
-    "4.2": ["Routing XYZ", "Routing Not XYZ"],
+    "4.2,6.6,6.10,7.3,14.20,16.3,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
     "4.1,15.6": ["Fixed", "Not Fixed"],
     "6.3,7.1,14.3,14.12,15.3,14.7,3.7,14.15.2": ["Torquing done", "Torquing Not done"],
     "10.1-10.3,14.1,14.11,15.1": ["Installed", "Not Installed"],

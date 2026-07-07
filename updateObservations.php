@@ -119,6 +119,8 @@ try {
            if ($newBarcode !== '') {
              if ($tableName === 'loco_antenna_and_gps_gsm_antenna' && in_array($s_no, ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
                  $observation_text = $existingDescription . ' ' . $newBarcode;
+             } else if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
+                 $observation_text = $existingDescription;
              } else {
                  $observation_text = $existingDescription . ': ' . $newBarcode;
              }
@@ -127,12 +129,21 @@ try {
            }
 
             // Update record in database.
-            $update = $pdo->prepare("
-                UPDATE $tableName
-                SET observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
-                WHERE loco_id = ? AND section_id = ? AND s_no = ?
-            ");
-            $update->execute([$observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
+            if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
+                $update = $pdo->prepare("
+                    UPDATE $tableName
+                    SET observation_text = ?, barcode = ?, observation_status = ?, remarks = ?, updated_at = NOW()
+                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
+                ");
+                $update->execute([$observation_text, $newBarcode, $status, $remarks, $locoId, $sectionId, $s_no]);
+            } else {
+                $update = $pdo->prepare("
+                    UPDATE $tableName
+                    SET observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
+                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
+                ");
+                $update->execute([$observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
+            }
 
             $debugEntry['action'] = 'updated';
             
@@ -150,13 +161,23 @@ try {
             }
         } else {
             // No existing record: Insert a new record.
-            // In this case, if there is no description available, store the barcode as is.
-            $insert = $pdo->prepare("
-                INSERT INTO $tableName 
-                    (loco_id, section_id, s_no, observation_text, observation_status, remarks, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
-            ");
-            $insert->execute([$locoId, $sectionId, $s_no, $newBarcode, $status, $remarks]);
+            if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
+                $insert = $pdo->prepare("
+                    INSERT INTO $tableName 
+                        (loco_id, section_id, s_no, observation_text, barcode, observation_status, remarks, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                ");
+                // The frontend sends description in observation_text (which we don't have here from DB)
+                // We'll leave observation_text empty, or you could pass it from the JS if needed
+                $insert->execute([$locoId, $sectionId, $s_no, '', $newBarcode, $status, $remarks]);
+            } else {
+                $insert = $pdo->prepare("
+                    INSERT INTO $tableName 
+                        (loco_id, section_id, s_no, observation_text, observation_status, remarks, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+                ");
+                $insert->execute([$locoId, $sectionId, $s_no, $newBarcode, $status, $remarks]);
+            }
 
             $debugEntry['action'] = 'inserted';
             $debugEntry['finalBarcode'] = $newBarcode;

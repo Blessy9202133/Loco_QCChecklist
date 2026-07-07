@@ -59,7 +59,8 @@ try {
 
     // Go through each observation table
     foreach ($tableNames as $tableName) {
-        $query = "SELECT S_no, observation_text, remarks, observation_status, section_id
+        $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
+        $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
                   WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
         $stmt = $pdo->prepare($query);

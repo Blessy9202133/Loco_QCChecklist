@@ -58,11 +58,11 @@ try {
 
             
             // Prepare SQL statement
-            $sql = "INSERT INTO verify_serial_numbers_of_equipment_as_per_ic (
+                $sql = "INSERT INTO verify_serial_numbers_of_equipment_as_per_ic (
                 loco_id, loco_type, brake_type, railway_division, shed_name,
-                inspection_date, observation_text, remarks, S_no,
+                inspection_date, observation_text, remarks, barcode, S_no,
                 observation_status, section_id, created_at,updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,NOW())";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,NOW())";
             
             $stmt = $pdo->prepare($sql);
 
@@ -70,18 +70,18 @@ try {
             foreach ($observations as $obs) {
                 $imagePath = isset($obs['image_path']) ? htmlspecialchars($obs['image_path']) : null;
                 
-                 
-
-                $stmt->execute([
+                                 $barcode = $obs['barcode_kavach_main_unit'] ?? null;
+                    $stmt->execute([
                     $locoID, $locoType, $brakeType, $railwayDivision, $shedName, $inspectionDate,
                     htmlspecialchars($obs['observation_text']),
                     htmlspecialchars($obs['remarks']),
+                    $barcode,
                     htmlspecialchars($obs['S_no']),
                     htmlspecialchars($obs['observation_status']),
                     $sectionID,
                     $createdAt
         
-                ]);
+                    ]);
 
                 // Format observation text dynamically
                 $formattedObservations[] = formatObservations($obs['observation_text'], $obs['S_no']);

@@ -40,6 +40,12 @@ if ($return_var === 0) {
 // 1. SCHEMA UPDATES: Add 'last_uploaded_hash' to 'report' table
 // =========================================================================
 $check_column = $conn->query("SHOW COLUMNS FROM `report` LIKE 'last_uploaded_hash'");
+
+// Add barcode column to verify_serial_numbers_of_equipment_as_per_ic if it does not exist
+$check_barcode = $conn->query("SHOW COLUMNS FROM `verify_serial_numbers_of_equipment_as_per_ic` LIKE 'barcode'");
+if ($check_barcode && $check_barcode->num_rows == 0) {
+    $conn->query("ALTER TABLE `verify_serial_numbers_of_equipment_as_per_ic` ADD COLUMN `barcode` VARCHAR(64) DEFAULT NULL");
+}
 if ($check_column && $check_column->num_rows == 0) {
     if ($conn->query("ALTER TABLE `report` ADD COLUMN `last_uploaded_hash` VARCHAR(64) DEFAULT NULL")) {
         echo "Successfully added 'last_uploaded_hash' column to 'report' table.<br>";
@@ -167,10 +173,6 @@ $tables_and_sections = [
 // Status Mapping for updating old statuses to new statuses (e.g. "Yes" to "OK")
 // Now supports point-specific mapping for safety!
 $status_mapping = [
-    "4.2" => [
-        "Routing Done" => "Routing XYZ",
-        "Routing Not Done" => "Routing Not XYZ"
-    ]
 ];
 
 // Description texts per S_no
@@ -386,13 +388,41 @@ foreach ($tables_and_sections as $table => $sections) {
         $conn->query("DELETE FROM `$table` WHERE `S_no` NOT IN ($valid_sno_str)");
     }
 }
+// ---------------------------------------------------------------------------
+// Renumber S_no values after deletions to keep sequences continuous
+// ---------------------------------------------------------------------------
+function renumber_section($conn, $table, $section_id) {
+    // Fetch rows for this table/section ordered by numeric S_no
+    $result = $conn->query("SELECT id, S_no FROM `$table` WHERE section_id = '$section_id' ORDER BY CAST(SUBSTRING_INDEX(S_no, '.', -1) AS UNSIGNED)");
+    if (!$result) { echo "Error fetching rows for renumbering: " . $conn->error . "<br>"; return; }
+    $i = 1;
+    while ($row = $result->fetch_assoc()) {
+        $new_sno = $section_id . '.' . $i;
+        if ($row['S_no'] !== $new_sno) {
+            $conn->query("UPDATE `$table` SET S_no = '" . $conn->real_escape_string($new_sno) . "' WHERE id = " . (int)$row['id']);
+        }
+        $i++;
+    }
+}
+
+// After deletions, renumber all affected tables/sections
+foreach ($tables_and_sections as $tbl => $secs) {
+    foreach ($secs as $sec) {
+        // Only renumber if this section still has any rows (i.e., not fully deleted)
+        $cnt = $conn->query("SELECT COUNT(*) as c FROM `$tbl` WHERE section_id = '$sec'");
+        if ($cnt && $cnt->fetch_assoc()['c'] > 0) {
+            renumber_section($conn, $tbl, $sec);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 
 // Fetch all unique locomotives
 $locos_res = $conn->query("SELECT Loco_Id, Loco_type, Brake_type, Railway_Division, Shed_name, inspection_Date FROM loco");
 if (!$locos_res) {
     die("Error fetching locos: " . $conn->error);
 }
-
 $total_inserted = 0;
 $loco_count = 0;
 
@@ -422,6 +452,16 @@ while ($loco = $locos_res->fetch_assoc()) {
                         
                         if ($row['observation_text'] !== $desc) {
                             $updates[] = "`observation_text` = '$desc_esc'";
+                            
+                            // Prevent losing the barcode for old records!
+                            // If this is the verify_serial_numbers_of_equipment_as_per_ic table, attempt to extract barcode
+                            if ($table === 'verify_serial_numbers_of_equipment_as_per_ic') {
+                                // e.g. "Loco KAVACH Main Unit: 1234567890" -> 1234567890
+                                if (preg_match('/:\s*([\d\w-]+)$/', trim($row['observation_text']), $matches)) {
+                                    $extractedBarcode = $conn->real_escape_string($matches[1]);
+                                    $updates[] = "`barcode` = '$extractedBarcode'";
+                                }
+                            }
                         }
                         
                         $current_status = $row['observation_status'];

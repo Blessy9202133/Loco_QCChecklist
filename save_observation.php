@@ -25,6 +25,9 @@ $observation_status = $_POST['observation_status'];
 $remarks = $_POST['remarks'];
 $section_id = intval($_POST['section_id']);
 $loco_id = intval($_POST['loco_id']);
+// Barcode may be sent as 'barcode' or 'barcode_kavach_main_unit' depending on the front‑end
+$barcode = $_POST['barcode'] ?? ($_POST['barcode_kavach_main_unit'] ?? null);
+
 
 $table_mapping = [
     1 => "document_verification_table",
@@ -82,21 +85,46 @@ $exists = $result['cnt'] > 0;
 if ($exists) {
     // UPDATE
     $sql = "UPDATE $table_name SET observation_text = ?, observation_status = ?, remarks = ?";
+    // Include barcode column for verify_serial_numbers_of_equipment_as_per_ic
+    if ($table_name === 'verify_serial_numbers_of_equipment_as_per_ic' && $barcode !== null) {
+        $sql .= ", barcode = ?";
+    }
     if ($image_path !== null) $sql .= ", image_path = ?";
     $sql .= " WHERE S_no = ? AND loco_id = ?";
 
     $stmt = $conn->prepare($sql);
-    if ($image_path !== null) {
-        $stmt->bind_param("ssssii", $observation_text, $observation_status, $remarks, $image_path, $S_no, $loco_id);
+    if ($table_name === 'verify_serial_numbers_of_equipment_as_per_ic' && $barcode !== null) {
+        if ($image_path !== null) {
+            $stmt->bind_param("ssssssii", $observation_text, $observation_status, $remarks, $barcode, $image_path, $S_no, $loco_id);
+        } else {
+            $stmt->bind_param("ssssii", $observation_text, $observation_status, $remarks, $barcode, $S_no, $loco_id);
+        }
     } else {
-        $stmt->bind_param("sssii", $observation_text, $observation_status, $remarks, $S_no, $loco_id);
+        if ($image_path !== null) {
+            $stmt->bind_param("ssssii", $observation_text, $observation_status, $remarks, $image_path, $S_no, $loco_id);
+        } else {
+            $stmt->bind_param("sssii", $observation_text, $observation_status, $remarks, $S_no, $loco_id);
+        }
     }
 } else {
     // INSERT
-    $sql = "INSERT INTO $table_name (S_no, loco_id, observation_text, observation_status, remarks, image_path)
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO $table_name (S_no, loco_id, observation_text, observation_status, remarks, image_path";
+    // Add barcode column for verify_serial_numbers_of_equipment_as_per_ic
+    if ($table_name === 'verify_serial_numbers_of_equipment_as_per_ic' && $barcode !== null) {
+        $sql .= ", barcode";
+    }
+    $sql .= ") VALUES (?, ?, ?, ?, ?, ?";
+    if ($table_name === 'verify_serial_numbers_of_equipment_as_per_ic' && $barcode !== null) {
+        $sql .= ", ?";
+    }
+    $sql .= ")";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iissss", $S_no, $loco_id, $observation_text, $observation_status, $remarks, $image_path);
+    if ($table_name === 'verify_serial_numbers_of_equipment_as_per_ic' && $barcode !== null) {
+        $stmt->bind_param("iisssss", $S_no, $loco_id, $observation_text, $observation_status, $remarks, $image_path, $barcode);
+    } else {
+        $stmt->bind_param("iissss", $S_no, $loco_id, $observation_text, $observation_status, $remarks, $image_path);
+    }
 }
 
 if ($stmt->execute()) {
