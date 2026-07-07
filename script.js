@@ -402,6 +402,11 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>BLW Factory(BLW)</option>
+                <option value="Patiala(PLW)" data-division="NR" ${locoInfo && locoInfo.shedName === "Patiala(PLW)"
+      ? "selected"
+      : ""
+    }>Patiala(PLW)</option>
+
 
                 <!-- For NCR Division -->
                 <option value="Jhansi(JHSE)" data-division="NCR" ${locoInfo && locoInfo.shedName === "Jhansi(JHSE)"
