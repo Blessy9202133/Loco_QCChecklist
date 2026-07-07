@@ -181,7 +181,7 @@ $observation_text = [
     "1.2" => "Loco Allocation Letter",
     "2.1" => "Ensure presence of Hologram and S/R Stamp on each equipment",
     "2.2" => "Loco KAVACH Main Unit:",
-    "2.3" => "Relay Interface Box: 15) this.value = this.value.slice(-15); toggleNotInstalledOption(this); \" >",
+    "2.3" => "Relay Interface Box:",
     "2.4" => "Cab Input Box:",
     "2.5" => "RFID Reader 1:",
     "2.6" => "RFID Reader 2:",
