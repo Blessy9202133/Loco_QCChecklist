@@ -109,15 +109,15 @@ try {
         $textCheck = $pdo->prepare("SELECT id, S_no, observation_text FROM loco_antenna_and_gps_gsm_antenna WHERE loco_id = ? AND (S_no LIKE '8.%' OR S_no LIKE '14.%' OR S_no LIKE '8.0.%')");
         $textCheck->execute([$locoID]);
         foreach ($textCheck->fetchAll() as $row) {
-            $text = $row['observation_text'];
+            $text = $row['observation_text'] ?? '';
             $newSno = null;
-            if (strpos($text, 'securely clamped to the roof using clamps welded to the rooftop') !== false) {
+            if ($text !== '' && strpos($text, 'securely clamped to the roof using clamps welded to the rooftop') !== false) {
                 $newSno = '8.13.1';
-            } elseif (strpos($text, 'conduit is routed into the Loco cabin through the elbow pipe') !== false) {
+            } elseif ($text !== '' && strpos($text, 'conduit is routed into the Loco cabin through the elbow pipe') !== false) {
                 $newSno = '8.13.2';
-            } elseif (strpos($text, 'conduit pipe and elbow are sourced from the Loco Kavach') !== false) {
+            } elseif ($text !== '' && strpos($text, 'conduit pipe and elbow are sourced from the Loco Kavach') !== false) {
                 $newSno = '8.13.3';
-            } elseif (strpos($text, 'RTV Silicone compound') !== false) {
+            } elseif ($text !== '' && strpos($text, 'RTV Silicone compound') !== false) {
                 $newSno = '8.13.4';
             }
             

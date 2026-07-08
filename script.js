@@ -4106,7 +4106,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
         <tbody id="observations-tbody-8_0">
           <tr id="row-516">
       <td>8.1</td>
-      <td class="observation_text">Verify RF Antenna – TX1 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
+      <td class="observation_text">Verify RF Antenna – TX1 from Base (From long-leg of antenna) height shall be &lt;= 310mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-1" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -4139,7 +4139,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
     <tr id="row-5126">
       <td>8.2</td>
-      <td class="observation_text">Verify RF Antenna – TX2 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
+      <td class="observation_text">Verify RF Antenna – TX2 from Base (From long-leg of antenna) height shall be &lt;= 310mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-1" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -4172,7 +4172,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
 <tr id="row-5136">
       <td>8.3</td>
-      <td class="observation_text">Verify GPS-GSM Antenna1 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
+      <td class="observation_text">Verify GPS-GSM Antenna1 from Base (From long-leg of antenna) height shall be &lt;= 310mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-1" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -4205,7 +4205,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
 <tr id="row-5146">
       <td>8.4</td>
-      <td class="observation_text">Verify GPS-GSM Antenna2 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
+      <td class="observation_text">Verify GPS-GSM Antenna2 from Base (From long-leg of antenna) height shall be &lt;= 310mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-1" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -4238,7 +4238,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
 <tr id="row-5156">
       <td>8.5</td>
-      <td class="observation_text">Verify RF Antenna height – from Rail Level height shall be <= 3960mm.</td>
+      <td class="observation_text">Verify RF Antenna height – from Rail Level height shall be &lt;= 3960mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-5" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -4271,7 +4271,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
 <tr id="row-5166">
       <td>8.6</td>
-      <td class="observation_text">Verify GPS-GSM Antenna height – from Rail Level height shall be <= 3891mm.</td>
+      <td class="observation_text">Verify GPS-GSM Antenna height – from Rail Level height shall be &lt;= 3891mm.</td>
       <td class="select">
         Height: <input type="number" id="height-input-8-1" placeholder="Enter height (mm)" class="height-input" style="width: 150px; padding: 5px; font-size: 14px; margin-bottom: 5px;" oninput="handleHeightInput(this)"><br>
         <select id="status-dropdown" onchange="highlightSelect(this)">
@@ -7862,7 +7862,7 @@ async function checkAndHighlightSections(locoId, shedName, railwayDivision) {
       } else {
         // Otherwise, reset the background and keep it disabled.
         button.style.backgroundColor = "";
-        button.disabled = false;
+        button.disabled = true;
       }
     }
   }
