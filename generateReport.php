@@ -30,6 +30,14 @@ try {
     // Ensure a meta table exists to track whether migration has been performed
     $pdo->exec("CREATE TABLE IF NOT EXISTS migration_meta (loco_id VARCHAR(20) PRIMARY KEY, section8_migrated TINYINT DEFAULT 0)");
 
+    // Automatically ensure barcode columns exist globally
+    try {
+        $pdo->exec("ALTER TABLE verify_serial_numbers_of_equipment_as_per_ic ADD COLUMN barcode VARCHAR(255) NULL");
+    } catch (PDOException $e) { /* Ignore if it already exists */ }
+    try {
+        $pdo->exec("ALTER TABLE verify_serial_numbers_of_equipment_as_per_ic ADD COLUMN barcode_status VARCHAR(50) NULL");
+    } catch (PDOException $e) { /* Ignore if it already exists */ }
+
     // Check migration flag for this loco
     $metaStmt = $pdo->prepare("SELECT section8_migrated FROM migration_meta WHERE loco_id = ?");
     $metaStmt->execute([$locoID]);
