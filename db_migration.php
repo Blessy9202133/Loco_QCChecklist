@@ -75,6 +75,29 @@ if ($check_column && $check_column->num_rows == 0) {
 }
 
 // =========================================================================
+// 1.5. SCHEMA UPDATES: Add 'item_id' column to tables
+// =========================================================================
+$item_id_tables = [
+    'document_verification_table', 'verify_serial_numbers_of_equipment_as_per_ic', 'loco_kavach',
+    'rib_cab_input_box', 'radio_power', 'rfid_ps_unit', 'dmi_lp_ocip', 'loco_antenna_and_gps_gsm_antenna',
+    'emi_filter_box', 'earthing', 'iru_faviely_units_fixing_for_e70_type_loco', 'psjb_tpm_units_fixing_for_ccb_type_loco',
+    'pneumatic_fittings_and_ep_valve_cocks_fixing', 'pgs_and_speedo_meter_units_fixing', 'rfid_reader_assembly',
+    'pressure_sensors_installation_in_loco', 'sifa_valve_fixing_for_ccb_type_loco', 'images'
+];
+
+foreach ($item_id_tables as $table) {
+    $check_item_id = $conn->query("SHOW COLUMNS FROM `$table` LIKE 'item_id'");
+    if ($check_item_id && $check_item_id->num_rows == 0) {
+        if ($conn->query("ALTER TABLE `$table` ADD COLUMN `item_id` VARCHAR(255) DEFAULT NULL AFTER `S_no`")) {
+            echo "Added item_id column to `$table`.<br>";
+        } else {
+            echo "Error adding item_id to `$table`: " . $conn->error . "<br>";
+        }
+        $conn->query("ALTER TABLE `$table` ADD INDEX (`item_id`)");
+    }
+}
+
+// =========================================================================
 // 2. SEARCH INDEXING OPTIMIZATIONS
 // =========================================================================
 $tables_to_index = [
@@ -531,5 +554,67 @@ while ($loco = $locos_res->fetch_assoc()) {
 echo "Checklist sync completed! Processed $loco_count locomotives and inserted $total_inserted missing observations.<br>";
 
 $conn->close();
+
+// =========================================================================
+// 5. ITEM_ID MIGRATION
+// =========================================================================
+echo "<br><b>Running Item ID Data Migration...</b><br>";
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=loco_info", "root", "Hbl@1234");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $mapJson = @file_get_contents(__DIR__ . '/migration_map.json');
+    $migrationMap = $mapJson ? json_decode($mapJson, true) : [];
+    
+    $pdo->beginTransaction();
+
+    foreach ($tables_and_sections as $table => $snos) {
+        $stmt = $pdo->prepare("SELECT id, S_no FROM $table WHERE item_id IS NULL OR item_id = ''");
+        $stmt->execute();
+        $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $updateCount = 0;
+        foreach ($records as $record) {
+            $s_no = trim($record['S_no']);
+            // Fallback for missing mapping
+            if (isset($migrationMap[$s_no])) {
+                $item_id = $migrationMap[$s_no];
+            } else {
+                $item_id = $table . '_' . str_replace('.', '_', $s_no);
+            }
+                
+            $updateStmt = $pdo->prepare("UPDATE $table SET item_id = ? WHERE id = ?");
+            $updateStmt->execute([$item_id, $record['id']]);
+            $updateCount++;
+        }
+        if ($updateCount > 0) echo "Updated $updateCount records with item_id in table $table<br>";
+    }
+
+    // Now update images table globally
+    $imgStmt = $pdo->prepare("SELECT id, S_no FROM images WHERE item_id IS NULL OR item_id = ''");
+    $imgStmt->execute();
+    $images = $imgStmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $imgUpdateCount = 0;
+    foreach ($images as $img) {
+        $s_no = trim($img['S_no']);
+        if (isset($migrationMap[$s_no])) {
+            $item_id = $migrationMap[$s_no];
+            $updateStmt = $pdo->prepare("UPDATE images SET item_id = ? WHERE id = ?");
+            $updateStmt->execute([$item_id, $img['id']]);
+            $imgUpdateCount++;
+        }
+    }
+    if ($imgUpdateCount > 0) echo "Updated $imgUpdateCount records with item_id in images table<br>";
+
+    $pdo->commit();
+    echo "Item ID Data Migration completed successfully.<br>";
+} catch (Exception $e) {
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    echo "Item ID Migration failed: " . $e->getMessage() . "<br>";
+}
+
 echo "<b>Database Migration Completed Successfully!</b><br>";
 ?>
