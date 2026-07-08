@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             $sql = "INSERT INTO document_verification_table 
-(loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date, observation_text, remarks, S_no, image_path, observation_status, section_id, created_at, updated_at) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, ''), ?, ?, ?, NOW())";
+(loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date, observation_text, remarks, S_no, image_path, observation_status, section_id, created_at, updated_at, item_id) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, ''), ?, ?, ?, NOW(), ?)";
 
 
             $stmt = $pdo->prepare($sql);
@@ -59,7 +59,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, ''), ?, ?, ?, NOW())";
                     htmlspecialchars($observation['observation_status']),
                     $sectionID,
                     $createdAt
-                ]);
+                , $observation['item_id']]);
             }
 
             // Debugging Console Log

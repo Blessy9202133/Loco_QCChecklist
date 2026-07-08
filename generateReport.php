@@ -153,15 +153,22 @@ try {
     $observations = [];
 
     // Fetch all images for this loco
-    $imageQuery = "SELECT S_no, image_path FROM images WHERE loco_id = ?";
+    $imageQuery = "SELECT item_id, S_no, image_path FROM images WHERE loco_id = ?";
     $imageStmt = $pdo->prepare($imageQuery);
     $imageStmt->execute([$locoID]);
-    $allImages = $imageStmt->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_COLUMN);
+    $allImagesData = $imageStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Group images by item_id (fallback to S_no if item_id is missing)
+    $allImages = [];
+    foreach ($allImagesData as $imgRow) {
+        $key = !empty($imgRow['item_id']) ? $imgRow['item_id'] : $imgRow['S_no'];
+        $allImages[$key][] = $imgRow['image_path'];
+    }
 
     // Go through each observation table
     foreach ($tableNames as $tableName) {
         $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
-        $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
+        $query = "SELECT item_id, S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
                   WHERE loco_id = ? AND railway_division = ? AND shed_name = ?
                   ORDER BY CAST(S_no AS DECIMAL(10,3))";
@@ -170,7 +177,8 @@ try {
         $tableObservations = $stmt->fetchAll();
 
         foreach ($tableObservations as &$obs) {
-            $imagesForThisSno = $allImages[$obs['S_no']] ?? [];
+            $key = !empty($obs['item_id']) ? $obs['item_id'] : $obs['S_no'];
+            $imagesForThisSno = $allImages[$key] ?? [];
 
             $validImages = [];
             foreach ($imagesForThisSno as $imagePath) {

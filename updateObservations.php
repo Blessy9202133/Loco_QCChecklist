@@ -68,12 +68,12 @@ try {
         $image_paths = $obs['image_paths'] ?? []; // Get image paths from the observation
 
         // Get existing observation_text (which holds description and barcode) if any.
-        $check = $pdo->prepare("SELECT observation_text FROM $tableName WHERE loco_id = ? AND section_id = ? AND s_no = ?");
-        $check->execute([$locoId, $sectionId, $s_no]);
+        $check = $pdo->prepare("SELECT observation_text FROM $tableName WHERE loco_id = ? AND section_id = ? AND item_id = ?");
+        $check->execute([$locoId, $sectionId, $obs['item_id']]);
         $existing = $check->fetch();
 
         $debugEntry = [
-            'S_no' => $s_no,
+            'item_id' => $obs['item_id'],
             'newBarcode_input' => $newBarcode,
             'action' => '',
             'existing_observation_text' => ''
@@ -132,17 +132,17 @@ try {
             if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
                 $update = $pdo->prepare("
                     UPDATE $tableName
-                    SET observation_text = ?, barcode = ?, observation_status = ?, remarks = ?, updated_at = NOW()
-                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
+                    SET observation_text = ?, barcode = ?, observation_status = ?, remarks = ?, S_no = ?, updated_at = NOW()
+                    WHERE loco_id = ? AND section_id = ? AND item_id = ?
                 ");
-                $update->execute([$observation_text, $newBarcode, $status, $remarks, $locoId, $sectionId, $s_no]);
+                $update->execute([$observation_text, $newBarcode, $status, $remarks, $s_no, $locoId, $sectionId, $obs['item_id']]);
             } else {
                 $update = $pdo->prepare("
                     UPDATE $tableName
-                    SET observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
-                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
+                    SET observation_text = ?, observation_status = ?, remarks = ?, S_no = ?, updated_at = NOW()
+                    WHERE loco_id = ? AND section_id = ? AND item_id = ?
                 ");
-                $update->execute([$observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
+                $update->execute([$observation_text, $status, $remarks, $s_no, $locoId, $sectionId, $obs['item_id']]);
             }
 
             $debugEntry['action'] = 'updated';
@@ -150,13 +150,13 @@ try {
             // Handle image updates if provided.
             if (!empty($image_paths) && is_array($image_paths)) {
                 // Delete existing images for this observation.
-                $deleteStmt = $pdo->prepare("DELETE FROM images WHERE loco_id = ? AND s_no = ?");
-                $deleteStmt->execute([$locoId, $s_no]);
+                $deleteStmt = $pdo->prepare("DELETE FROM images WHERE loco_id = ? AND item_id = ?");
+                $deleteStmt->execute([$locoId, $obs['item_id']]);
 
                 // Insert the new images.
                 foreach ($image_paths as $imgPath) {
-                    $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, NOW())");
-                    $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath]);
+                    $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at, item_id) VALUES (?, ?, ?, ?, NOW(), ?)");
+                    $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath, $obs['item_id']]);
                 }
             }
         } else {
@@ -164,19 +164,19 @@ try {
             if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
                 $insert = $pdo->prepare("
                     INSERT INTO $tableName 
-                        (loco_id, section_id, s_no, observation_text, barcode, observation_status, remarks, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                        (loco_id, section_id, s_no, observation_text, barcode, observation_status, remarks, created_at, updated_at, item_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
                 ");
                 // The frontend sends description in observation_text (which we don't have here from DB)
                 // We'll leave observation_text empty, or you could pass it from the JS if needed
-                $insert->execute([$locoId, $sectionId, $s_no, '', $newBarcode, $status, $remarks]);
+                $insert->execute([$locoId, $sectionId, $s_no, '', $newBarcode, $status, $remarks, $obs['item_id']]);
             } else {
                 $insert = $pdo->prepare("
                     INSERT INTO $tableName 
-                        (loco_id, section_id, s_no, observation_text, observation_status, remarks, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+                        (loco_id, section_id, s_no, observation_text, observation_status, remarks, created_at, updated_at, item_id)
+                    VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
                 ");
-                $insert->execute([$locoId, $sectionId, $s_no, $newBarcode, $status, $remarks]);
+                $insert->execute([$locoId, $sectionId, $s_no, $newBarcode, $status, $remarks, $obs['item_id']]);
             }
 
             $debugEntry['action'] = 'inserted';
@@ -185,8 +185,8 @@ try {
             // Handle image inserts for new observations.
             if (!empty($image_paths) && is_array($image_paths)) {
                 foreach ($image_paths as $imgPath) {
-                    $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, NOW())");
-                    $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath]);
+                    $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at, item_id) VALUES (?, ?, ?, ?, NOW(), ?)");
+                    $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath, $obs['item_id']]);
                 }
             }
         }

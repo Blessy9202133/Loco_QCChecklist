@@ -520,7 +520,7 @@ async function showSection(section) {
           </thead>
           <tbody id="observations-tbody-1_0">
             <!-- Row 1 -->
-            <tr id="row-1">
+            <tr id="row-1" data-item-id="sec1_item_1">
               <td>1.1</td>
               <td class="observation_text">Annexure of IC (Inspection Certificate) issued by RDSO.</td>
               <td class="select">
@@ -534,7 +534,7 @@ async function showSection(section) {
                 <textarea placeholder="Add comments here if NOT OK..." rows="2" cols="20"></textarea><br>
               </td>
             </tr>
-             <tr id="row-2">
+             <tr id="row-2" data-item-id="sec1_item_2">
       <td>1.2</td>
       <td class="observation_text">Loco Allocation Letter</td>
       <td>
@@ -592,7 +592,7 @@ async function showSection(section) {
           </tr>
         </thead>
         <tbody id="observations-tbody-2_0">
-        <tr id="row-4">
+        <tr id="row-4" data-item-id="sec2_item_1">
         <td>2.1</td>
       <td class="observation_text">Ensure presence of Hologram and S/R Stamp on each equipment</td>
       <td>
@@ -626,7 +626,7 @@ async function showSection(section) {
 
     </tr>
 
-    <tr id="row-5">
+    <tr id="row-5" data-item-id="sec2_item_2">
   <td>2.2</td>
   <td class="observation_text" style="padding-right: 10px;">
     Loco KAVACH Main Unit:
@@ -680,7 +680,7 @@ async function showSection(section) {
     </div>
   </td>
 </tr>
-<tr id="row-6">
+<tr id="row-6" data-item-id="sec2_item_3">
   <td>2.3</td>
   <td class="observation_text" style="padding-right: 10px;">
     Relay Interface Box:
@@ -732,7 +732,7 @@ async function showSection(section) {
     </div>
   </td>
 </tr>
-<tr id="row-7">
+<tr id="row-7" data-item-id="sec2_item_4">
   <td>2.4</td>
   <td class="observation_text">
     Cab Input Box: 
@@ -781,7 +781,7 @@ async function showSection(section) {
     </div>
   </td>
 </tr>
-<tr id="row-8">
+<tr id="row-8" data-item-id="sec2_item_5">
   <td>2.5</td>
    <td class="observation_text">
     RFID Reader 1: <input 
@@ -832,7 +832,7 @@ async function showSection(section) {
   </td>
 </tr>
 
-<tr id="row-9">
+<tr id="row-9" data-item-id="sec2_item_6">
   <td>2.6</td>
    <td class="observation_text">
     RFID Reader 2: <input 
@@ -882,7 +882,7 @@ async function showSection(section) {
     </div>
   </td>
 </tr>
-<tr id="row-10">
+<tr id="row-10" data-item-id="sec2_item_7">
   <td>2.7</td>
   <td class="observation_text">
      LPOCIP (DMI) 1: <input 
@@ -932,7 +932,7 @@ async function showSection(section) {
   </td>
 </tr>
 
-<tr id="row-11">
+<tr id="row-11" data-item-id="sec2_item_8">
   <td>2.8</td>
   <td class="observation_text">
     LPOCIP (DMI) 2:<input 
@@ -982,7 +982,7 @@ async function showSection(section) {
   </td>
 </tr>
 
-<tr id="row-12">
+<tr id="row-12" data-item-id="sec2_item_9">
   <td>2.9</td>
   <td class="observation_text">
    Speedometer 1: <input 
@@ -1034,7 +1034,7 @@ async function showSection(section) {
 </tr>
 
           </tr>
-          <tr id="row-13">
+          <tr id="row-13" data-item-id="sec2_item_10">
             <td>2.10</td>
            <td class="observation_text">Speedometer 2:
            <input 
@@ -1084,7 +1084,7 @@ async function showSection(section) {
 </div>
 
           </tr>
-          <tr id="row-14">
+          <tr id="row-14" data-item-id="sec2_item_11">
             <td >2.11</td>
            <td class="observation_text"> GPS/GSM Antenna 1:
            <input 
@@ -1136,7 +1136,7 @@ async function showSection(section) {
 
 
           </tr>
-          <tr id="row-15">
+          <tr id="row-15" data-item-id="sec2_item_12">
             <td>2.12</td>
            <td class="observation_text"> GPS/GSM Antenna 2:
         <input 
@@ -1186,7 +1186,7 @@ async function showSection(section) {
 
 
           </tr>
-          <tr id="row-16">
+          <tr id="row-16" data-item-id="sec2_item_13">
             <td>2.13</td>
            <td class="observation_text">
   UHF Radio Antenna 1:
@@ -1239,7 +1239,7 @@ async function showSection(section) {
 
 
           </tr>
-          <tr id="row-17">
+          <tr id="row-17" data-item-id="sec2_item_14">
             <td>2.14</td>
            <td class="observation_text">UHF Radio Antenna 2:
           <input 
@@ -1287,7 +1287,7 @@ async function showSection(section) {
 </div>
 
           </tr>
-          <tr id="row-18">
+          <tr id="row-18" data-item-id="sec2_item_15">
             <td>2.15</td>
            <td class="observation_text">UHF Radio Antenna 3:
           <input 
@@ -1336,7 +1336,7 @@ async function showSection(section) {
 
 
           </tr>
-          <tr id="row-19">
+          <tr id="row-19" data-item-id="sec2_item_16">
             <td>2.16</td>
            <td class="observation_text">UHF Radio Antenna 4:
            <input 
@@ -1384,7 +1384,7 @@ async function showSection(section) {
 </div>
 
           </tr>
-          <tr id="row-20">
+          <tr id="row-20" data-item-id="sec2_item_17">
             <td>2.17</td>
            <td class="observation_text">RFID PS 1:
           <input 
@@ -1433,7 +1433,7 @@ async function showSection(section) {
 
 
           </tr>
-          <tr id="row-21">
+          <tr id="row-21" data-item-id="sec2_item_18">
             <td>2.18</td>
            <td class="observation_text">RFID PS 2:
           <input 
@@ -1482,7 +1482,7 @@ async function showSection(section) {
 
           </tr>
 
-          <tr id="row-22">
+          <tr id="row-22" data-item-id="sec2_item_19">
             <td>2.19</td>
            <td class = "observation_text">Pulse Generator 1:
           <input 
@@ -1531,7 +1531,7 @@ async function showSection(section) {
           </tr>
 
           
-          <tr id="row-222">
+          <tr id="row-222" data-item-id="sec2_item_20">
             <td>2.20</td>
            <td class = "observation_text">Pulse Generator 2:
           <input 
@@ -1580,7 +1580,7 @@ async function showSection(section) {
           </tr>
 
           
-          <tr id="row-223">
+          <tr id="row-223" data-item-id="sec2_item_21">
             <td>2.21</td>
            <td class = "observation_text">PPC Card 1:
           <input 
@@ -1628,7 +1628,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-            <tr id="row-224">
+            <tr id="row-224" data-item-id="sec2_item_22">
             <td>2.22</td>
            <td class = "observation_text">PPC Card 2:
           <input 
@@ -1676,7 +1676,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-            <tr id="row-225">
+            <tr id="row-225" data-item-id="sec2_item_23">
             <td>2.23</td>
            <td class = "observation_text">VC Card 1:
           <input 
@@ -1724,7 +1724,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-           <tr id="row-226">
+           <tr id="row-226" data-item-id="sec2_item_24">
             <td>2.24</td>
            <td class = "observation_text">VC Card 2:
           <input 
@@ -1772,7 +1772,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-           <tr id="row-227">
+           <tr id="row-227" data-item-id="sec2_item_25">
             <td>2.25</td>
            <td class = "observation_text">VC Card 3:
           <input 
@@ -1820,7 +1820,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-           <tr id="row-228">
+           <tr id="row-228" data-item-id="sec2_item_26">
             <td>2.26</td>
            <td class = "observation_text">Voter Card 1:
           <input 
@@ -1868,7 +1868,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-2229">
+          <tr id="row-2229" data-item-id="sec2_item_27">
             <td>2.27</td>
            <td class = "observation_text">Voter Card 2:
           <input 
@@ -1916,7 +1916,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-229">
+          <tr id="row-229" data-item-id="sec2_item_28">
             <td>2.28</td>
            <td class = "observation_text">Vital Gate Way Card 1:
 
@@ -1965,7 +1965,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-230">
+          <tr id="row-230" data-item-id="sec2_item_29">
             <td>2.29</td>
            <td class = "observation_text">Vital Gate Way Card 2:
 
@@ -2014,7 +2014,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-231">
+          <tr id="row-231" data-item-id="sec2_item_30">
             <td>2.30</td>
            <td class = "observation_text">Cab I/P Card 1:
 
@@ -2063,7 +2063,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-            <tr id="row-232">
+            <tr id="row-232" data-item-id="sec2_item_31">
             <td>2.31</td>
            <td class = "observation_text">Cab I/P Card 2:
 
@@ -2112,7 +2112,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-            <tr id="row-233">
+            <tr id="row-233" data-item-id="sec2_item_32">
             <td>2.32</td>
            <td class = "observation_text">DPS Card 1:
 
@@ -2162,7 +2162,7 @@ async function showSection(section) {
           </tr>
 
           
-            <tr id="row-234">
+            <tr id="row-234" data-item-id="sec2_item_33">
             <td>2.33</td>
            <td class = "observation_text">DPS Card 2:
 
@@ -2211,7 +2211,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-           <tr id="row-235">
+           <tr id="row-235" data-item-id="sec2_item_34">
             <td>2.34</td>
            <td class = "observation_text">Radio unit:
 
@@ -2260,7 +2260,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-240">
+          <tr id="row-240" data-item-id="sec2_item_35">
             <td>2.35</td>
            <td class = "observation_text">EMI Filter Unit:
 
@@ -2309,7 +2309,7 @@ async function showSection(section) {
 </div>
           </tr>
 
-          <tr id="row-236">
+          <tr id="row-236" data-item-id="sec2_item_36">
             <td>2.36</td>
            <td class = "observation_text">Radio Modem-1:
 
@@ -2359,7 +2359,7 @@ async function showSection(section) {
           </tr>
 
           
-          <tr id="row-237">
+          <tr id="row-237" data-item-id="sec2_item_37">
             <td>2.37</td>
            <td class = "observation_text">Radio Modem-2:
 
@@ -2409,7 +2409,7 @@ async function showSection(section) {
           </tr>
 
           
-          <tr id="row-238">
+          <tr id="row-238" data-item-id="sec2_item_38">
             <td>2.38</td>
            <td class = "observation_text">Interface Relay Unit Faiveley-1:
 
@@ -2460,7 +2460,7 @@ async function showSection(section) {
           </tr>
 
           
-          <tr id="row-239">
+          <tr id="row-239" data-item-id="sec2_item_39">
             <td>2.39</td>
            <td class = "observation_text">Interface Relay Unit Faiveley-2 :
 
@@ -2509,7 +2509,7 @@ async function showSection(section) {
 </div>
           </tr>
           
-          <tr id="row-2390">
+          <tr id="row-2390" data-item-id="sec2_item_40">
             <td>2.40</td>
            <td class = "observation_text">IRAB Main Unit :
 
@@ -2594,7 +2594,7 @@ async function showSection(section) {
           </tr>
         </thead>
         <tbody id="observations-tbody-3_0">
-          <tr id="row-23">
+          <tr id="row-23" data-item-id="sec3_item_1">
               <td>3.1</td>
               <td class="observation_text"><b>Placement of LOCO KAVACH Equipment in Locomotive:</b>Verify that all Loco KAVACH equipment and peripherals are installed and connected as per connectivity diagram</td>
               <td class="select">
@@ -2625,7 +2625,7 @@ async function showSection(section) {
   <canvas id="canvas-23" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
 </tr>
-<tr id="row-24">
+<tr id="row-24" data-item-id="sec3_item_2">
       <td>3.2</td>
       <td class="observation_text">Ensure that adequate space is available around the Loco KAVACH for ease of maintenance and service.</td>
       <td class="select">
@@ -2657,7 +2657,7 @@ async function showSection(section) {
 </div>
     </tr>
 
-    <tr id="row-25">
+    <tr id="row-25" data-item-id="sec3_item_3">
       <td>3.3</td>
       <td class="observation_text"><b>Loco Stand:</b>Loco Kavach Unit has been placed on the designated stand and secured using the mounting bolts supplied in the Loco Kavach Installation Kit?</td>
       <td class="select">
@@ -2688,7 +2688,7 @@ async function showSection(section) {
   <canvas id="canvas-25" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-26">
+    <tr id="row-26" data-item-id="sec3_item_4">
       <td>3.4</td>
       <td class="observation_text"><b>Welding between Loco surface and KAVACH fixing Stand:</b>Inspect the welding between the Loco surface and the KAVACH stand. Ensure there are no sharp edges or gaps.
 Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
@@ -2720,7 +2720,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-26" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-  <tr id="row-27">
+  <tr id="row-27" data-item-id="sec3_item_5">
       <td>3.5</td>
       <td class="observation_text"><b>Welding Surface Treatment:</b><br>
     Is Aerol Zinc3060 sprayed and the coating is extended up to 50 mm on both sides?</td>
@@ -2817,7 +2817,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
   </tr>
 
-    <tr id="row-28">
+    <tr id="row-28" data-item-id="sec3_item_6">
       <td>3.6</td>
       <td class="observation_text"><b>Loco Stand fixing holes:</b>Ensure that Loco stand fixing holes(M8) are exactly matching with Loco channel fixing holes(M8).</td>
       <td>
@@ -2848,7 +2848,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-28" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-29">
+    <tr id="row-29" data-item-id="sec3_item_7">
       <td>3.7</td>
       <td class="observation_text"><b>Torque and Marking:</b>Verify the torque Value of M8 Bolts (25 N.M) and mark with green/Yellow paint if the torque value is Ok.</td>
       <td class="select">
@@ -2879,7 +2879,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-29" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-30">
+    <tr id="row-30" data-item-id="sec3_item_8">
       <td>3.8</td>
       <td class="observation_text"><b>Cable connections:</b>Verify the connections on the Loco external cable are made correctly according to the "Loco KAVACH External Harness Connectivity Diagram" without any overlaps. </td>
       <td class="select">
@@ -2910,7 +2910,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-30" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-31">
+    <tr id="row-31" data-item-id="sec3_item_9">
       <td>3.9</td>
       <td class="observation_text"><b>Wire Stress:</b>Routing of wires to be done without stress and without sharp bends.</td>
       <td>
@@ -2941,7 +2941,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-31" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-32">
+    <tr id="row-32" data-item-id="sec3_item_10">
       <td>3.10</td>
       <td class="observation_text"><b>Cable securing:</b>Verify that all peripheral cables for the loco kavach unit are routed and securely fastened using the appropriate metal clamps.</td>
       <td class="select">
@@ -2972,7 +2972,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-32" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-33">
+    <tr id="row-33" data-item-id="sec3_item_11">
       <td>3.11</td>
       <td class ="observation_text"><b>Connector fitment:</b>Ensure that all the external cable circular connectors are fully locked properly with Loco Kavach receptacles.</td>
       <td class="select">
@@ -3003,7 +3003,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-33" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-  <tr id="row-1333">
+  <tr id="row-1333" data-item-id="sec3_item_12">
       <td>3.12</td>
       <td class ="observation_text"><b>Earthing:</b>Ensure that earthing done with 10Sq.mm Yellow/Green cable for Loco Kavach main unit.</td>
       <td class="select">
@@ -3034,7 +3034,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-1333" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
- <tr id="row-2333">
+ <tr id="row-2333" data-item-id="sec3_item_13">
       <td>3.13</td>
       <td class ="observation_text"><b>Earth Cable:</b>Ensure that cable continuity,lug's crimping and tightness of earth cable.</td>
       <td class="select">
@@ -3065,7 +3065,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-2333" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
- <tr id="row-3333">
+ <tr id="row-3333" data-item-id="sec3_item_14">
       <td>3.14</td>
       <td class ="observation_text"><b>Earth Cable routing:</b>Ensure that the earth cables are routed through the conduit and routed properly and tied with metal clamps / cable ties.</td>
       <td class="select">
@@ -3128,7 +3128,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-4_0">
-          <tr id="row-34">
+          <tr id="row-34" data-item-id="sec4_item_1">
       <td>4.1</td>
       <td class="observation_text"><b>EMI Filter Box Fixing:</b>Fix M5x16mm Bolts on the EMI Filter Box to the loco stand with torque of 6 N-m and mark with green/yellow paint.</td>
        <td class = "select">
@@ -3160,7 +3160,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-35">
+    <tr id="row-35" data-item-id="sec4_item_2">
       <td>4.2</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure all the cables routed through PG gland without sharp bends, stress and tied with metal clamps.</td>
         <td class = "select">
@@ -3222,7 +3222,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-5_0">
-          <tr id="row-36">
+          <tr id="row-36" data-item-id="sec5_item_1">
       <td>5.1</td>
       <td class="observation_text"><b>Space between RIB and CAB Input:</b>Ensure enough space available in-between cab input box and RIB unit for easy access of cables</td>
       <td class="select">
@@ -3254,7 +3254,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-37">
+    <tr id="row-37" data-item-id="sec5_item_2">
       <td>5.2</td>
       <td class="observation_text"><b>Welding:</b>Ensure RIB and CAB Input box stand welding is without gap, cracks and joint breaks.</td>
       <td class="select">
@@ -3285,7 +3285,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-37" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-38">
+    <tr id="row-38" data-item-id="sec5_item_3">
       <td>5.3</td>
       <td class="observation_text"><b>Torque:</b>The M5X16mm bolts shall be tightened with 6 N.m  torque Wrench and mark with green/yellow paint after torque verification.</td>
       <td class="select">
@@ -3316,7 +3316,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-38" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-39">
+    <tr id="row-39" data-item-id="sec5_item_4">
       <td>5.4</td>
       <td class="observation_text"><b>Cable Connections:</b>Verify the RIB Unit harness cable connections for MILB1, MILB2, MILB3, MC26, MC18 are properly terminated.</td>
       <td class="select">
@@ -3349,7 +3349,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-39" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-<tr id="row-1339">
+<tr id="row-1339" data-item-id="sec5_item_5">
       <td>5.5</td>
       <td class="observation_text"><b>Cable Routing:</b>Verify proper routing through PG glands without sharp bends or stress. Cables must be tied using metal clamps. </td>
       <td class="select">
@@ -3381,7 +3381,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-40">
+    <tr id="row-40" data-item-id="sec5_item_6">
       <td>5.6</td>
       <td class="observation_text"><b>Connector fitment:</b>Verify that cables are connected with respect to labels and ensure all the external cable circular connectors are fully locked properly with enclosure (LOCO KAVACH) receptacles.</td>
       <td class="select">
@@ -3414,7 +3414,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
    
     </tr>
-    <tr id="row-1140">
+    <tr id="row-1140" data-item-id="sec5_item_7">
       <td>5.7</td>
       <td class="observation_text"><b>Earthing:</b>Ensure that earthing done with 10Sq.mm Yellow/Green cable for Relay Interface Box and Cab Input box.</td>
       <td class="select">
@@ -3446,7 +3446,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
    
     </tr>
-    <tr id="row-1240">
+    <tr id="row-1240" data-item-id="sec5_item_8">
       <td>5.8</td>
       <td class="observation_text"><b>Earth Cable:</b>Ensure that cable continuity, lug's crimping and tightness of earth cable.</td>
       <td class="select">
@@ -3478,7 +3478,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
    
     </tr>
-    <tr id="row-1340">
+    <tr id="row-1340" data-item-id="sec5_item_9">
       <td>5.9</td>
       <td class="observation_text"><b>Earth Cable routing:</b>Ensure that the earth cables are routed through the conduit and routed properly and tied with metal clamps / cable ties.</td>
       <td class="select">
@@ -3543,7 +3543,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-6_0">
-          <tr id="row-41">
+          <tr id="row-41" data-item-id="sec6_item_1">
       <td>6.1</td>
       <td class="observation_text"><b>DMI Mounting Place:</b>Check the DMI mounted place is good enough at driver desk, which can be operated easily by Loco pilot.</td>
        <td class="select">
@@ -3575,7 +3575,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-42">
+    <tr id="row-42" data-item-id="sec6_item_2">
       <td>6.2</td>
       <td class="observation_text"><b>DMI Mounting Stand:</b>Ensure that DMI mounting stand is properly welded without any joint gaps and can be withstand to loco vibrations.</td>
       <td class="select">
@@ -3606,7 +3606,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-42" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-43">
+    <tr id="row-43" data-item-id="sec6_item_3">
       <td>6.3</td>
       <td class="observation_text"><b>Torque and Marking:</b>Ensure M5x16mm Bolts are tightened to 6 N·m torque using a torque wrench, and mark screw heads with green/yellow paint after torque verification.</td>
       <td class="select">
@@ -3637,7 +3637,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-43" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-44">
+    <tr id="row-44" data-item-id="sec6_item_4">
       <td>6.4</td>
       <td class="observation_text"><b>DMI Cable:</b>Make sure the DMI cable can be easily accessed by the projection at the bottom of the stand.</td>
       <td class="select">
@@ -3668,7 +3668,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-44" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-45">
+    <tr id="row-45" data-item-id="sec6_item_5">
       <td>6.5</td>
       <td class="observation_text"><b>DMI Stand Color:</b>Ensure welded portions of the stand are treated with red oxide coating before applying RAL7032 (Pebble Grey/ Smoke Gray ) paint to prevent corrosion</td>
       <td class="select">
@@ -3699,7 +3699,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-45" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-46">
+    <tr id="row-46" data-item-id="sec6_item_6">
       <td>6.6</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure all the cables routed without any stress, without sharp bends and tied with metal clamps.</td>
      <td class="select">
@@ -3730,7 +3730,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-46" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-47">
+    <tr id="row-47" data-item-id="sec6_item_7">
       <td>6.7</td>
       <td class="observation_text"><b>Cable Booting:</b>Verify that the cable booting is not damaged or peeled during and after cable routing, and ensure circular connectors are fully locked with the DMI unit enclosure receptacles</td>
       <td class="select">
@@ -3761,7 +3761,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-47" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-48">
+    <tr id="row-48" data-item-id="sec6_item_8">
       <td>6.8</td>
       <td class="observation_text"><b>DMI-1 Cable Connection:</b>DMI-1 cable should be connected to MC1 at Loco Kavach unit.</td>
       <td class="select">
@@ -3792,7 +3792,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-48" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-49">
+    <tr id="row-49" data-item-id="sec6_item_9">
       <td>6.9</td>
       <td class="observation_text"><b>DMI 2 Cable Connection:</b>DMI-2 cable should be connected to MC3 at Loco Kavach unit.</td>
       <td class="select">
@@ -3823,7 +3823,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-49" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
        </tr>
- <tr id="row-1449">
+ <tr id="row-1449" data-item-id="sec6_item_10">
       <td>6.10</td>
       <td class="observation_text"><b>Earthing:</b>Ensure that earthing done with 10Sq.mm Yellow/Green cable for
  LP-OCIP -1 and LP-OCIP-2.</td>
@@ -3855,7 +3855,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-1449" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
        </tr>
- <tr id="row-1549">
+ <tr id="row-1549" data-item-id="sec6_item_11">
       <td>6.11</td>
       <td class="observation_text"><b>Earth Cable:</b>Ensure that cable continuity,lug's crimping and tightness of earth cable.</td>
       <td class="select">
@@ -3886,7 +3886,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-1549" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
        </tr>
- <tr id="row-1649">
+ <tr id="row-1649" data-item-id="sec6_item_12">
       <td>6.12</td>
       <td class="observation_text"><b>Earth Cable routing:</b>Ensure that the earth cables are routed through the conduit and routed properly and tied with metal clamps / cable ties.</td>
       <td class="select">
@@ -3948,7 +3948,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-7_0">
-          <tr id="row-51">
+          <tr id="row-51" data-item-id="sec7_item_1">
       <td>7.1</td>
       <td class="observation_text"><b>RFID PS Unit fixing:</b>Ensure M5x16mm Bolts are tightened to 6 N·m torque using a torque wrench on the Loco Kavach stand, and mark screw heads with green/yellow paint after verifying the torque value</td>
       <td class="select">
@@ -3980,7 +3980,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-52">
+    <tr id="row-52" data-item-id="sec7_item_2">
       <td>7.2</td>
       <td class="observation_text"><b>Cable connections:</b>Ensure that cable connections are given at the corresponding location with respect to labels provided at Loco Kavach.</td>
       <td class="select">
@@ -4011,7 +4011,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-52" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-53">
+    <tr id="row-53" data-item-id="sec7_item_3">
       <td>7.3</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure that cables are routed properly without hanging and tied properly with cables ties</td>
       <td class="select">
@@ -4042,7 +4042,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
       <canvas id="canvas-53" style="display: none;"></canvas> <!-- Canvas to capture the image -->
       </div>
     </tr>
-    <tr id="row-54">
+    <tr id="row-54" data-item-id="sec7_item_4">
       <td>7.4</td>
       <td class="observation_text"><b>Connector locking:</b>Ensure the circular connectors are properly locked with RFID box unit receptacles.</td>
       <td class="select">
@@ -4104,7 +4104,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-8_0">
-          <tr id="row-516">
+          <tr id="row-516" data-item-id="sec8_item_1">
       <td>8.1</td>
       <td class="observation_text">Verify RF Antenna – TX1 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
       <td class="select">
@@ -4137,7 +4137,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-516" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-5126">
+    <tr id="row-5126" data-item-id="sec8_item_2">
       <td>8.2</td>
       <td class="observation_text">Verify RF Antenna – TX2 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
       <td class="select">
@@ -4170,7 +4170,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-5126" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-<tr id="row-5136">
+<tr id="row-5136" data-item-id="sec8_item_3">
       <td>8.3</td>
       <td class="observation_text">Verify GPS-GSM Antenna1 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
       <td class="select">
@@ -4203,7 +4203,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-5136" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-<tr id="row-5146">
+<tr id="row-5146" data-item-id="sec8_item_4">
       <td>8.4</td>
       <td class="observation_text">Verify GPS-GSM Antenna2 from Base (From long-leg of antenna) height shall be <= 310mm.</td>
       <td class="select">
@@ -4236,7 +4236,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-5146" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-<tr id="row-5156">
+<tr id="row-5156" data-item-id="sec8_item_5">
       <td>8.5</td>
       <td class="observation_text">Verify RF Antenna height – from Rail Level height shall be <= 3960mm.</td>
       <td class="select">
@@ -4269,7 +4269,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-5156" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-<tr id="row-5166">
+<tr id="row-5166" data-item-id="sec8_item_6">
       <td>8.6</td>
       <td class="observation_text">Verify GPS-GSM Antenna height – from Rail Level height shall be <= 3891mm.</td>
       <td class="select">
@@ -4302,7 +4302,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-5166" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-          <tr id="row-56">
+          <tr id="row-56" data-item-id="sec8_item_7">
       <td>8.7</td>
       <td class="observation_text">Are RF and GPS/GSM antennas properly leveled using a spirit level instrument?</td>
       <td class="select">
@@ -4334,7 +4334,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
 </div>
     </tr>
 
-    <tr id="row-57">
+    <tr id="row-57" data-item-id="sec8_item_8">
       <td>8.8</td>
       <td class="observation_text"><b>Radio Antenna Welding:</b>Check that the radio antenna’s base plate welding is done properly, with no joint gaps or cracks.</td>
       <td class="select">
@@ -4365,7 +4365,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-57" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-58">
+    <tr id="row-58" data-item-id="sec8_item_9">
       <td>8.9</td>
       <td class="observation_text"><b>Welding:</b>Ensure the welding is sufficient to withstand locomotive vibrations at higher speeds without affecting the antennas.</td>
       <td class="select">
@@ -4396,7 +4396,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-58" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-59">
+    <tr id="row-59" data-item-id="sec8_item_10">
       <td>8.10</td>
       <td class="observation_text"><b>Antenna Mounting:</b>Antennas are to be mounted within stipulated height to avoid OHE line contact.</td>
       <td class="select">
@@ -4427,7 +4427,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
   <canvas id="canvas-59" style="display: none;"></canvas> <!-- Canvas to capture the image -->
 </div>
     </tr>
-    <tr id="row-60">
+    <tr id="row-60" data-item-id="sec8_item_11">
       <td>8.11</td>
       <td class="observation_text"><b>RF Antenna Cable Connections:</b>Are the Rx and Tx cables connected to their respective Rx and Tx antenna, as per the labels?</td>
       <td class="select">
@@ -4458,7 +4458,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
       <canvas id="canvas-60" style="display: none;"></canvas> <!-- Canvas to capture the image -->
       </div>
     </tr>
-    <tr id="row-61">
+    <tr id="row-61" data-item-id="sec8_item_12">
       <td>8.12</td>
       <td class="observation_text"><b>GPS/GSM Antenna and Cable Installation:</b>Are the GPS and GSM cables clearly labeled and correctly connected to their respective GPS and GSM antenna on both sides of the locomotive?</td>
       <td class="select">
@@ -4489,7 +4489,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
       <canvas id="canvas-61" style="display: none;"></canvas> <!-- Canvas to capture the image -->
       </div>
     </tr>
-  <tr id="row-62">
+  <tr id="row-62" data-item-id="sec8_item_13">
       <td>8.13</td>
       <td class="observation_text"> 
       <b>Antenna Cables Routing:</b><br>
@@ -4666,7 +4666,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
     </tr>
 
 
-    <tr id="row-63">
+    <tr id="row-63" data-item-id="sec8_item_14">
       <td>8.14</td>
       <td class="observation_text"><b>Red oxide coating:</b>Ensure that all welded portions should be treated with red oxide coating, before painted with RAL7032 (pebble grey / Smoke Gray ) paint, to avoid corrosion. </td>
         <td class = "select">
@@ -4729,7 +4729,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-9_0">
-          <tr id="row-64">
+          <tr id="row-64" data-item-id="sec9_item_1">
       <td>9.1</td>
       <td class="observation_text"><b>Pneumatic fittings:</b>Confirm that all pipes and fittings used in the assembly are from the approved BOM and sourced from the I and C kit supplied by the factory.Any locally procured items must be checked for compliance with the approved BOM</td>
       <td class="select">
@@ -4761,7 +4761,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      </div>
     </tr>
 
-    <tr id="row-65">
+    <tr id="row-65" data-item-id="sec9_item_2">
       <td>9.2</td>
       <td class="observation_text"><b>Copper Pipes:</b>Ensure that copper pipes are bent using appropriate bending tool, and there no kinks or sharp bends in the pipe.</td>
       <td class="select">
@@ -4792,7 +4792,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-65" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-66">
+    <tr id="row-66" data-item-id="sec9_item_3">
       <td>9.3</td>
       <td class="observation_text"><b>Copper Tube:</b>Ensure that copper tube length is measured with respect to the connectivity from loco pneumatic to EP Valve, BP cock, Horn cock and valve arrangements.</td>
       <td class="select">
@@ -4823,7 +4823,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-66" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-67">
+    <tr id="row-67" data-item-id="sec9_item_4">
       <td>9.4</td>
       <td class="observation_text"><b>Copper pipe connections:</b>Ensure that copper pipe connections made properly with approved make (Ex. Fluid Control) ferrules and TEE-joints used.</td>
       <td class="select">
@@ -4854,7 +4854,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-67" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-68">
+    <tr id="row-68" data-item-id="sec9_item_5">
       <td>9.5</td>
       <td class="observation_text"><b>Threaded Connections:</b>All threaded connections must be sealed with loctite 567 (Not With Teflon Tape), which is supplied in the IandC kit.</td>
       <td class="select">
@@ -4885,7 +4885,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-68" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-69">
+     <tr id="row-69" data-item-id="sec9_item_6">
       <td>9.6</td>
       <td class="observation_text"><b>Pneumatic Lines Connections:</b>Check the pneumatic lines with a soap solution to make sure there are no loose connections and no air bubbles should be seen.</td>
       <td class="select">
@@ -4916,7 +4916,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-69" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-<tr id="row-969">
+<tr id="row-969" data-item-id="sec9_item_7">
       <td>9.7</td>
       <td class="observation_text"><b>Pneumatic Lines Connections:</b>The soap solution must be cleaned after the test.</td>
       <td class="select">
@@ -4978,7 +4978,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-10_0">
-          <tr id="row-71">
+          <tr id="row-71" data-item-id="sec10_item_1">
       <td>10.1</td>
       <td class="observation_text">Ensure all these pressure sensors shall be installed under CAB1 driver desk.</td>
       <td class="select">
@@ -5010,7 +5010,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      </div>
     </tr>
 
-    <tr id="row-72">
+    <tr id="row-72" data-item-id="sec10_item_2">
       <td>10.2</td>
       <td class="observation_text">Ensure MR sensor should be 16 bar, and remain BP,BC1,BC2 are 7 bar</td>
       <td class="select">
@@ -5041,7 +5041,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-72" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-73">
+    <tr id="row-73" data-item-id="sec10_item_3">
       <td>10.3</td>
       <td class="observation_text">Ensure all pressure sensors should be installed on T-Joints</td>
       <td class="select">
@@ -5072,7 +5072,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
      <canvas id="canvas-73" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-7323">
+    <tr id="row-7323" data-item-id="sec10_item_4">
       <td>10.4</td>
       <td class="observation_text"><b>Wiring Connections :</b> Red (+V) to Terminal 1,  Black (–V) to Terminal 2 & Black-White (Earth) to Terminal 3—Mention In Status</td>
       <td class="select">
@@ -5135,7 +5135,7 @@ Ensure 2.80 mm diameter E6013 welding electrodes are used.</td>
           </tr>
         </thead>
         <tbody id="observations-tbody-11_0">
-          <tr id="row-74">
+          <tr id="row-74" data-item-id="sec11_item_1">
       <td>11.1</td>
       <td class="observation_text"><b>IRU Fixing Place:</b>Are two IRUs installed—one in CAB-I and one in CAB-II—as per installation instructions?</td>
       <td class="select">
@@ -5204,7 +5204,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
 
 
 
-    <tr id="row-75">
+    <tr id="row-75" data-item-id="sec11_item_2">
       <td>11.2</td>
       <td class="observation_text"><b>Welding:</b>Has the mounting frame been welded under the A9 Driver Brake Controller (DBC) of each cab and after welding has the frame been painted properly?</td>
       <td class="select">
@@ -5236,7 +5236,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-75" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-78">
+    <tr id="row-78" data-item-id="sec11_item_3">
       <td>11.3</td>
       <td class="observation_text"><b>Red oxide coating:</b>Ensure that the welded portion should be coated with red oxide and painted with RAL7032 (Pebble grey/smoke gray) paint.</td>
       <td class="select">
@@ -5268,7 +5268,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-78" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     
-    <tr id="row-76">
+    <tr id="row-76" data-item-id="sec11_item_4">
       <td>11.4</td>
       <td class="observation_text">Have the IRU units been fixed to the mounting frame using the bolts, nuts, and washers supplied in the Brake Interface Installation Kit?</td>
       <td class="select">
@@ -5300,7 +5300,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-76" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-       <tr id="row-79">
+       <tr id="row-79" data-item-id="sec11_item_5">
       <td>11.5</td>
       <td class="observation_text"><b>Cable connections:</b>Ensure that cable connections are given at the corresponding location with respect to labels provided.</td>
      <td class="select">
@@ -5332,7 +5332,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-79" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-80">
+    <tr id="row-80" data-item-id="sec11_item_6">
       <td>11.6</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure that cables are routed properly without hanging on ground and tied properly with cable ties.</td>
       <td class="select">
@@ -5364,7 +5364,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-80" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-8022">
+    <tr id="row-8022" data-item-id="sec11_item_7">
       <td>11.7</td>
       <td class="observation_text">EP Valve and Isolation Cock are installed on the stand where the IRU unit is mounted -- Mention In Status</td>
       <td class="select">
@@ -5396,7 +5396,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-8022" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-8023">
+     <tr id="row-8023" data-item-id="sec11_item_8">
       <td>11.8</td>
       <td class="observation_text">EP Solenoid Valve wiring: Red (+V) connected to Terminal 1, Black (–V) connected to Terminal 2 (Cable from MILB3)-- Mention In Status </td>
       <td class="select">
@@ -5429,7 +5429,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-8023" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-8024">
+     <tr id="row-8024" data-item-id="sec11_item_9">
       <td>11.9</td>
       <td class="observation_text">Isolation Cock (N/C type) wiring: Red (+V) connected to Terminal 1, Black (–V) to Terminal 2 (Cable from MC26)-- Mention In Status </td>
       <td class="select">
@@ -5462,7 +5462,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-8024" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-8025">
+     <tr id="row-8025" data-item-id="sec11_item_10">
       <td>11.10</td>
       <td class="observation_text">Verify that the existing D2 Relay Valve and Manifold Unit are removed from previous location and New D2 Relay Valve is installed on the LE (Locomotive Equipment) unit-- -- Mention In Status</td>
       <td class="select">
@@ -5495,7 +5495,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      </div>
     </tr>
      </tr>
-     <tr id="row-8026">
+     <tr id="row-8026" data-item-id="sec11_item_11">
       <td>11.11</td>
       <td class="observation_text">Wire connections: LE Unit Solenoid Valve wiring: Red (+V) connected to Terminal 1, Black (–V) to Terminal 2 (Cable from MILB1)-- Mention In Status </td>
       <td class="select">
@@ -5560,7 +5560,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
           </tr>
         </thead>
          <tbody id="observations-tbody-12_0">
-           <tr id="row-81">
+           <tr id="row-81" data-item-id="sec12_item_1">
       <td>12.1</td>
       <td class="observation_text"><b>PSJB Fixing:</b>Ensure existing PSJB removed and Handed over to Loco Shed Rail team, And install factory supplied PSJB</td>
       <td class="select">
@@ -5592,7 +5592,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
       </div>
     </tr>
 
-    <tr id="row-82">
+    <tr id="row-82" data-item-id="sec12_item_2">
       <td>12.2</td>
       <td class="observation_text"><b>TPM Unit Fixing:</b>Ensure that TPM module is installed right side to the MPIO module</td>
       <td class="select">
@@ -5623,7 +5623,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
         <canvas id="canvas-82" style="display: none;"></canvas> <!-- Canvas to capture the image -->
       </div>
     </tr>
-    <tr id="row-83">
+    <tr id="row-83" data-item-id="sec12_item_3">
       <td>12.3</td>
       <td class="observation_text"><b>Fixing of PSJB and TPM:</b>Ensure that PSJB and TPM units fixing holes are matching with supporting clamps</td>
       <td class="select">
@@ -5655,7 +5655,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-83" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-84">
+    <tr id="row-84" data-item-id="sec12_item_4">
       <td>12.4</td>
       <td class="observation_text"><b>Cable connections:</b>Ensure that cable connections are given at the corresponding location with respect to labels provided.</td>
       <td class="select">
@@ -5687,7 +5687,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-84" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-85">
+    <tr id="row-85" data-item-id="sec12_item_5">
       <td>12.5</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure that cables are routed properly without hanging on ground and tied properly with cable ties.</td>
       <td class="select">
@@ -5719,7 +5719,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-85" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-1186">
+     <tr id="row-1186" data-item-id="sec12_item_6">
       <td>12.6</td>
       <td class="observation_text">Ensure SIFA Valve is installed with mounting frame under DBC panel in CAB-1 side(NOTE: Ensure that SIFA VALVE SHOULD BE CLOSED CONDITION WHILE INSTALLATION)</td>
       <td class="select">
@@ -5751,7 +5751,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-1186" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-1187">
+    <tr id="row-1187" data-item-id="sec12_item_7">
       <td>12.7</td>
       <td class="observation_text">Ensure that mounting location of the SIFA valve should be easy for operations and maintenance</td>
       <td class="select">
@@ -5783,7 +5783,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-1187" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-1188">
+    <tr id="row-1188" data-item-id="sec12_item_8">
       <td>12.8</td>
       <td class="observation_text">Ensure SIFA valve manifold should be fixed to mounting frame by using hardware provided along with the installation Kit.</td>
       <td class="select">
@@ -5815,7 +5815,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-1188" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-1189">
+    <tr id="row-1189" data-item-id="sec12_item_9">
       <td>12.9</td>
       <td class="observation_text">Welding: Ensure that welded portion should be neat and clean. Check that there is no welding gaps and cracks.</td>
       <td class="select">
@@ -5879,7 +5879,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
           </tr>
         </thead>
          <tbody id="observations-tbody-13_0">
-          <tr id="row-86">
+          <tr id="row-86" data-item-id="sec13_item_1">
       <td>13.1</td>
       <td class="observation_text">Check the Pneumatic connections are as per the connectivity diagram.</td>
       <td class="select">
@@ -5912,7 +5912,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      </div>
     </tr>
 
-    <tr id="row-87">
+    <tr id="row-87" data-item-id="sec13_item_2">
       <td>13.2</td>
       <td class="observation_text">Verify ball value installation on BP(3/4") and MR (3/8") pipes, and confirm Loctite 567 is used at every connection.</td>
       <td class="select">
@@ -5944,7 +5944,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-87" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-88">
+    <tr id="row-88" data-item-id="sec13_item_3">
       <td>13.3</td>
       <td class="observation_text">Ensure BC pressure transducer reads 7 bar, BP is at 5 bar, and MR is at 16 bar.</td>
       <td class="select">
@@ -5975,7 +5975,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
         <canvas id="canvas-88" style="display: none;"></canvas> <!-- Canvas to capture the image -->
       </div>
     </tr>
-    <tr id="row-89">
+    <tr id="row-89" data-item-id="sec13_item_4">
       <td>13.4</td>
       <td class="observation_text">Check that all pipe joints are properly connected to the LPSR (MUB-2 and MUB-3).</td>
       <td class="select">
@@ -6007,7 +6007,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-89" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-11189">
+    <tr id="row-11189" data-item-id="sec13_item_5">
       <td>13.5</td>
       <td class="observation_text">Check that the BP line is connected to the QRV (Quick Release Valve).</td>
       <td class="select">
@@ -6039,7 +6039,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-11189" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-1189">
+    <tr id="row-1189" data-item-id="sec13_item_6">
       <td>13.6</td>
       <td class="observation_text">Check if the ball valve electrical terminations are properly connected.</td>
       <td class="select">
@@ -6102,7 +6102,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
           </tr>
         </thead>
          <tbody id="observations-tbody-14_0">
-          <tr id="row-90">
+          <tr id="row-90" data-item-id="sec14_item_1">
       <td>14.1</td>
       <td class="observation_text"<b>PG1 and PG2 Installation:</b>Ensure that PG1(Left from LP of CAB1) and PG2 (Right from LP of CAB1) are installed on allotted axles (WAP5=wheel 2and3, WAP7=whee2and5) of locomotives on left and right side.</td>
       <td class="select">
@@ -6134,7 +6134,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      </div>
     </tr>
 
-    <tr id="row-91">
+    <tr id="row-91" data-item-id="sec14_item_2">
       <td>14.2</td>
       <td class="observation_text"><b>Washer Insertion:</b>Verify that M12 spring is correctly inserted in the drive pin.</td>
      <td class="select">
@@ -6165,7 +6165,7 @@ Is the mounting frame fabricated using 50x50x5 mm galvanized steel tube or angle
      <canvas id="canvas-91" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-92">
+    <tr id="row-92" data-item-id="sec14_item_3">
       <td>14.3</td>
       <td class="observation_text"><b>Drive Pin Fixing:</b><br>
 Ensure drive pin length before installation as per Loco type,(loco type WAP7=60 mm, WAP5=76mm, EMU=90mm).<br>
@@ -6199,7 +6199,7 @@ Verify that the torque applied is 76N·m using a calibrated torque wrench.</td>
      <canvas id="canvas-92" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-93">
+    <tr id="row-93" data-item-id="sec14_item_4">
       <td>14.4</td>
       <td class="observation_text"><b>Gasket Lock Plate Placement:</b>Ensure the Gasket Lock Plate is correctly positioned on the axle cover without any misalignment.</td>
       <td class="select">
@@ -6230,7 +6230,7 @@ Verify that the torque applied is 76N·m using a calibrated torque wrench.</td>
      <canvas id="canvas-93" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-94">
+    <tr id="row-94" data-item-id="sec14_item_5">
       <td>14.5</td>
       <td class="observation_text"><b>PG Coupler Ring Placement:</b><br>
 Verify that PG coupler ring is positioned correctly on the gasket.<br>
@@ -6263,7 +6263,7 @@ Ensure that the label (PG1 / PG2) is clearly visible at the top end.</td>
      <canvas id="canvas-94" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-95">
+    <tr id="row-95" data-item-id="sec14_item_6">
       <td>14.6</td>
       <td class="observation_text"><b>Coupler Ring Alignment:</b>Confirm that the selected PG (PG1 / PG2) determines the alignment of four out of eight holes with the axle cover.</td>
       <td class="select">
@@ -6294,7 +6294,7 @@ Ensure that the label (PG1 / PG2) is clearly visible at the top end.</td>
      <canvas id="canvas-95" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-96">
+    <tr id="row-96" data-item-id="sec14_item_7">
       <td>14.7</td>
       <td class="observation_text"><b>Coupler Ring Fixing:</b><br>
 Ensure the CSK Hex Socket screws size M10×30mm-SS are used to fix the coupler ring with LOCTITE 542.<br>
@@ -6327,7 +6327,7 @@ Check that screws are tightened to the specified torque of 40 N.m using a calibr
      <canvas id="canvas-96" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-97">
+    <tr id="row-97" data-item-id="sec14_item_8">
       <td>14.8</td>
       <td class="observation_text"><b>Gasket PG Placement:</b>Verify that "Gasket PG" is correctly placed on the coupler ring without any gaps or misalignment.</td>
       <td class="select">
@@ -6358,7 +6358,7 @@ Check that screws are tightened to the specified torque of 40 N.m using a calibr
      <canvas id="canvas-97" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-98">
+    <tr id="row-98" data-item-id="sec14_item_9">
       <td>14.9</td>
       <td class="observation_text"><b>PG1 / PG2 Insertion:</b><br>
 Ensure PG1 / PG2 is inserted correctly into the axle cover.<br>
@@ -6391,7 +6391,7 @@ Confirm that driving fork is aligned with the drive pin before proceeding.</td>
      <canvas id="canvas-98" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-99">
+    <tr id="row-99" data-item-id="sec14_item_10">
       <td>14.10</td>
       <td class="observation_text"><b>PG Alignment:</b>Ensure that all eight holes on PG align perfectly with holes on the gasket and coupler ring.</td>
       <td class="select">
@@ -6422,7 +6422,7 @@ Confirm that driving fork is aligned with the drive pin before proceeding.</td>
      <canvas id="canvas-99" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-100">
+    <tr id="row-100" data-item-id="sec14_item_11">
       <td>14.11</td>
       <td class="observation_text"><b>PG Fixing with M8 Bolts:</b><br>
 Check that the M8×25mm bolts are properly installed with LOCTITE 542.<br>
@@ -6455,7 +6455,7 @@ Ensure both spring and plain washers are used.</td>
      <canvas id="canvas-100" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-101">
+    <tr id="row-101" data-item-id="sec14_item_12">
       <td>14.12</td>
       <td class="observation_text"><b>M8 Bolt Torque Check:</b>Verify that all M8 bolts are tightened to 25 N.m using a calibrated torque wrench.Marking with green/yellow paint.</td>
       <td class="select">
@@ -6486,7 +6486,7 @@ Ensure both spring and plain washers are used.</td>
      <canvas id="canvas-101" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-      <tr id="row-340">
+      <tr id="row-340" data-item-id="sec14_item_13">
       <td>14.13</td>
       <td class="observation_text"><b>Final Position Check:</b>Ensure that the final installed positions of PG1 and PG2 match the specified locations.</td>
       <td class="select">
@@ -6518,7 +6518,7 @@ Ensure both spring and plain washers are used.</td>
      <canvas id="canvas-340" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-341">
+    <tr id="row-341" data-item-id="sec14_item_14">
       <td>14.14</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure that PG cables routing made properly with metal clamps / cable ties</td>
       <td class="select">
@@ -6549,7 +6549,7 @@ Ensure both spring and plain washers are used.</td>
      <canvas id="canvas-341" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-342">
+    <tr id="row-342" data-item-id="sec14_item_15">
       <td>14.15</td>
       <td class="observation_text"><b>Speedometer Boxes fixing:</b>
 Is each Speedometer Interface Unit mounted on the locomotive chassis near its corresponding Pulse Generator?</td>
@@ -6648,7 +6648,7 @@ Speedometer holes and fixing clamp holes are to be matched evenly. Verify the M6
      </div>
     </tr>
 
-    <tr id="row-343">
+    <tr id="row-343" data-item-id="sec14_item_16">
       <td>14.16</td>
       <td class="observation_text"><b>Welding of supporting clamps:</b>Ensure that speedometer supporting clamps are welded without any gaps and cracks.</td>
       <td class="select">
@@ -6679,7 +6679,7 @@ Speedometer holes and fixing clamp holes are to be matched evenly. Verify the M6
      <canvas id="canvas-343" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-   <tr id="row-344">
+   <tr id="row-344" data-item-id="sec14_item_17">
       <td>14.17</td>
       <td class="observation_text"><b>Speedometer Cables:</b>Ensure that cables from PG to Speedometers and from speedometer units to Loco Kavach unit are connected properly.</td>
       <td class="select">
@@ -6710,7 +6710,7 @@ Speedometer holes and fixing clamp holes are to be matched evenly. Verify the M6
      <canvas id="canvas-344" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-345">
+    <tr id="row-345" data-item-id="sec14_item_18">
       <td>14.18</td>
       <td class="observation_text"><b>Pulse Generator & Speedometer Interface Unit Connection:</b><br>
 Is PG1 connected to the Speedometer Interface Unit with Part No.6000052976?</td>
@@ -6774,7 +6774,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      <canvas id="canvas-3450" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-3476">
+    <tr id="row-3476" data-item-id="sec14_item_19">
       <td>14.19</td>
       <td class="observation_text">Is each Speedometer Interface Unit correctly connected to the Loco Kavach Unit?</td>
       <td class="select">
@@ -6805,7 +6805,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      <canvas id="canvas-3476" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-346">
+    <tr id="row-346" data-item-id="sec14_item_20">
       <td>14.20</td>
       <td class="observation_text"><b>Cable routing:</b>Ensure that external cables are routed to their respective speedometer units</td>
       <td class="select">
@@ -6836,7 +6836,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      <canvas id="canvas-346" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-   <tr id="row-347">
+   <tr id="row-347" data-item-id="sec14_item_21">
       <td>14.21</td>
       <td class="observation_text"><b>Connector locking :</b>Ensure that the external cable circular connectors are properly locked with speedometer box unit receptacles.</td>
       <td class="select">
@@ -6898,7 +6898,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
           </tr>
         </thead>
          <tbody id="observations-tbody-15_0">
-          <tr id="row-102">
+          <tr id="row-102" data-item-id="sec15_item_1">
       <td>15.1</td>
       <td class="observation_text">Is each RFID reader installed at a distance of 1 to 3 meters from the end of cattle guard?</td>
       <td class="select">
@@ -6930,7 +6930,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      </div>
     </tr>
 
-    <tr id="row-103">
+    <tr id="row-103" data-item-id="sec15_item_2">
       <td>15.2</td>
       <td class="observation_text"><b>Welding quality:</b>Ensure Stud welding/Arc Welding is done properly, such that the RFID Reader can be  withstand for loco vibrations during running and Carried out DPT Test. </td>
       <td class="select">
@@ -6994,7 +6994,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      </div>
     </tr>
     
-    <tr id="row-104">
+    <tr id="row-104" data-item-id="sec15_item_3">
       <td>15.3</td>
       <td class="observation_text"><b>Channels tightness:</b>Verify the tightness for channels fixing screws (M8X16mm) by using torque wrench (25N-M).marking with green/yellow pain</td>
       <td class="select">
@@ -7025,7 +7025,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      <canvas id="canvas-104" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-105">
+    <tr id="row-105" data-item-id="sec15_item_4">
       <td>15.4</td>
       <td class="observation_text">Has the bottom surface of the RFID reader been adjusted and fixed at a height of 400 ± 50 mm from the rail head?</td>
       <td class="select">
@@ -7056,7 +7056,7 @@ Is PG2  connected to the Speedometer Interface Unit with Part No.6000052977?</td
      <canvas id="canvas-105" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-507">
+    <tr id="row-507" data-item-id="sec15_item_5">
       <td>15.5</td>
       <td class="observation_text">Is one end of the Chain/Sling welded to locomotive chassis, away from the mounting bracket weld joint?</td>
       <td class="select">
@@ -7120,7 +7120,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      </div>
     </tr>
 
-    <tr id="row-108">
+    <tr id="row-108" data-item-id="sec15_item_6">
       <td>15.6</td>
       <td class="observation_text">Is mud guard (from the Loco Kavach Installation Kit) been fixed to RFID reader mounting bracket,installed in front of each RFID reader on the cattle guard side, using the supplied bolts and washers?</td>
       <td class="select">
@@ -7152,7 +7152,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-108" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-     <tr id="row-109">
+     <tr id="row-109" data-item-id="sec15_item_7">
       <td>15.7</td>
       <td class="observation_text"><b>Cable trench:</b>Verify that RFID reader cables are routed properly through the loco trench without any overlaps and over-stress. Ensure that cable should not have any sharp bends in routing and mill connectors without any damage while routing.</td>
       <td class="select"><select id="status-dropdown" onchange="highlightSelect(this)">
@@ -7182,7 +7182,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-109" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-110">
+    <tr id="row-110" data-item-id="sec15_item_8">
       <td>15.8</td>
       <td class="observation_text"><b>Connector connectivity:</b>Ensure that MIL connectors connectivity as per the connectivity drawing.</td>
       <td class="select">
@@ -7213,7 +7213,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-110" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-111">
+    <tr id="row-111" data-item-id="sec15_item_9">
       <td>15.9</td>
       <td class="observation_text"><b>RFID -1 connectivity:</b>Ensure that RFID Reader-1 is connected to MC6 at Loco Kavach.</td>
       <td class="select">
@@ -7244,7 +7244,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-111" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-112">
+    <tr id="row-112" data-item-id="sec15_item_10">
       <td>15.10</td>
       <td class="observation_text"><b>RFID -2 connectivity:</b>Ensure that RFID Reader-2 is connected to MC7 at Loco Kavach.</td>
         <td class = "select">
@@ -7276,7 +7276,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      </div>
     </tr>
    
-   <tr id="row-765">
+   <tr id="row-765" data-item-id="sec15_item_11">
       <td>15.11</td>
       <td class="observation_text"><b>Circular connectors:</b>Ensure that the circular connectors are properly locked with RFID box unit receptacles.</td>
         <td class = "select">
@@ -7340,7 +7340,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           </tr>
         </thead>
         <tbody id="observations-tbody-16_0">
-          <tr id="row-766">
+          <tr id="row-766" data-item-id="sec16_item_1">
       <td>16.1</td>
       <td class="observation_text"><b>Pneumatic fittings:</b>Confirm that all pipes and fittings used in the assembly are from the approved BOM and sourced from the IandC kit supplied by the factory.</td>
       <td class="select">
@@ -7372,7 +7372,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      </div>
     </tr>
 
-    <tr id="row-767">
+    <tr id="row-767" data-item-id="sec16_item_2">
       <td>16.2</td>
       <td class="observation_text"><b>Copper Pipes:</b> Confirm that copper pipes are bent using appropriate bending tool, and that  there no kinks or sharp bends in the pipe.</td>
       <td class="select">
@@ -7403,7 +7403,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-72" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-768">
+    <tr id="row-768" data-item-id="sec16_item_3">
       <td>16.3</td>
       <td class="observation_text"><b>Copper Tube :</b>Ensure that copper tube length is measured with respect to the connectivity  from loco pneumatics MR to ON/OFF Ball Cock, Solenoid Valve to HT Horn MR Pipe arrangements, as per approved drawing for WAP5, WAP7, WAG9, WAG7 and WAP4. This pneumatic arrangement is not required for Diesele locos.</td>
       <td class="select">
@@ -7434,7 +7434,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-768" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-   <tr id="row-769">
+   <tr id="row-769" data-item-id="sec16_item_4">
       <td>16.4</td>
       <td class="observation_text"><b>Copper pipe connections:</b>Ensure that copper pipe connections made properly with                        approved make (Ex. Fluid Control) ferrules and TEE-joints used.</td>
       <td class="select">
@@ -7465,7 +7465,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
      <canvas id="canvas-769" style="display: none;"></canvas> <!-- Canvas to capture the image -->
      </div>
     </tr>
-    <tr id="row-800">
+    <tr id="row-800" data-item-id="sec16_item_5">
       <td>16.5</td>
       <td class="observation_text">Auto Horn Solenoid valve connections(Red +ve) to be connected at terminal1 and (Black -ve) to be connected at terminal2. This cable part of CAB I/P wiring of TB21 (Red +ve) & TB22 (Black -ve). This cable part of CAB I/P wiring of TB21 (Red +ve) & TB22 (Black -ve).</td>
       <td class="select">
@@ -7939,6 +7939,7 @@ async function saveObservation(section) {
 
   for (const row of rows) {
     const S_no = row.querySelector("td:first-child")?.innerText.trim() || "";
+    const item_id = row.getAttribute("data-item-id") || "";
 
     const obsField = row.querySelector(".observation_text");
 
@@ -7981,6 +7982,7 @@ async function saveObservation(section) {
     }
 
     observations.push({
+      item_id,
       S_no,
       observation_text: text,
       remarks,
@@ -8113,7 +8115,7 @@ window.editedBarcodes = window.editedBarcodes || {};
  * Called on each barcode input. Saves the new value, then re-renders
  * just that section so the table reflects the fresh code.
  */
-function updateEditedBarcode(rowId, value, sectionID, sno) {
+function updateEditedBarcode(rowId, value, sectionID, itemsList) {
   window.editedBarcodes[rowId] = value;
   if (!sectionID) {
     const row = document.getElementById(`row-${rowId}`);
@@ -8125,22 +8127,25 @@ function updateEditedBarcode(rowId, value, sectionID, sno) {
     }
   }
   if (sectionID) {
-    if (!sno) {
+    if (!itemsList) {
       const tbody = document.getElementById(`observations-tbody-${sectionID}`);
       if (tbody) {
-        sno = Array.from(tbody.querySelectorAll("tr"))
-          .map(tr => tr.querySelector("td:first-child")?.innerText.trim())
-          .filter(Boolean);
+        itemsList = Array.from(tbody.querySelectorAll("tr"))
+          .map(tr => ({
+            item_id: tr.getAttribute("data-item-id"),
+            s_no: tr.querySelector("td:first-child")?.innerText.trim()
+          }))
+          .filter(item => item.item_id);
       }
     }
-    updateSections(window.allObservations, sectionID, sno);
+    updateSections(window.allObservations, sectionID, itemsList);
   }
 }
 
 /**
  * Filter & render a single section's table.
  */
-function updateSections(observations, sectionID, sno) {
+function updateSections(observations, sectionID, itemsList) {
   const sectionContainer = document.getElementById(`observations-section-${sectionID}`);
   if (!sectionContainer) {
     console.warn(`⚠️ Section container not found for sectionID: ${sectionID}`);
@@ -8149,7 +8154,7 @@ function updateSections(observations, sectionID, sno) {
   enableSectionButtons(sectionID);
   const filtered = observations.filter(o => o.section_id === sectionID);
   if (filtered.length) {
-    updateObservationsTable(sectionID, filtered, sno);
+    updateObservationsTable(sectionID, filtered, itemsList);
   } else {
     console.warn(`⚠️ No observations for section ${sectionID}`);
   }
@@ -8164,7 +8169,7 @@ function updateEditedBarcode(rowId, value) {
   window.editedBarcodes[rowId] = value;
 }
 
-function updateObservationsTable(sectionID, observations, sno) {
+function updateObservationsTable(sectionID, observations, itemsList) {
   const tbody = document.getElementById(`observations-tbody-${sectionID}`);
   if (!tbody) {
     console.error(`Table body #observations-tbody-${sectionID} not found.`);
@@ -8186,8 +8191,8 @@ function updateObservationsTable(sectionID, observations, sno) {
   const filteredObservations = observations.filter(obs => obs.section_id === sectionID);
 
   // For each serial number, find an existing observation or create a default one.
-  const allRows = sno.map(snoValue => {
-    return filteredObservations.find(obs => obs.S_no === snoValue) || { S_no: snoValue, section_id: sectionID };
+  const allRows = itemsList.map(item => {
+    return filteredObservations.find(obs => obs.item_id === item.item_id) || { item_id: item.item_id, S_no: item.s_no, section_id: sectionID };
   });
 
   allRows.forEach((observation) => {
@@ -8293,6 +8298,7 @@ oninput="
 
     const row = document.createElement("tr");
     row.setAttribute("data-sno", S_no);
+    if (observation.item_id) row.setAttribute("data-item-id", observation.item_id);
     row.setAttribute("id", `row-${rowId}`);
 
     let statusCellContent = `
@@ -8544,16 +8550,19 @@ function getDetails() {
 
       Object.keys(sectionWiseSno).forEach((sectionID) => {
         const tbody = document.getElementById(`observations-tbody-${sectionID}`);
-        let completeSnoList = [];
+        let completeItemsList = [];
         if (tbody) {
-          completeSnoList = Array.from(tbody.querySelectorAll("tr"))
-            .map(tr => tr.querySelector("td:first-child")?.innerText.trim())
-            .filter(Boolean);
+          completeItemsList = Array.from(tbody.querySelectorAll("tr"))
+            .map(tr => ({
+              s_no: tr.querySelector("td:first-child")?.innerText.trim(),
+              item_id: tr.getAttribute("data-item-id")
+            }))
+            .filter(item => item.s_no && item.item_id);
         }
-        if (completeSnoList.length === 0) {
-          completeSnoList = sectionWiseSno[sectionID];
+        if (completeItemsList.length === 0) {
+          completeItemsList = sectionWiseSno[sectionID].map(sno => ({ s_no: sno, item_id: "" }));
         }
-        updateSections(response.observations, sectionID, completeSnoList);
+        updateSections(response.observations, sectionID, completeItemsList);
 
         let updateBtn = document.getElementById(`update-btn-${sectionID}`);
         if (updateBtn) {
@@ -8653,6 +8662,7 @@ async function updateObservation(section) {
   for (const row of rows) {
     const rowId = row.id.replace("row-", "");
     const S_no = row.querySelector("td:nth-child(1)")?.innerText.trim() || "";
+    const item_id = row.getAttribute("data-item-id") || "";
 
     // 5a) Text, barcode (for 2_0), remarks, status
     let observationText = row.querySelector(".observation_text")?.textContent.trim() || "";
@@ -8710,6 +8720,7 @@ async function updateObservation(section) {
     ];
 
     observations.push({
+      item_id,
       S_no,
       observation_text: observationText,
       barcode: barcodeValue,

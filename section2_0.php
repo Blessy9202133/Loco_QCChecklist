@@ -62,7 +62,7 @@ try {
                 loco_id, loco_type, brake_type, railway_division, shed_name,
                 inspection_date, observation_text, remarks, barcode, S_no,
                 observation_status, section_id, created_at,updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,NOW())";
+            , item_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,NOW(), ?)";
             
             $stmt = $pdo->prepare($sql);
 
@@ -81,19 +81,19 @@ try {
                     $sectionID,
                     $createdAt
         
-                    ]);
+                    , $obs['item_id']]);
 
                 // Format observation text dynamically
                 $formattedObservations[] = formatObservations($obs['observation_text'], $obs['S_no']);
 
                 // Update images in the images table:
                 if (!empty($obs['image_paths']) && is_array($obs['image_paths'])) {
-                    $deleteStmt = $pdo->prepare("DELETE FROM images WHERE loco_id = ? AND s_no = ?");
-                    $deleteStmt->execute([$locoID, $obs['S_no']]);
+                    $deleteStmt = $pdo->prepare("DELETE FROM images WHERE loco_id = ? AND item_id = ?");
+                    $deleteStmt->execute([$locoID, $obs['item_id']]);
 
                     foreach ($obs['image_paths'] as $imgPath) {
-                        $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, ?)");
-                        $imgStmt->execute(['radio_power', $locoID, $obs['S_no'], $imgPath,$createdAt]);
+                        $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at, item_id) VALUES (?, ?, ?, ?, ?, ?)");
+                        $imgStmt->execute(['radio_power', $locoID, $obs['S_no'], $imgPath,$createdAt, $obs['item_id']]);
                     }
                 }
             }
