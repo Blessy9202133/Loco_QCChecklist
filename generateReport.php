@@ -81,17 +81,6 @@ try {
             }
             $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ?");
             $imgShift->execute([$newSno, $locoID, $oldSno]);
-        }
-        // Insert placeholder rows for the new points 8.1‑8.6 (empty observation fields)
-        for ($i = 1; $i <= 6; $i++) {
-            $newSno = "8.$i";
-            foreach ($tables as $tbl) {
-                // Use a generic insert – most tables share these columns; extra columns will take default values
-                $insertStmt = $pdo->prepare("INSERT INTO $tbl (loco_id, railway_division, shed_name, section_id, S_no)
-                                            VALUES (?,?,?,8,?)");
-                $insertStmt->execute([$locoID, $railwayDivision, $shedName, $newSno]);
-            }
-        }
         // Mark migration as done
         $upsertMeta = $pdo->prepare("INSERT INTO migration_meta (loco_id, section8_migrated) VALUES (?,1) ON DUPLICATE KEY UPDATE section8_migrated=1");
         $upsertMeta->execute([$locoID]);
@@ -103,9 +92,7 @@ try {
             '8.7.4' => '8.13.4',
             '8.7.3' => '8.13.3',
             '8.7.2' => '8.13.2',
-            '8.7.1' => '8.13.1',
-            '8.7' => '8.13',
-            '8.8' => '8.14'
+            '8.7.1' => '8.13.1'
         ];
         
         // Pass 1: Trimmed S_no matching
