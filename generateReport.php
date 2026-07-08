@@ -143,6 +143,18 @@ try {
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    $errorMsg = 'Database error: ' . $e->getMessage();
+    file_put_contents('generateReport_error.log', date('Y-m-d H:i:s') . " - " . $errorMsg . "\n", FILE_APPEND);
+    echo json_encode(['success' => false, 'message' => $errorMsg]);
+} catch (Exception $e) {
+    http_response_code(500);
+    $errorMsg = 'General error: ' . $e->getMessage();
+    file_put_contents('generateReport_error.log', date('Y-m-d H:i:s') . " - " . $errorMsg . "\n", FILE_APPEND);
+    echo json_encode(['success' => false, 'message' => $errorMsg]);
+} catch (Error $e) {
+    http_response_code(500);
+    $errorMsg = 'Fatal error: ' . $e->getMessage();
+    file_put_contents('generateReport_error.log', date('Y-m-d H:i:s') . " - " . $errorMsg . "\n", FILE_APPEND);
+    echo json_encode(['success' => false, 'message' => $errorMsg]);
 }
 ?>
