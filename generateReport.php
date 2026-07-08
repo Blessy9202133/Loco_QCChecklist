@@ -70,6 +70,7 @@ try {
     }
     // -------------------------------------------------------------------
 
+    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date FROM loco WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
     $locoStmt = $pdo->prepare($locoQuery);
     $locoStmt->execute([$locoID, $railwayDivision, $shedName]);
     $locoDetails = $locoStmt->fetch();
@@ -113,7 +114,7 @@ try {
 
             $validImages = [];
             foreach ($imagesForThisSno as $imagePath) {
-                if (file_exists(__DIR__ . '/' . $imagePath) && strpos($imagePath, 'uploads/') === 0) {
+                if ($imagePath && file_exists(__DIR__ . '/' . $imagePath) && strpos($imagePath, 'uploads/') === 0) {
                     $validImages[] = "http://localhost/Qcchecklist/" . $imagePath;
                 }
             }
