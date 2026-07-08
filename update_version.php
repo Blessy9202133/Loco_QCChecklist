@@ -73,9 +73,12 @@ if ($pullCode === 0) {
         // Automatically apply any database migrations silently!
         ob_start();
         include 'db_migration.php';
-        ob_end_clean();
+        $migrationOutput = ob_get_clean();
 
-        echo json_encode(["status" => "updated"]);
+        echo json_encode([
+            "status" => "updated",
+            "details" => $migrationOutput
+        ]);
     } else {
         echo json_encode(["status" => "uptodate"]);
     }

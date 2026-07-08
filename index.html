@@ -444,12 +444,18 @@
       const modal = document.getElementById('updateModal');
       const statusText = document.getElementById('updateStatusText');
       modal.style.display = 'flex';
-      statusText.innerHTML = '<span class="loader"></span> Running database migration and checklist sync... Please wait.';
+      statusText.innerHTML = '<span class="loader"></span> Checking for software updates and syncing database... Please wait.';
       
-      fetch('db_migration.php')
-        .then(response => response.text())
+      fetch('update_version.php')
+        .then(response => response.json())
         .then(data => {
-          statusText.innerHTML = data;
+          if (data.status === 'updated') {
+             statusText.innerHTML = '<strong>Software updated successfully!</strong><br><br>' + (data.details || '');
+          } else if (data.status === 'uptodate') {
+             statusText.innerHTML = '<strong>Software is already up to date.</strong>';
+          } else {
+             statusText.innerHTML = '<span style="color: red;">Update failed: ' + (data.output ? data.output.join('<br>') : JSON.stringify(data)) + '</span>';
+          }
         })
         .catch(error => {
           statusText.innerHTML = '<span style="color: red;">Failed to run updates: ' + error + '</span>';
