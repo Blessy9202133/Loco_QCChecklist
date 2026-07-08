@@ -13,11 +13,8 @@ chdir($repo);
 // Fix git dubious ownership error for the web server user
 exec("$git config --global --add safe.directory C:/xampp/htdocs/Qcchecklist");
 
-// Get current branch name dynamically (e.g. 'auto_update' or 'main')
-$currentBranch = trim(shell_exec("$git rev-parse --abbrev-ref HEAD"));
-if (!$currentBranch) {
-    $currentBranch = 'main'; // default fallback
-}
+// Explicitly pull from this branch for automatic updates across systems
+$currentBranch = 'feature/unique-item-ids';
 
 // fetch
 exec("$git fetch origin $currentBranch 2>&1", $fetchOutput, $fetchCode);
