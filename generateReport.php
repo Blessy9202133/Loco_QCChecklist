@@ -81,6 +81,8 @@ try {
             }
             $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ?");
             $imgShift->execute([$newSno, $locoID, $oldSno]);
+        }
+        
         // Mark migration as done
         $upsertMeta = $pdo->prepare("INSERT INTO migration_meta (loco_id, section8_migrated) VALUES (?,1) ON DUPLICATE KEY UPDATE section8_migrated=1");
         $upsertMeta->execute([$locoID]);
