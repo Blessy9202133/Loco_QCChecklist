@@ -8171,6 +8171,15 @@ function updateObservationsTable(sectionID, observations, sno) {
     return;
   }
 
+  const defaultTexts = {};
+  Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+    const s_no_td = tr.querySelector("td:first-child");
+    const text_td = tr.querySelector(".observation_text");
+    if (s_no_td && text_td) {
+      defaultTexts[s_no_td.innerText.trim()] = text_td.innerHTML;
+    }
+  });
+
   tbody.innerHTML = "";
 
   // Filter observations for the current section.
@@ -8239,7 +8248,7 @@ function updateObservationsTable(sectionID, observations, sno) {
     `;
 
     // For the observation text cell, include the barcode input field only for section "2_0"
-    let observationContent = observation.observation_text || "N/A";
+    let observationContent = observation.observation_text || defaultTexts[S_no] || "N/A";
     let heightValue = "";
     if (sectionID === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
       const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+\.?)\s*(\d+)$/i);
