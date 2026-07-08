@@ -26,10 +26,50 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 
-    // Fetch loco details
-    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date
-                  FROM loco
-                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
+    // ----- Automatic Section 8 migration (run once per locomotive) -----
+    // Ensure a meta table exists to track whether migration has been performed
+    $pdo->exec("CREATE TABLE IF NOT EXISTS migration_meta (loco_id VARCHAR(20) PRIMARY KEY, section8_migrated TINYINT DEFAULT 0)");
+
+    // Check migration flag for this loco
+    $metaStmt = $pdo->prepare("SELECT section8_migrated FROM migration_meta WHERE loco_id = ?");
+    $metaStmt->execute([$locoID]);
+    $meta = $metaStmt->fetch();
+    $needsMigration = (!$meta || $meta['section8_migrated'] == 0);
+
+    if ($needsMigration) {
+        // List of all observation tables (same list defined later in the script)
+        $tables = [
+            'document_verification_table', 'verify_serial_numbers_of_equipment_as_per_ic',
+            'loco_kavach', 'emi_filter_box', 'rib_cab_input_box', 'dmi_lp_ocip',
+            'rfid_ps_unit', 'loco_antenna_and_gps_gsm_antenna', 'pneumatic_fittings_and_ep_valve_cocks_fixing',
+            'pressure_sensors_installation_in_loco', 'iru_faviely_units_fixing_for_e70_type_loco',
+            'psjb_tpm_units_fixing_for_ccb_type_loco', 'sifa_valve_fixing_for_ccb_type_loco',
+            'pgs_and_speedo_meter_units_fixing', 'rfid_reader_assembly', 'earthing', 'radio_power'
+        ];
+        // Shift old Section 8 rows (8.1‑8.8) down by 6 positions
+        foreach ($tables as $tbl) {
+            $shiftStmt = $pdo->prepare("UPDATE $tbl SET S_no = S_no + 6 WHERE loco_id = ? AND S_no BETWEEN 8.1 AND 8.8");
+            $shiftStmt->execute([$locoID]);
+        }
+        // Also shift image rows
+        $imgShift = $pdo->prepare("UPDATE images SET S_no = S_no + 6 WHERE loco_id = ? AND S_no BETWEEN 8.1 AND 8.8");
+        $imgShift->execute([$locoID]);
+        // Insert placeholder rows for the new points 8.1‑8.6 (empty observation fields)
+        for ($i = 1; $i <= 6; $i++) {
+            $newSno = "8.$i";
+            foreach ($tables as $tbl) {
+                // Use a generic insert – most tables share these columns; extra columns will take default values
+                $insertStmt = $pdo->prepare("INSERT INTO $tbl (loco_id, railway_division, shed_name, section_id, S_no)
+                                            VALUES (?,?,?,8,?)");
+                $insertStmt->execute([$locoID, $railwayDivision, $shedName, $newSno]);
+            }
+        }
+        // Mark migration as done
+        $upsertMeta = $pdo->prepare("INSERT INTO migration_meta (loco_id, section8_migrated) VALUES (?,1) ON DUPLICATE KEY UPDATE section8_migrated=1");
+        $upsertMeta->execute([$locoID]);
+    }
+    // -------------------------------------------------------------------
+
     $locoStmt = $pdo->prepare($locoQuery);
     $locoStmt->execute([$locoID, $railwayDivision, $shedName]);
     $locoDetails = $locoStmt->fetch();
@@ -62,7 +102,8 @@ try {
         $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
         $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
-                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
+                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?
+                  ORDER BY CAST(S_no AS DECIMAL(10,3))";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$locoID, $railwayDivision, $shedName]);
         $tableObservations = $stmt->fetchAll();
