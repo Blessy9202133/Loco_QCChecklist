@@ -35,8 +35,16 @@ foreach ($rows as $row) {
         $newSno = '8.11';
     } elseif (strpos($text, 'GPS/GSM Antenna and Cable Installation') !== false) {
         $newSno = '8.12';
-    } elseif (strpos($text, 'Antenna Cables Routing') !== false) {
+    } elseif (strpos($text, 'Antenna Cables Routing: Verify that cables') !== false) {
         $newSno = '8.13';
+    } elseif (strpos($text, 'securely clamped to the roof using clamps welded to the rooftop') !== false) {
+        $newSno = '8.13.1';
+    } elseif (strpos($text, 'conduit is routed into the Loco cabin through the elbow pipe') !== false) {
+        $newSno = '8.13.2';
+    } elseif (strpos($text, 'conduit pipe and elbow are sourced from the Loco Kavach') !== false) {
+        $newSno = '8.13.3';
+    } elseif (strpos($text, 'RTV Silicone compound') !== false) {
+        $newSno = '8.13.4';
     } elseif (strpos($text, 'Red oxide coating') !== false) {
         $newSno = '8.14';
     }
