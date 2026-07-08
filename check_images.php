@@ -1,0 +1,8 @@
+<?php
+$pdo = new PDO("mysql:host=localhost;dbname=loco_info;charset=utf8mb4", "root", "Hbl@1234", [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+]);
+
+$stmt = $pdo->query("SELECT * FROM images WHERE S_no LIKE '14.%' AND section_id LIKE '8%'");
+print_r($stmt->fetchAll());
