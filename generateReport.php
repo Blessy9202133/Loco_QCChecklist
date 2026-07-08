@@ -38,11 +38,16 @@ try {
         $pdo->exec("ALTER TABLE verify_serial_numbers_of_equipment_as_per_ic ADD COLUMN barcode_status VARCHAR(50) NULL");
     } catch (PDOException $e) { /* Ignore if it already exists */ }
 
+    try {
+        $pdo->exec("ALTER TABLE migration_meta ADD COLUMN section8_subrows_migrated TINYINT DEFAULT 0");
+    } catch (PDOException $e) { /* Ignore if already exists */ }
+
     // Check migration flag for this loco
-    $metaStmt = $pdo->prepare("SELECT section8_migrated FROM migration_meta WHERE loco_id = ?");
+    $metaStmt = $pdo->prepare("SELECT section8_migrated, section8_subrows_migrated FROM migration_meta WHERE loco_id = ?");
     $metaStmt->execute([$locoID]);
     $meta = $metaStmt->fetch();
-    $needsMigration = (!$meta || $meta['section8_migrated'] == 0);
+    
+    $needsMigration = (!$meta || !isset($meta['section8_migrated']) || $meta['section8_migrated'] == 0);
 
     if ($needsMigration) {
         // List of all observation tables (same list defined later in the script)
@@ -57,6 +62,10 @@ try {
         // Shift old Section 8 rows down by 6 positions
         $mapping = [
             '8.8' => '8.14',
+            '8.7.4' => '8.13.4',
+            '8.7.3' => '8.13.3',
+            '8.7.2' => '8.13.2',
+            '8.7.1' => '8.13.1',
             '8.7' => '8.13',
             '8.6' => '8.12',
             '8.5' => '8.11',
@@ -86,6 +95,51 @@ try {
         // Mark migration as done
         $upsertMeta = $pdo->prepare("INSERT INTO migration_meta (loco_id, section8_migrated) VALUES (?,1) ON DUPLICATE KEY UPDATE section8_migrated=1");
         $upsertMeta->execute([$locoID]);
+    }
+
+    $needsSubrowMigration = (!$meta || !isset($meta['section8_subrows_migrated']) || $meta['section8_subrows_migrated'] == 0);
+    if ($needsSubrowMigration) {
+        $subrowMapping = [
+            '8.7.4' => '8.13.4',
+            '8.7.3' => '8.13.3',
+            '8.7.2' => '8.13.2',
+            '8.7.1' => '8.13.1',
+            '8.7' => '8.13',
+            '8.8' => '8.14'
+        ];
+        
+        // Pass 1: Trimmed S_no matching
+        foreach ($subrowMapping as $oldSno => $newSno) {
+            $shiftStmt = $pdo->prepare("UPDATE loco_antenna_and_gps_gsm_antenna SET S_no = ? WHERE loco_id = ? AND TRIM(S_no) = ?");
+            $shiftStmt->execute([$newSno, $locoID, $oldSno]);
+            $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND TRIM(S_no) = ?");
+            $imgShift->execute([$newSno, $locoID, $oldSno]);
+        }
+
+        // Pass 2: Robust Text-based matching (handles severely corrupted S_no values)
+        $textCheck = $pdo->prepare("SELECT id, S_no, observation_text FROM loco_antenna_and_gps_gsm_antenna WHERE loco_id = ? AND (S_no LIKE '8.%' OR S_no LIKE '14.%' OR S_no LIKE '8.0.%')");
+        $textCheck->execute([$locoID]);
+        foreach ($textCheck->fetchAll() as $row) {
+            $text = $row['observation_text'];
+            $newSno = null;
+            if (strpos($text, 'securely clamped to the roof using clamps welded to the rooftop') !== false) {
+                $newSno = '8.13.1';
+            } elseif (strpos($text, 'conduit is routed into the Loco cabin through the elbow pipe') !== false) {
+                $newSno = '8.13.2';
+            } elseif (strpos($text, 'conduit pipe and elbow are sourced from the Loco Kavach') !== false) {
+                $newSno = '8.13.3';
+            } elseif (strpos($text, 'RTV Silicone compound') !== false) {
+                $newSno = '8.13.4';
+            }
+            
+            if ($newSno && $row['S_no'] !== $newSno) {
+                $pdo->prepare("UPDATE loco_antenna_and_gps_gsm_antenna SET S_no = ? WHERE id = ?")->execute([$newSno, $row['id']]);
+                $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND TRIM(S_no) = ?")->execute([$newSno, $locoID, trim($row['S_no'])]);
+            }
+        }
+        
+        $upsertMeta2 = $pdo->prepare("INSERT INTO migration_meta (loco_id, section8_subrows_migrated) VALUES (?,1) ON DUPLICATE KEY UPDATE section8_subrows_migrated=1");
+        $upsertMeta2->execute([$locoID]);
     }
     // -------------------------------------------------------------------
 
