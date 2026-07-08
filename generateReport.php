@@ -62,7 +62,7 @@ try {
                 $shiftStmt = $pdo->prepare("UPDATE $tbl SET S_no = ? WHERE loco_id = ? AND S_no = ?");
                 $shiftStmt->execute([$newSno, $locoID, $oldSno]);
             }
-            $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ? AND section_id LIKE '8%'");
+            $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ?");
             $imgShift->execute([$newSno, $locoID, $oldSno]);
         }
         // Insert placeholder rows for the new points 8.1‑8.6 (empty observation fields)
