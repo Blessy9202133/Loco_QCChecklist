@@ -50,37 +50,60 @@ try {
     $needsMigration = (!$meta || !isset($meta['section8_migrated']) || $meta['section8_migrated'] == 0);
 
     if ($needsMigration) {
-        // List of all observation tables (same list defined later in the script)
-        $tables = [
-            'document_verification_table', 'verify_serial_numbers_of_equipment_as_per_ic',
-            'loco_kavach', 'emi_filter_box', 'rib_cab_input_box', 'dmi_lp_ocip',
-            'rfid_ps_unit', 'loco_antenna_and_gps_gsm_antenna', 'pneumatic_fittings_and_ep_valve_cocks_fixing',
-            'pressure_sensors_installation_in_loco', 'iru_faviely_units_fixing_for_e70_type_loco',
-            'psjb_tpm_units_fixing_for_ccb_type_loco', 'sifa_valve_fixing_for_ccb_type_loco',
-            'pgs_and_speedo_meter_units_fixing', 'rfid_reader_assembly', 'earthing', 'radio_power'
-        ];
-        // Shift old Section 8 rows down by 6 positions
-        $mapping = [
-            '8.8' => '8.14',
-            '8.7.4' => '8.13.4',
-            '8.7.3' => '8.13.3',
-            '8.7.2' => '8.13.2',
-            '8.7.1' => '8.13.1',
-            '8.7' => '8.13',
-            '8.6' => '8.12',
-            '8.5' => '8.11',
-            '8.4' => '8.10',
-            '8.3' => '8.9',
-            '8.2' => '8.8',
-            '8.1' => '8.7'
-        ];
-        foreach ($mapping as $oldSno => $newSno) {
-            foreach ($tables as $tbl) {
-                $shiftStmt = $pdo->prepare("UPDATE $tbl SET S_no = ? WHERE loco_id = ? AND S_no = ?");
-                $shiftStmt->execute([$newSno, $locoID, $oldSno]);
+        $shouldShift = false;
+        
+        // Check actual data to see if it's old or new format
+        $checkData = $pdo->prepare("SELECT S_no, observation_text FROM loco_antenna_and_gps_gsm_antenna WHERE loco_id = ? AND S_no IN ('8.1', '8.7', '8.13', '8.13.1')");
+        $checkData->execute([$locoID]);
+        $rows = $checkData->fetchAll();
+        
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $text = strtolower($row['observation_text'] ?? '');
+                // If 8.1 contains 'gps antenna', it's the old format!
+                if ($row['S_no'] === '8.1' && strpos($text, 'gps antenna') !== false) {
+                    $shouldShift = true;
+                }
+                // If 8.7 contains 'conduit', it's the old format!
+                if ($row['S_no'] === '8.7' && strpos($text, 'conduit') !== false) {
+                    $shouldShift = true;
+                }
             }
-            $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ?");
-            $imgShift->execute([$newSno, $locoID, $oldSno]);
+        }
+
+        if ($shouldShift) {
+            // List of all observation tables (same list defined later in the script)
+            $tables = [
+                'document_verification_table', 'verify_serial_numbers_of_equipment_as_per_ic',
+                'loco_kavach', 'emi_filter_box', 'rib_cab_input_box', 'dmi_lp_ocip',
+                'rfid_ps_unit', 'loco_antenna_and_gps_gsm_antenna', 'pneumatic_fittings_and_ep_valve_cocks_fixing',
+                'pressure_sensors_installation_in_loco', 'iru_faviely_units_fixing_for_e70_type_loco',
+                'psjb_tpm_units_fixing_for_ccb_type_loco', 'sifa_valve_fixing_for_ccb_type_loco',
+                'pgs_and_speedo_meter_units_fixing', 'rfid_reader_assembly', 'earthing', 'radio_power'
+            ];
+            // Shift old Section 8 rows down by 6 positions
+            $mapping = [
+                '8.8' => '8.14',
+                '8.7.4' => '8.13.4',
+                '8.7.3' => '8.13.3',
+                '8.7.2' => '8.13.2',
+                '8.7.1' => '8.13.1',
+                '8.7' => '8.13',
+                '8.6' => '8.12',
+                '8.5' => '8.11',
+                '8.4' => '8.10',
+                '8.3' => '8.9',
+                '8.2' => '8.8',
+                '8.1' => '8.7'
+            ];
+            foreach ($mapping as $oldSno => $newSno) {
+                foreach ($tables as $tbl) {
+                    $shiftStmt = $pdo->prepare("UPDATE $tbl SET S_no = ? WHERE loco_id = ? AND S_no = ?");
+                    $shiftStmt->execute([$newSno, $locoID, $oldSno]);
+                }
+                $imgShift = $pdo->prepare("UPDATE images SET S_no = ? WHERE loco_id = ? AND S_no = ?");
+                $imgShift->execute([$newSno, $locoID, $oldSno]);
+            }
         }
         
         // Mark migration as done
