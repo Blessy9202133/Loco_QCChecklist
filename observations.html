@@ -355,27 +355,35 @@
           if (!obs.observation_status || obs.observation_status.trim() === '' || obs.observation_status.trim() === 'Select') {
             return;
           }
+          let statusText = obs.observation_status || "";
           let heightValue = "";
           let observationContent = obs.observation_text || "";
           if (obs.barcode && String(obs.barcode).trim() !== "") {
             observationContent += " " + String(obs.barcode).trim();
           }
           if (["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(obs.S_no)) {
-            const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+\.?)\s*(\d+)$/i);
+            let heightMatch = statusText.match(/\(Height:\s*(\d+)\s*(?:mm)?\)/i);
+            if (heightMatch) {
+              heightValue = heightMatch[1];
+            }
+
+            const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+(?:mm)?\.?)\s*(?:-?\s*)?(\d+)(?:\s*\.\s*\d+)*$/i);
             if (match) {
               observationContent = match[1].replace(/&lt;=/g, '<=').replace('≤', '<=');
               if (!observationContent.endsWith('.')) {
                 observationContent += '.';
               }
-              heightValue = match[2];
+              if (!heightValue) heightValue = match[2];
             } else {
               observationContent = observationContent.replace(/&lt;=/g, '<=').replace('≤', '<=');
             }
+            observationContent = observationContent.replace(/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i, '$1');
           }
           const formattedDescription = formatDescription(observationContent);
-          let statusText = obs.observation_status.trim();
+          
+          let baseStatusText = statusText.replace(/\s*\(\s*Height:.*?\s*\)/i, '').replace(/\n/g, '').trim();
           let statusColor = '';
-          switch (statusText) {
+          switch (baseStatusText) {
             case 'Available':
             case 'Present':
             case 'Yes':
@@ -435,7 +443,9 @@
               statusColor = 'yellow';
           }
           if (["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(obs.S_no) && heightValue !== "") {
-            statusText += ` (${heightValue} mm)`;
+            statusText = `${baseStatusText}<br>(Height: ${heightValue} mm)`;
+          } else {
+            statusText = baseStatusText;
           }
           const tr = document.createElement("tr");
           let imageHTML = 'No Image';
@@ -1019,9 +1029,8 @@
             }
 
             if (["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(obs.S_no) && heightValue !== "") {
-              if (!statusText.toLowerCase().includes("height:")) {
-                statusText += ` (Height: ${heightValue})`;
-              }
+              let baseStatusText = statusText.replace(/\s*\(\s*Height:.*?\s*\)/i, '').trim();
+              statusText = `${baseStatusText}\n(Height: ${heightValue} mm)`;
             }
 
             return {
@@ -1084,7 +1093,7 @@
             didParseCell: function (data) {
               if (data.row.section === 'body' && data.column.index === 2) {
                 const statusText = String(data.cell.raw).trim();
-                const baseStatusText = statusText.replace(/\s*\(\d+(?:\s*mm)?\)$/i, "");
+                const baseStatusText = statusText.replace(/\s*\(\s*Height:.*?\s*\)/i, "").replace(/\n/g, "").trim();
                 const s_no = String(data.row.raw[0]);
                 function matchesSno(sno, pattern) {
                   return pattern.split(',').some(part => {
