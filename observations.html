@@ -707,9 +707,10 @@
         }
 
         const totalPointsFixed = 183;
-        const closedPoints = observationsArray.filter(obs =>
-          ["Available", "Present", "Yes", "Routing Done", "Fixed", "Secured", "Installed", "Connected", "Aligned", "Torquing done", "Positioning done", "Configured", "Welding done", "Earthing done", "Matching", "Not Applicable", "Coating done", "Applied", "Cables Connected", "Metal clamps implemented", "Locked", "Verified and ok", "No but accepted", "No But Accepted", "Accepted with Deviation", "Accepted with deviation"].includes(obs.observation_status.trim())
-        ).length;
+        const closedPoints = observationsArray.filter(obs => {
+          let baseStatus = obs.observation_status ? obs.observation_status.replace(/\s*\(\s*Height:.*?\s*\)/i, '').replace(/\n/g, '').trim() : "";
+          return ["Available", "Present", "Yes", "Routing Done", "Fixed", "Secured", "Installed", "Connected", "Aligned", "Torquing done", "Positioning done", "Configured", "Welding done", "Earthing done", "Matching", "Not Applicable", "Coating done", "Applied", "Cables Connected", "Metal clamps implemented", "Locked", "Verified and ok", "No but accepted", "No But Accepted", "Accepted with Deviation", "Accepted with deviation"].includes(baseStatus);
+        }).length;
         const openPoints = totalPointsFixed - closedPoints;
 
 
