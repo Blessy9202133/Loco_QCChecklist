@@ -7353,6 +7353,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7385,6 +7386,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7416,6 +7418,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7447,6 +7450,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7478,6 +7482,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Connected">Connected</option>
           <option value="Not Connected">Not Connected</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
