@@ -97,14 +97,21 @@ try {
             if ($tableName === 'loco_antenna_and_gps_gsm_antenna' && in_array($s_no, ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
                 // Normalize and ensure ending punctuation for section 8 height rows.
                 $updatedDescription = str_replace(['≤', '&lt;='], '<=', $updatedDescription);
+                $updatedDescription = preg_replace('/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i', '$1', $updatedDescription);
                 if ($updatedDescription !== '' && substr($updatedDescription, -1) !== '.') {
                     $updatedDescription .= '.';
                 }
 
+                $observation_text = trim($updatedDescription);
+
                 if ($newHeight !== '') {
-                    $observation_text = trim(preg_replace('/\s*(\d+)?$/', '', $updatedDescription)) . ' ' . $newHeight;
+                    if (stripos($status, '(Height:') === false) {
+                        $status = trim($status) . ' (Height: ' . $newHeight . ')';
+                    } else {
+                        $status = preg_replace('/\(Height:.*?\)/i', '(Height: ' . $newHeight . ')', $status);
+                    }
                 } else {
-                    $observation_text = trim($updatedDescription);
+                    $status = preg_replace('/\s*\(Height:.*?\)/i', '', $status);
                 }
             } else {
                 if (preg_match('/^(.*):\s*(\d{10,15})$/', $existingText, $matches)) {

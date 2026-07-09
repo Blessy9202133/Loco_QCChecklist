@@ -8267,16 +8267,24 @@ function updateObservationsTable(sectionID, observations, sno) {
     let observationContent = observation.observation_text || defaultTexts[S_no] || "N/A";
     let heightValue = "";
     if (sectionID === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
-      const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+\.?)\s*(\d+)$/i);
+      let statusText = observation.observation_status || "";
+      let heightMatch = statusText.match(/\(Height:\s*(\d+)\s*(?:mm)?\)/i);
+      if (heightMatch) {
+        heightValue = heightMatch[1];
+        observation.observation_status = statusText.replace(/\s*\(Height:.*?\)/i, '').trim();
+      }
+
+      const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+(?:mm)?\.?)\s*(?:-?\s*)?(\d+)(?:\s*\.\s*\d+)*$/i);
       if (match) {
         observationContent = match[1].replace(/&lt;=/g, '<=').replace('≤', '<=');
         if (!observationContent.endsWith('.')) {
           observationContent += '.';
         }
-        heightValue = match[2];
+        if (!heightValue) heightValue = match[2];
       } else {
         observationContent = observationContent.replace(/&lt;=/g, '<=').replace('≤', '<=');
       }
+      observationContent = observationContent.replace(/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i, '$1');
     }
     if (sectionID === "2_0" && S_no !== "2.1") {
       observationContent += `<br>

@@ -44,12 +44,22 @@ try {
             foreach ($observations as $obs) {
                 $observationText = trim($obs['observation_text'] ?? '');
                 $heightValue = trim($obs['height'] ?? '');
-                if (in_array($obs['S_no'], ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6']) && $heightValue !== '') {
+                $status = $obs['observation_status'] ?? '';
+                if (in_array($obs['S_no'], ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
                     $observationText = str_replace(['&lt;=', '≤'], '<=', $observationText);
+                    $observationText = preg_replace('/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i', '$1', $observationText);
                     if ($observationText !== '' && substr($observationText, -1) !== '.') {
                         $observationText .= '.';
                     }
-                    $observationText .= ' ' . $heightValue;
+                    if ($heightValue !== '') {
+                        if (stripos($status, '(Height:') === false) {
+                            $status = trim($status) . ' (Height: ' . $heightValue . ')';
+                        } else {
+                            $status = preg_replace('/\(Height:.*?\)/i', '(Height: ' . $heightValue . ')', $status);
+                        }
+                    } else {
+                        $status = preg_replace('/\s*\(Height:.*?\)/i', '', $status);
+                    }
                 }
 
                 $stmt = $pdo->prepare("INSERT INTO loco_antenna_and_gps_gsm_antenna (
@@ -62,7 +72,7 @@ try {
                     $locoID, $locoType, $brakeType, $railwayDivision,
                     $shedName, $inspectionDate,
                     $observationText, $obs['remarks'], $obs['S_no'],
-                    $obs['observation_status'], $sectionID,$createdAt
+                    $status, $sectionID,$createdAt
                 ]);
 
                 // Update images in images table:
