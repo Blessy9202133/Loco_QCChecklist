@@ -192,7 +192,9 @@ try {
             $validImages = [];
             foreach ($imagesForThisSno as $imagePath) {
                 if ($imagePath && file_exists(__DIR__ . '/' . $imagePath) && strpos($imagePath, 'uploads/') === 0) {
-                    $validImages[] = "http://localhost/Qcchecklist/" . $imagePath;
+                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+                    $host = $_SERVER['HTTP_HOST'];
+                    $validImages[] = $protocol . $host . "/QCCHECKLIST/" . $imagePath;
                 }
             }
 
