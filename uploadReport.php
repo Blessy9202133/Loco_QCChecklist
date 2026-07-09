@@ -26,7 +26,7 @@ try {
             exit;
         }
 
-        if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             $uploadPath = $uploadDir . $fileName;
@@ -66,9 +66,10 @@ try {
                 ]);
             }
         } else {
+            $errCode = isset($_FILES['file']) ? $_FILES['file']['error'] : 'POST max size exceeded or no file';
             echo json_encode([
                 'success' => false,
-                'message' => 'File upload error: ' . $_FILES['file']['error']
+                'message' => 'File upload error: ' . $errCode
             ]);
         }
     } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
