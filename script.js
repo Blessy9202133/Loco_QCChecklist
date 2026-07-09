@@ -7958,9 +7958,20 @@ async function saveObservation(section) {
       return;
     }
 
-    const barcodeInput = row.querySelector("input[type='text'], input[type='number']");
-    const barcode = barcodeInput ? barcodeInput.value.trim() : "";
-    const text = descriptionHtml.trim(); // DO NOT append barcode to text
+    let heightValue = "";
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      const heightInput = row.querySelector('.height-input');
+      heightValue = heightInput ? heightInput.value.trim() : "";
+    }
+
+    let text = descriptionHtml.trim();
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no) && heightValue !== "") {
+      text = text.replace(/&lt;=/g, '<=').replace(/≤/g, '<=');
+      if (!text.endsWith('.')) {
+        text += '.';
+      }
+      text = text + ' ' + heightValue;
+    }
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const status = row.querySelector("select")?.value || "";
 
@@ -7980,14 +7991,19 @@ async function saveObservation(section) {
       return;
     }
 
-    observations.push({
+    const observationPayload = {
       S_no,
       observation_text: text,
       remarks,
       observation_status: status,
-      image_paths: imagePaths,
-      barcode_kavach_main_unit: barcode
-    });
+      image_paths: imagePaths
+    };
+
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      observationPayload.height = heightValue;
+    }
+
+    observations.push(observationPayload);
   }
 
   // ✅ Check if at least one observation status is selected
@@ -8654,9 +8670,11 @@ async function updateObservation(section) {
     const rowId = row.id.replace("row-", "");
     const S_no = row.querySelector("td:nth-child(1)")?.innerText.trim() || "";
 
-    // 5a) Text, barcode (for 2_0), remarks, status
+    // 5a) Text, barcode (for 2_0), height (for section 8 rows), remarks, status
     let observationText = row.querySelector(".observation_text")?.textContent.trim() || "";
     let barcodeValue = "";
+    let heightValue = "";
+
     if (section === "2_0") {
       const bcInput = row.querySelector("input[name='barcode_kavach_main_unit']");
       if (bcInput) {
@@ -8666,16 +8684,23 @@ async function updateObservation(section) {
     } else if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
       const hInput = row.querySelector(".height-input");
       if (hInput) {
-        barcodeValue = hInput.value.trim();
-        if (hInput.dataset.initialValue !== barcodeValue) hasChanges = true;
+        heightValue = hInput.value.trim();
+        if (hInput.dataset.initialValue !== heightValue) hasChanges = true;
+        observationText = observationText.replace(/&lt;=/g, '<=').replace(/≤/g, '<=');
+        if (heightValue !== "") {
+          if (observationText !== '' && !observationText.endsWith('.')) {
+            observationText += '.';
+          }
+          observationText += ' ' + heightValue;
+        }
       }
     }
 
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const observationStatus = row.querySelector("select")?.value || "";
     if (observationStatus && observationStatus !== "Select") hasChanges = true;
-    if (observationText || remarks || barcodeValue) hasChanges = true;
-    if (!observationStatus && !remarks && !barcodeValue && !observationText) continue;
+    if (observationText || remarks || barcodeValue || heightValue) hasChanges = true;
+    if (!observationStatus && !remarks && !barcodeValue && !heightValue && !observationText) continue;
 
     // 5b) Gather ALL images currently in the container
     const existingPaths = [];
@@ -8709,15 +8734,24 @@ async function updateObservation(section) {
       ...uploadedPaths
     ];
 
-    observations.push({
+    const rowPayload = {
       S_no,
       observation_text: observationText,
-      barcode: barcodeValue,
       remarks,
       observation_status: observationStatus,
       image_paths: allImages,
       deleted_images: deletedPaths
-    });
+    };
+
+    if (section === "2_0") {
+      rowPayload.barcode = barcodeValue;
+    }
+
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      rowPayload.height = heightValue;
+    }
+
+    observations.push(rowPayload);
   }
 
   // 6) Abort if no modifications
@@ -8728,6 +8762,19 @@ async function updateObservation(section) {
 
   // 7) Append JSON payload
   formData.append("observations", JSON.stringify(observations));
+
+  // Debug: log section update payload before submission
+  console.log("updateObservations payload for section:", section, {
+    locoId,
+    locoType: document.getElementById("loco-type").value,
+    brakeType: document.getElementById("brake-type").value,
+    railwayDivision,
+    shedName,
+    inspectionDate: document.getElementById("date").value,
+    section,
+    section_index: sectionMapping[section],
+    observations
+  });
 
   // 8) Submit update
   try {

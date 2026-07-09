@@ -42,7 +42,16 @@ try {
 
             // Loop through each observation
             foreach ($observations as $obs) {
-                // Insert into radio_power table
+                $observationText = trim($obs['observation_text'] ?? '');
+                $heightValue = trim($obs['height'] ?? '');
+                if (in_array($obs['S_no'], ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6']) && $heightValue !== '') {
+                    $observationText = str_replace(['&lt;=', '≤'], '<=', $observationText);
+                    if ($observationText !== '' && substr($observationText, -1) !== '.') {
+                        $observationText .= '.';
+                    }
+                    $observationText .= ' ' . $heightValue;
+                }
+
                 $stmt = $pdo->prepare("INSERT INTO loco_antenna_and_gps_gsm_antenna (
                     loco_id, loco_type, brake_type, railway_division, shed_name,
                     inspection_date, observation_text, remarks, S_no,
@@ -52,7 +61,7 @@ try {
                 $stmt->execute([
                     $locoID, $locoType, $brakeType, $railwayDivision,
                     $shedName, $inspectionDate,
-                    $obs['observation_text'], $obs['remarks'], $obs['S_no'],
+                    $observationText, $obs['remarks'], $obs['S_no'],
                     $obs['observation_status'], $sectionID,$createdAt
                 ]);
 
