@@ -132,9 +132,18 @@ try {
     }
     // -------------------------------------------------------------------
 
-    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date FROM loco WHERE loco_id = ? AND railway_division = ? AND shed_name = ?";
+    $shedNames = [$shedName];
+    if ($shedName === 'Vadodara(BRC)' || $shedName === 'Vadodhara Loco Shed(BRC)') {
+        $shedNames = ['Vadodara(BRC)', 'Vadodhara Loco Shed(BRC)'];
+    } elseif ($shedName === 'Vatva(VTA)' || $shedName === 'Vatva Loco Shed(VTA)') {
+        $shedNames = ['Vatva(VTA)', 'Vatva Loco Shed(VTA)'];
+    }
+    $placeholders = implode(',', array_fill(0, count($shedNames), '?'));
+
+    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date FROM loco WHERE loco_id = ? AND railway_division = ? AND shed_name IN ($placeholders)";
     $locoStmt = $pdo->prepare($locoQuery);
-    $locoStmt->execute([$locoID, $railwayDivision, $shedName]);
+    $params = array_merge([$locoID, $railwayDivision], $shedNames);
+    $locoStmt->execute($params);
     $locoDetails = $locoStmt->fetch();
 
     if (!$locoDetails) {
@@ -165,14 +174,14 @@ try {
         $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
         $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
-                  WHERE loco_id = ? AND railway_division = ? AND shed_name = ?
+                  WHERE loco_id = ? AND railway_division = ? AND shed_name IN ($placeholders)
                   ORDER BY
                     CAST(SUBSTRING_INDEX(S_no, '.', 1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 2), '.', -1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 3), '.', -1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 4), '.', -1) AS UNSIGNED)";
         $stmt = $pdo->prepare($query);
-        $stmt->execute([$locoID, $railwayDivision, $shedName]);
+        $stmt->execute(array_merge([$locoID, $railwayDivision], $shedNames));
         $tableObservations = $stmt->fetchAll();
 
         foreach ($tableObservations as &$obs) {

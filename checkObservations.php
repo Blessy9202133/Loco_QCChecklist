@@ -76,14 +76,32 @@ if (!isset($tableNames[$sectionId])) {
 
 $table = $tableNames[$sectionId];
 
+$shedNames = [$shedName];
+if ($shedName === 'Vadodara(BRC)' || $shedName === 'Vadodhara Loco Shed(BRC)') {
+    $shedNames = ['Vadodara(BRC)', 'Vadodhara Loco Shed(BRC)'];
+} elseif ($shedName === 'Vatva(VTA)' || $shedName === 'Vatva Loco Shed(VTA)') {
+    $shedNames = ['Vatva(VTA)', 'Vatva Loco Shed(VTA)'];
+}
+
+$placeholders = implode(',', array_fill(0, count($shedNames), '?'));
+
 // Prepare SQL query to check if observations exist in the table and are actually filled
 $checkQuery = "SELECT COUNT(*) as count FROM $table 
-               WHERE loco_id = ? AND shed_name = ? AND railway_division = ? 
+               WHERE loco_id = ? AND shed_name IN ($placeholders) AND railway_division = ? 
                AND observation_status IS NOT NULL 
                AND observation_status != '' 
                AND observation_status != 'Select'";
 $checkStmt = $conn->prepare($checkQuery);
-$checkStmt->bind_param("sss", $locoId, $shedName, $railwayDivision);
+
+$types = "s" . str_repeat("s", count($shedNames)) . "s";
+$params = array_merge([$locoId], $shedNames, [$railwayDivision]);
+
+$bindNames = [];
+$bindNames[] = $types;
+for ($i = 0; $i < count($params); $i++) {
+    $bindNames[] = &$params[$i];
+}
+call_user_func_array([$checkStmt, 'bind_param'], $bindNames);
 $checkStmt->execute();
 
 // Fetch result and determine if any observations exist
