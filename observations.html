@@ -516,9 +516,13 @@
           const majorA = partsA[0];
           const majorB = partsB[0];
           if (majorA !== majorB) return majorA - majorB;
-          const minorA = partsA[1];
-          const minorB = partsB[1];
-          return minorA - minorB;
+          const minorA = partsA.length > 1 ? partsA[1] : 0;
+          const minorB = partsB.length > 1 ? partsB[1] : 0;
+          if (minorA !== minorB) return minorA - minorB;
+          
+          const patchA = partsA.length > 2 ? partsA[2] : 0;
+          const patchB = partsB.length > 2 ? partsB[2] : 0;
+          return patchA - patchB;
         });
       }
 
