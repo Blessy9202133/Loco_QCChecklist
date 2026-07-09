@@ -132,17 +132,19 @@ try {
     }
     // -------------------------------------------------------------------
 
-    $shedNames = [$shedName];
-    if ($shedName === 'Vadodara(BRC)' || $shedName === 'Vadodhara Loco Shed(BRC)') {
-        $shedNames = ['Vadodara(BRC)', 'Vadodhara Loco Shed(BRC)'];
-    } elseif ($shedName === 'Vatva(VTA)' || $shedName === 'Vatva Loco Shed(VTA)') {
-        $shedNames = ['Vatva(VTA)', 'Vatva Loco Shed(VTA)'];
+    $shedCondition = "shed_name = ?";
+    $shedParams = [$shedName];
+    if (strpos($shedName, 'Vadodara') !== false || strpos($shedName, 'Vadodhara') !== false || strpos($shedName, '(BRC)') !== false) {
+        $shedCondition = "(shed_name LIKE '%Vadodara%' OR shed_name LIKE '%Vadodhara%' OR shed_name LIKE '%(BRC)%')";
+        $shedParams = [];
+    } elseif (strpos($shedName, 'Vatva') !== false || strpos($shedName, '(VTA)') !== false) {
+        $shedCondition = "(shed_name LIKE '%Vatva%' OR shed_name LIKE '%(VTA)%')";
+        $shedParams = [];
     }
-    $placeholders = implode(',', array_fill(0, count($shedNames), '?'));
 
-    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date FROM loco WHERE loco_id = ? AND railway_division = ? AND shed_name IN ($placeholders)";
+    $locoQuery = "SELECT loco_id, loco_type, brake_type, railway_division, shed_name, inspection_date FROM loco WHERE loco_id = ? AND railway_division = ? AND $shedCondition";
     $locoStmt = $pdo->prepare($locoQuery);
-    $params = array_merge([$locoID, $railwayDivision], $shedNames);
+    $params = array_merge([$locoID, $railwayDivision], $shedParams);
     $locoStmt->execute($params);
     $locoDetails = $locoStmt->fetch();
 
@@ -174,14 +176,14 @@ try {
         $barcodeSelect = ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') ? ', barcode' : ', NULL as barcode';
         $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
-                  WHERE loco_id = ? AND railway_division = ? AND shed_name IN ($placeholders)
+                  WHERE loco_id = ? AND railway_division = ? AND $shedCondition
                   ORDER BY
                     CAST(SUBSTRING_INDEX(S_no, '.', 1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 2), '.', -1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 3), '.', -1) AS UNSIGNED),
                     CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 4), '.', -1) AS UNSIGNED)";
         $stmt = $pdo->prepare($query);
-        $stmt->execute(array_merge([$locoID, $railwayDivision], $shedNames));
+        $stmt->execute(array_merge([$locoID, $railwayDivision], $shedParams));
         $tableObservations = $stmt->fetchAll();
 
         foreach ($tableObservations as &$obs) {

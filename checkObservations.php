@@ -76,25 +76,27 @@ if (!isset($tableNames[$sectionId])) {
 
 $table = $tableNames[$sectionId];
 
-$shedNames = [$shedName];
-if ($shedName === 'Vadodara(BRC)' || $shedName === 'Vadodhara Loco Shed(BRC)') {
-    $shedNames = ['Vadodara(BRC)', 'Vadodhara Loco Shed(BRC)'];
-} elseif ($shedName === 'Vatva(VTA)' || $shedName === 'Vatva Loco Shed(VTA)') {
-    $shedNames = ['Vatva(VTA)', 'Vatva Loco Shed(VTA)'];
-}
+$shedCondition = "shed_name = ?";
+$shedParams = [$shedName];
 
-$placeholders = implode(',', array_fill(0, count($shedNames), '?'));
+if (strpos($shedName, 'Vadodara') !== false || strpos($shedName, 'Vadodhara') !== false || strpos($shedName, '(BRC)') !== false) {
+    $shedCondition = "(shed_name LIKE '%Vadodara%' OR shed_name LIKE '%Vadodhara%' OR shed_name LIKE '%(BRC)%')";
+    $shedParams = [];
+} elseif (strpos($shedName, 'Vatva') !== false || strpos($shedName, '(VTA)') !== false) {
+    $shedCondition = "(shed_name LIKE '%Vatva%' OR shed_name LIKE '%(VTA)%')";
+    $shedParams = [];
+}
 
 // Prepare SQL query to check if observations exist in the table and are actually filled
 $checkQuery = "SELECT COUNT(*) as count FROM $table 
-               WHERE loco_id = ? AND shed_name IN ($placeholders) AND railway_division = ? 
+               WHERE loco_id = ? AND $shedCondition AND railway_division = ? 
                AND observation_status IS NOT NULL 
                AND observation_status != '' 
                AND observation_status != 'Select'";
 $checkStmt = $conn->prepare($checkQuery);
 
-$types = "s" . str_repeat("s", count($shedNames)) . "s";
-$params = array_merge([$locoId], $shedNames, [$railwayDivision]);
+$types = "s" . str_repeat("s", count($shedParams)) . "s";
+$params = array_merge([$locoId], $shedParams, [$railwayDivision]);
 
 $bindNames = [];
 $bindNames[] = $types;
