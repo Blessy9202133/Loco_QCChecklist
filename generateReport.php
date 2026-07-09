@@ -166,7 +166,11 @@ try {
         $query = "SELECT S_no, observation_text, remarks, observation_status, section_id $barcodeSelect
                   FROM $tableName
                   WHERE loco_id = ? AND railway_division = ? AND shed_name = ?
-                  ORDER BY CAST(S_no AS DECIMAL(10,3))";
+                  ORDER BY
+                    CAST(SUBSTRING_INDEX(S_no, '.', 1) AS UNSIGNED),
+                    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 2), '.', -1) AS UNSIGNED),
+                    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 3), '.', -1) AS UNSIGNED),
+                    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(S_no, '.', 4), '.', -1) AS UNSIGNED)";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$locoID, $railwayDivision, $shedName]);
         $tableObservations = $stmt->fetchAll();
