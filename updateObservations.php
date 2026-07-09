@@ -194,6 +194,31 @@ try {
 
                 if ($insertObservationText === '') {
                     $insertObservationText = $newHeight !== '' ? $newHeight : $insertObservationText;
+                }
+
+                $insert->execute([
+                    $locoId,
+                    $sectionId,
+                    $s_no,
+                    $locoType,
+                    $brakeType,
+                    $railwayDivision,
+                    $shedName,
+                    $inspectionDate,
+                    $insertObservationText,
+                    $status,
+                    $remarks
+                ]);
+
+                $debugEntry['action'] = 'inserted';
+                $debugEntry['finalHeight'] = $newHeight;
+
+                if (!empty($image_paths) && is_array($image_paths)) {
+                    foreach ($image_paths as $imgPath) {
+                        $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, NOW())");
+                        $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath]);
+                    }
+                }
             }
         }
         $debugInfo[] = $debugEntry;
