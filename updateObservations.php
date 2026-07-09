@@ -140,11 +140,11 @@ try {
                 ");
                 $update->execute([$locoType, $brakeType, $railwayDivision, $shedName, $inspectionDate, $observation_text, $newBarcode, $status, $remarks, $locoId, $sectionId, $s_no]);
             } else {
-                $update = $pdo->prepare("\
-                    UPDATE $tableName
+                $update = $pdo->prepare(
+                    "UPDATE $tableName
                     SET loco_type = ?, brake_type = ?, railway_division = ?, shed_name = ?, inspection_date = ?, observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
-                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
-                ");
+                    WHERE loco_id = ? AND section_id = ? AND s_no = ?"
+                );
                 $update->execute([$locoType, $brakeType, $railwayDivision, $shedName, $inspectionDate, $observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
             }
 
