@@ -267,6 +267,7 @@ async function showSection(section) {
       <option value="Amrit Bharat" ${locoInfo && locoInfo.locoType === "Amrit Bharat" ? "selected" : ""}>Amrit Bharat</option>
       <option value="WDM" ${locoInfo && locoInfo.locoType === "WDM" ? "selected" : ""}>WDM</option>
       <option value="WDM-3" ${locoInfo && locoInfo.locoType === "WDM-3" ? "selected" : ""}>WDM-3</option>
+      <option value="WDS-6" ${locoInfo && locoInfo.locoType === "WDS-6" ? "selected" : ""}>WDS-6</option>
     
                 </select>
                 </div>
@@ -406,6 +407,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Patiala(PLW)</option>
+                <option value="Tuglakabad(TKD-D)" data-division="NR" ${locoInfo && locoInfo.shedName === "Tuglakabad(TKD-D)"
+      ? "selected"
+      : ""
+    }>Tuglakabad(TKD-D)</option>
 
 
                 <!-- For NCR Division -->
