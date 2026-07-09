@@ -7860,9 +7860,9 @@ async function checkAndHighlightSections(locoId, shedName, railwayDivision) {
         button.style.backgroundColor = "#b2ebf2";
         button.disabled = false;
       } else {
-        // Otherwise, reset the background and keep it disabled.
+        // Otherwise, reset the background and enable it.
         button.style.backgroundColor = "";
-        button.disabled = true;
+        button.disabled = false;
       }
     }
   }
