@@ -499,6 +499,19 @@
         grouped[section].push(observation);
       });
 
+      for (const key in grouped) {
+        grouped[key].sort((a, b) => {
+          const partsA = String(a.S_no).split('.').map(n => parseInt(n, 10) || 0);
+          const partsB = String(b.S_no).split('.').map(n => parseInt(n, 10) || 0);
+          const majorA = partsA[0];
+          const majorB = partsB[0];
+          if (majorA !== majorB) return majorA - majorB;
+          const minorA = partsA[1];
+          const minorB = partsB[1];
+          return minorA - minorB;
+        });
+      }
+
       return grouped;
     }
 
