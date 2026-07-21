@@ -329,6 +329,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>WR</option>
+                   <option value="SWR"  ${locoInfo && locoInfo.railwayDivision === "SWR"
+      ? "selected"
+      : ""
+    }>SWR</option>
                 </select>
             </td>
             
@@ -417,6 +421,13 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Jhansi(JHSD)</option>
+
+                  <!-- For SWR Division -->
+                <option value="KR Puram Loco Shed" data-division="SWR" ${locoInfo && locoInfo.shedName === "KR Puram Loco Shed"
+      ? "selected"
+      : ""
+    }>KR Puram Loco Shed</option>
+                 
 
                 <!-- For WCR Division -->
                 <option value="Itarsi(ETE)" data-division="WCR" ${locoInfo && locoInfo.shedName === "Itarsi(ETE)"
