@@ -76,14 +76,34 @@ if (!isset($tableNames[$sectionId])) {
 
 $table = $tableNames[$sectionId];
 
+$shedCondition = "shed_name = ?";
+$shedParams = [$shedName];
+
+if (strpos($shedName, 'Vadodara') !== false || strpos($shedName, 'Vadodhara') !== false || strpos($shedName, '(BRC)') !== false) {
+    $shedCondition = "(shed_name LIKE '%Vadodara%' OR shed_name LIKE '%Vadodhara%' OR shed_name LIKE '%(BRC)%')";
+    $shedParams = [];
+} elseif (strpos($shedName, 'Vatva') !== false || strpos($shedName, '(VTA)') !== false) {
+    $shedCondition = "(shed_name LIKE '%Vatva%' OR shed_name LIKE '%(VTA)%')";
+    $shedParams = [];
+}
+
 // Prepare SQL query to check if observations exist in the table and are actually filled
 $checkQuery = "SELECT COUNT(*) as count FROM $table 
-               WHERE loco_id = ? AND shed_name = ? AND railway_division = ? 
+               WHERE loco_id = ? AND $shedCondition AND railway_division = ? 
                AND observation_status IS NOT NULL 
                AND observation_status != '' 
                AND observation_status != 'Select'";
 $checkStmt = $conn->prepare($checkQuery);
-$checkStmt->bind_param("sss", $locoId, $shedName, $railwayDivision);
+
+$types = "s" . str_repeat("s", count($shedParams)) . "s";
+$params = array_merge([$locoId], $shedParams, [$railwayDivision]);
+
+$bindNames = [];
+$bindNames[] = $types;
+for ($i = 0; $i < count($params); $i++) {
+    $bindNames[] = &$params[$i];
+}
+call_user_func_array([$checkStmt, 'bind_param'], $bindNames);
 $checkStmt->execute();
 
 // Fetch result and determine if any observations exist

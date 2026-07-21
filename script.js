@@ -267,6 +267,7 @@ async function showSection(section) {
       <option value="Amrit Bharat" ${locoInfo && locoInfo.locoType === "Amrit Bharat" ? "selected" : ""}>Amrit Bharat</option>
       <option value="WDM" ${locoInfo && locoInfo.locoType === "WDM" ? "selected" : ""}>WDM</option>
       <option value="WDM-3" ${locoInfo && locoInfo.locoType === "WDM-3" ? "selected" : ""}>WDM-3</option>
+      <option value="WDS-6" ${locoInfo && locoInfo.locoType === "WDS-6" ? "selected" : ""}>WDS-6</option>
     
                 </select>
                 </div>
@@ -410,6 +411,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Patiala(PLW)</option>
+                <option value="Tuglakabad(TKD-D)" data-division="NR" ${locoInfo && locoInfo.shedName === "Tuglakabad(TKD-D)"
+      ? "selected"
+      : ""
+    }>Tuglakabad(TKD-D)</option>
 
 
                 <!-- For NCR Division -->
@@ -7359,6 +7364,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7391,6 +7397,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7422,6 +7429,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7453,6 +7461,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7484,6 +7493,7 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
           <option value="Select">Select</option>
           <option value="Connected">Connected</option>
           <option value="Not Connected">Not Connected</option>
+          <option value="Not Applicable">Not Applicable</option>
         </select>
       </td>
       <td class="remarks">
@@ -7871,9 +7881,9 @@ async function checkAndHighlightSections(locoId, shedName, railwayDivision) {
         button.style.backgroundColor = "#b2ebf2";
         button.disabled = false;
       } else {
-        // Otherwise, reset the background and keep it disabled.
+        // Otherwise, reset the background and enable it.
         button.style.backgroundColor = "";
-        button.disabled = true;
+        button.disabled = false;
       }
     }
   }
@@ -7969,9 +7979,20 @@ async function saveObservation(section) {
       return;
     }
 
-    const barcodeInput = row.querySelector("input[type='text'], input[type='number']");
-    const barcode = barcodeInput ? barcodeInput.value.trim() : "";
-    const text = descriptionHtml.trim(); // DO NOT append barcode to text
+    let heightValue = "";
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      const heightInput = row.querySelector('.height-input');
+      heightValue = heightInput ? heightInput.value.trim() : "";
+    }
+
+    let text = descriptionHtml.trim();
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no) && heightValue !== "") {
+      text = text.replace(/&lt;=/g, '<=').replace(/≤/g, '<=');
+      if (!text.endsWith('.')) {
+        text += '.';
+      }
+      text = text + ' ' + heightValue;
+    }
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const status = row.querySelector("select")?.value || "";
 
@@ -7991,14 +8012,19 @@ async function saveObservation(section) {
       return;
     }
 
-    observations.push({
+    const observationPayload = {
       S_no,
       observation_text: text,
       remarks,
       observation_status: status,
-      image_paths: imagePaths,
-      barcode_kavach_main_unit: barcode
-    });
+      image_paths: imagePaths
+    };
+
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      observationPayload.height = heightValue;
+    }
+
+    observations.push(observationPayload);
   }
 
   // ✅ Check if at least one observation status is selected
@@ -8262,16 +8288,24 @@ function updateObservationsTable(sectionID, observations, sno) {
     let observationContent = observation.observation_text || defaultTexts[S_no] || "N/A";
     let heightValue = "";
     if (sectionID === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
-      const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+\.?)\s*(\d+)$/i);
+      let statusText = observation.observation_status || "";
+      let heightMatch = statusText.match(/\(Height:\s*(\d+)\s*(?:mm)?\)/i);
+      if (heightMatch) {
+        heightValue = heightMatch[1];
+        observation.observation_status = statusText.replace(/\s*\(Height:.*?\)/i, '').trim();
+      }
+
+      const match = observationContent.match(/^(.*height shall be\s*(?:<=|≤|&lt;=)\s*\d+(?:mm)?\.?)\s*(?:-?\s*)?(\d+)(?:\s*\.\s*\d+)*$/i);
       if (match) {
         observationContent = match[1].replace(/&lt;=/g, '<=').replace('≤', '<=');
         if (!observationContent.endsWith('.')) {
           observationContent += '.';
         }
-        heightValue = match[2];
+        if (!heightValue) heightValue = match[2];
       } else {
         observationContent = observationContent.replace(/&lt;=/g, '<=').replace('≤', '<=');
       }
+      observationContent = observationContent.replace(/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i, '$1');
     }
     if (sectionID === "2_0" && S_no !== "2.1") {
       observationContent += `<br>
@@ -8665,9 +8699,11 @@ async function updateObservation(section) {
     const rowId = row.id.replace("row-", "");
     const S_no = row.querySelector("td:nth-child(1)")?.innerText.trim() || "";
 
-    // 5a) Text, barcode (for 2_0), remarks, status
+    // 5a) Text, barcode (for 2_0), height (for section 8 rows), remarks, status
     let observationText = row.querySelector(".observation_text")?.textContent.trim() || "";
     let barcodeValue = "";
+    let heightValue = "";
+
     if (section === "2_0") {
       const bcInput = row.querySelector("input[name='barcode_kavach_main_unit']");
       if (bcInput) {
@@ -8677,16 +8713,23 @@ async function updateObservation(section) {
     } else if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
       const hInput = row.querySelector(".height-input");
       if (hInput) {
-        barcodeValue = hInput.value.trim();
-        if (hInput.dataset.initialValue !== barcodeValue) hasChanges = true;
+        heightValue = hInput.value.trim();
+        if (hInput.dataset.initialValue !== heightValue) hasChanges = true;
+        observationText = observationText.replace(/&lt;=/g, '<=').replace(/≤/g, '<=');
+        if (heightValue !== "") {
+          if (observationText !== '' && !observationText.endsWith('.')) {
+            observationText += '.';
+          }
+          observationText += ' ' + heightValue;
+        }
       }
     }
 
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const observationStatus = row.querySelector("select")?.value || "";
     if (observationStatus && observationStatus !== "Select") hasChanges = true;
-    if (observationText || remarks || barcodeValue) hasChanges = true;
-    if (!observationStatus && !remarks && !barcodeValue && !observationText) continue;
+    if (observationText || remarks || barcodeValue || heightValue) hasChanges = true;
+    if (!observationStatus && !remarks && !barcodeValue && !heightValue && !observationText) continue;
 
     // 5b) Gather ALL images currently in the container
     const existingPaths = [];
@@ -8720,15 +8763,24 @@ async function updateObservation(section) {
       ...uploadedPaths
     ];
 
-    observations.push({
+    const rowPayload = {
       S_no,
       observation_text: observationText,
-      barcode: barcodeValue,
       remarks,
       observation_status: observationStatus,
       image_paths: allImages,
       deleted_images: deletedPaths
-    });
+    };
+
+    if (section === "2_0") {
+      rowPayload.barcode = barcodeValue;
+    }
+
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no)) {
+      rowPayload.height = heightValue;
+    }
+
+    observations.push(rowPayload);
   }
 
   // 6) Abort if no modifications
@@ -8739,6 +8791,19 @@ async function updateObservation(section) {
 
   // 7) Append JSON payload
   formData.append("observations", JSON.stringify(observations));
+
+  // Debug: log section update payload before submission
+  console.log("updateObservations payload for section:", section, {
+    locoId,
+    locoType: document.getElementById("loco-type").value,
+    brakeType: document.getElementById("brake-type").value,
+    railwayDivision,
+    shedName,
+    inspectionDate: document.getElementById("date").value,
+    section,
+    section_index: sectionMapping[section],
+    observations
+  });
 
   // 8) Submit update
   try {
@@ -8789,28 +8854,28 @@ function getDropdownOptions(sno, observationStatus) {
     "2.38,2.39,2.40,2.3": ["Matching", "Not Matching", "Not Installed", "Not Applicable"], "2.2,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.14,2.15,2.16,2.17,2.18,2.19,2.20,2.21,2.22,2.23,2.24,2.25,2.26,2.27,2.28,2.29,2.30,2.31,2.32,2.33,2.34,2.35,2.36,2.37": ["Matching", "Not Matching", "Not Installed"],
     "3.6,14.13": ["Matching", "Not Matching"],
     "8.1,8.2,8.3,8.4,8.5,8.6": ["Yes", "No", "Accepted with Deviation", "No but accepted"],
-    "3.3,3.4,3.5,3.5.1,3.5.2,3.12,3.13,6.2,6.4,6.7,7.2,9.1-9.6,14.2,14.6,15.2,15.4,15.10,16.2,15.5,15.5.1,3.12,3.13,5.7,6.10,6.11,5.1,14.8,5.2,5.3,9.7,16.1,16.2,16.3,16.4,5.8,5.7,15.9,8.7,8.8,8.9,8.10,8.13.1,8.13.2,8.13.3,8.13.4": ["Yes", "No"],
-    "3.1,3.8,6.8,6.9,14.2,14.15.1,14.18,14.18.1,14.19,15.8,14.15,14.17,16.5,5.6,10.4,8.11,8.12": ["Connected", "Not Connected"],
+    "3.3,3.4,3.5,3.5.1,3.5.2,3.12,3.13,6.2,6.4,6.7,7.2,9.1-9.6,14.2,14.6,15.2,15.4,15.10,15.5,15.5.1,3.12,3.13,5.7,6.10,6.11,5.1,14.8,5.2,5.3,9.7,5.8,5.7,15.9,8.7,8.8,8.9,8.10,8.13.1,8.13.2,8.13.3,8.13.4": ["Yes", "No"],
+    "3.1,3.8,6.8,6.9,14.2,14.15.1,14.18,14.18.1,14.19,15.8,14.15,14.17,5.6,10.4,8.11,8.12": ["Connected", "Not Connected"],
     "1.1,1.2,3.2,6.1": ["Available", "Not Available"],
     "6.5,8.14": ["Applied", "Not Applied"],
-    "4.2,6.6,6.10,7.3,14.20,16.3,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
+    "4.2,6.6,6.10,7.3,14.20,3.9,3.14,5.8,14.14,15.7,6.12,5.9,5.5,8.13": ["Routing Done", "Routing Not Done"],
     "4.1,15.6": ["Fixed", "Not Fixed"],
     "6.3,7.1,14.3,14.12,15.3,14.7,3.7,14.15.2": ["Torquing done", "Torquing Not done"],
     "10.1-10.3,14.1,14.11,15.1": ["Installed", "Not Installed"],
     "14.10,14.9": ["Aligned", "Not Aligned"],
     "14.4,14.5": ["Positioning done", "Positioning not done"],
     "14.16": ["Welding done", "Welding Not done"],
-    "16.1": ["Earthing done", "Earthing Not done"],
     "15.11,7.4,14.21": ["Locked", "Not Locked"],
     "3.11": ["Cables Connected", "Cables Not Connected"],
     "12.9,12.7,11.4,11.2,11.1,11.1.1,15.2.1,5.4": ["Yes", "No", "Not Applicable"],
     "12.8": ["Fixed", "Not Fixed", "Not Applicable"],
     "12.6,12.2,12.1,11.7,11.10": ["Installed", "Not Installed", "Not Applicable"],
     "12.5,11.6": ["Routing Done", "Routing Not Done", "Not Applicable"],
-    "12.4,11.5,13.1,13.4,13.5,13.6,11.8,11.9,11.11": ["Connected", "Not Connected", "Not Applicable"],
+    "12.4,11.5,13.1,13.4,13.5,13.6,11.8,11.9,11.11,16.5": ["Connected", "Not Connected", "Not Applicable"],
     "12.3": ["Matching", "Not Matching", "Not Applicable"],
     "11.3": ["Applied", "Not Applied", "Not Applicable"],
     "13.2,13.3": ["Verified and ok", "Not ok", "Not Applicable"],
+    "16.1,16.2,16.3,16.4":  ["Yes", "No", "Not Applicable"],
     "3.10": ["Metal clamps implemented", "Metal clamps not implemented"]
 
   };

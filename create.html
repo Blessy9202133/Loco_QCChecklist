@@ -85,6 +85,18 @@ if (isset($_SESSION['loco_id'])) {
 
   
   <script>
+    function getStandardShedName(shedName) {
+      if (!shedName) return "";
+      const lowerShed = shedName.toLowerCase();
+      if (lowerShed.includes("vadodara") || lowerShed.includes("vadodhara")) {
+        return "Vadodara Loco Shed(BRC)";
+      }
+      if (lowerShed.includes("vatva")) {
+        return "Vatva Loco Shed(VTA)";
+      }
+      return shedName;
+    }
+
     window.addEventListener('load', function() {
       const urlParams = new URLSearchParams(window.location.search);
       const locoId = urlParams.get("loco_id");
@@ -108,7 +120,7 @@ if (isset($_SESSION['loco_id'])) {
                 if (typeof window.updateShedNames === 'function') {
                   window.updateShedNames();
                 }
-                document.getElementById("shed-name").value = details.shedName || "";
+                document.getElementById("shed-name").value = getStandardShedName(details.shedName || "");
                 document.getElementById("date").value = details.inspectionDate || "";
 
                 // Automatically trigger getDetails() to load observations & highlight sidebar
@@ -150,7 +162,7 @@ if (isset($_SESSION['loco_id'])) {
             if (typeof window.updateShedNames === 'function') {
               window.updateShedNames();
             }
-            if (document.getElementById("shed-name")) document.getElementById("shed-name").value = normalized.shedName;
+            if (document.getElementById("shed-name")) document.getElementById("shed-name").value = getStandardShedName(normalized.shedName);
             if (document.getElementById("date")) document.getElementById("date").value = normalized.inspectionDate;
           });
         } else {

@@ -30,8 +30,13 @@ if (!isset($tableNames[(int)$sectionIndex])) {
 }
 $tableName = $tableNames[(int)$sectionIndex];
 
-$locoId = $_POST['loco-id'] ?? '';
-$sectionId = $_POST['section-id'] ?? '';
+$locoId = trim($_POST['loco-id'] ?? '');
+$sectionId = trim($_POST['section-id'] ?? '');
+$locoType = trim($_POST['loco-type'] ?? '');
+$brakeType = trim($_POST['brake-type'] ?? '');
+$railwayDivision = trim($_POST['railway-division'] ?? '');
+$shedName = trim($_POST['shed-name'] ?? '');
+$inspectionDate = trim($_POST['inspection-date'] ?? '');
 $observationsJson = $_POST['observations'] ?? '';
 
 if (empty($locoId) || empty($sectionId) || empty($observationsJson)) {
@@ -63,8 +68,9 @@ try {
         $s_no = $obs['S_no'];
         $remarks = $obs['remarks'] ?? '';
         $status = $obs['observation_status'] ?? '';
-        // Get new barcode from the 'barcode' field sent from the client.
         $newBarcode = trim($obs['barcode'] ?? '');
+        $newHeight = trim($obs['height'] ?? '');
+        $clientObservationText = trim($obs['observation_text'] ?? '');
         $image_paths = $obs['image_paths'] ?? []; // Get image paths from the observation
 
         // Get existing observation_text (which holds description and barcode) if any.
@@ -75,6 +81,8 @@ try {
         $debugEntry = [
             'S_no' => $s_no,
             'newBarcode_input' => $newBarcode,
+            'newHeight_input' => $newHeight,
+            'clientObservationText' => $clientObservationText,
             'action' => '',
             'existing_observation_text' => ''
         ];
@@ -83,66 +91,68 @@ try {
             $existingText = trim($existing['observation_text']);
             $debugEntry['existing_observation_text'] = $existingText;
 
-            // Assume the format is "Description: barcode"
-            // Use regex to capture description and barcode.
+            // Use the client-provided observation text when available.
+            $updatedDescription = $clientObservationText !== '' ? $clientObservationText : $existingText;
+
             if ($tableName === 'loco_antenna_and_gps_gsm_antenna' && in_array($s_no, ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
-                if (preg_match('/^(.*?)[.:\s]+(\d+)$/', $existingText, $matches)) {
+                // Normalize and ensure ending punctuation for section 8 height rows.
+                $updatedDescription = str_replace(['≤', '&lt;='], '<=', $updatedDescription);
+                $updatedDescription = preg_replace('/(height shall be\s*<=\s*\d+(?:mm)?\.?)[\s\.\d-]*$/i', '$1', $updatedDescription);
+                if ($updatedDescription !== '' && substr($updatedDescription, -1) !== '.') {
+                    $updatedDescription .= '.';
+                }
+
+                $observation_text = trim($updatedDescription);
+
+                if ($newHeight !== '') {
+                    if (stripos($status, '(Height:') === false) {
+                        $status = trim($status) . ' (Height: ' . $newHeight . ')';
+                    } else {
+                        $status = preg_replace('/\(Height:.*?\)/i', '(Height: ' . $newHeight . ')', $status);
+                    }
+                } else {
+                    $status = preg_replace('/\s*\(Height:.*?\)/i', '', $status);
+                }
+            } else {
+                if (preg_match('/^(.*):\s*(\d{10,15})$/', $existingText, $matches)) {
                     $existingDescription = trim($matches[1]);
                     $existingBarcode = trim($matches[2]);
                 } else {
                     $existingDescription = $existingText;
                     $existingBarcode = '';
                 }
-                if (substr($existingDescription, -1) !== '.') {
-                    $existingDescription .= '.';
-                }
-                // Normalize unicode less than or equal symbol to standard <=
-                $existingDescription = str_replace('≤', '<=', $existingDescription);
-            } else if (preg_match('/^(.*):\s*(\d{10,15})$/', $existingText, $matches)) {
-                $existingDescription = trim($matches[1]);
-                $existingBarcode = trim($matches[2]);
-            } else {
-                // If format is not as expected, assume entire text is description and no barcode exists.
-                $existingDescription = $existingText;
-                $existingBarcode = '';
-            }
 
-            // Preserve the existing barcode if no new barcode is entered.
-            if (empty($newBarcode)) {
-                $newBarcode = $existingBarcode;
+                if ($newBarcode === '') {
+                    $newBarcode = $existingBarcode;
+                }
+
+                if ($newBarcode !== '') {
+                    if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
+                        $observation_text = trim($updatedDescription);
+                    } else {
+                        $baseDescription = $clientObservationText !== '' ? $clientObservationText : $existingDescription;
+                        $observation_text = trim($baseDescription) . ': ' . $newBarcode;
+                    }
+                } else {
+                    $observation_text = trim($updatedDescription);
+                }
             }
-            
-            $debugEntry['existingDescription'] = $existingDescription;
-            $debugEntry['existingBarcode'] = $existingBarcode;
-            $debugEntry['finalBarcode'] = $newBarcode;
-           // Only append “: barcode” or “ barcode” if there actually is a barcode
-           if ($newBarcode !== '') {
-             if ($tableName === 'loco_antenna_and_gps_gsm_antenna' && in_array($s_no, ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
-                 $observation_text = $existingDescription . ' ' . $newBarcode;
-             } else if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
-                 $observation_text = $existingDescription;
-             } else {
-                 $observation_text = $existingDescription . ': ' . $newBarcode;
-             }
-           } else {
-            $observation_text = $existingDescription;
-           }
 
             // Update record in database.
             if ($tableName === 'verify_serial_numbers_of_equipment_as_per_ic') {
                 $update = $pdo->prepare("
                     UPDATE $tableName
-                    SET observation_text = ?, barcode = ?, observation_status = ?, remarks = ?, updated_at = NOW()
+                    SET loco_type = ?, brake_type = ?, railway_division = ?, shed_name = ?, inspection_date = ?, observation_text = ?, barcode = ?, observation_status = ?, remarks = ?, updated_at = NOW()
                     WHERE loco_id = ? AND section_id = ? AND s_no = ?
                 ");
-                $update->execute([$observation_text, $newBarcode, $status, $remarks, $locoId, $sectionId, $s_no]);
+                $update->execute([$locoType, $brakeType, $railwayDivision, $shedName, $inspectionDate, $observation_text, $newBarcode, $status, $remarks, $locoId, $sectionId, $s_no]);
             } else {
-                $update = $pdo->prepare("
-                    UPDATE $tableName
-                    SET observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
-                    WHERE loco_id = ? AND section_id = ? AND s_no = ?
-                ");
-                $update->execute([$observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
+                $update = $pdo->prepare(
+                    "UPDATE $tableName
+                    SET loco_type = ?, brake_type = ?, railway_division = ?, shed_name = ?, inspection_date = ?, observation_text = ?, observation_status = ?, remarks = ?, updated_at = NOW()
+                    WHERE loco_id = ? AND section_id = ? AND s_no = ?"
+                );
+                $update->execute([$locoType, $brakeType, $railwayDivision, $shedName, $inspectionDate, $observation_text, $status, $remarks, $locoId, $sectionId, $s_no]);
             }
 
             $debugEntry['action'] = 'updated';
@@ -173,20 +183,48 @@ try {
             } else {
                 $insert = $pdo->prepare("
                     INSERT INTO $tableName 
-                        (loco_id, section_id, s_no, observation_text, observation_status, remarks, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+                        (loco_id, section_id, s_no, loco_type, brake_type, railway_division, shed_name, inspection_date, observation_text, observation_status, remarks, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
                 ");
-                $insert->execute([$locoId, $sectionId, $s_no, $newBarcode, $status, $remarks]);
-            }
 
-            $debugEntry['action'] = 'inserted';
-            $debugEntry['finalBarcode'] = $newBarcode;
+                $insertObservationText = trim($clientObservationText);
 
-            // Handle image inserts for new observations.
-            if (!empty($image_paths) && is_array($image_paths)) {
-                foreach ($image_paths as $imgPath) {
-                    $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, NOW())");
-                    $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath]);
+                if ($tableName === 'loco_antenna_and_gps_gsm_antenna' && in_array($s_no, ['8.1', '8.2', '8.3', '8.4', '8.5', '8.6'])) {
+                    $insertObservationText = str_replace(['≤', '&lt;='], '<=', $insertObservationText);
+                    if ($insertObservationText !== '' && substr($insertObservationText, -1) !== '.') {
+                        $insertObservationText .= '.';
+                    }
+                    if ($newHeight !== '') {
+                        $insertObservationText = trim(preg_replace('/\s*(\d+)?$/', '', $insertObservationText)) . ' ' . $newHeight;
+                    }
+                }
+
+                if ($insertObservationText === '') {
+                    $insertObservationText = $newHeight !== '' ? $newHeight : $insertObservationText;
+                }
+
+                $insert->execute([
+                    $locoId,
+                    $sectionId,
+                    $s_no,
+                    $locoType,
+                    $brakeType,
+                    $railwayDivision,
+                    $shedName,
+                    $inspectionDate,
+                    $insertObservationText,
+                    $status,
+                    $remarks
+                ]);
+
+                $debugEntry['action'] = 'inserted';
+                $debugEntry['finalHeight'] = $newHeight;
+
+                if (!empty($image_paths) && is_array($image_paths)) {
+                    foreach ($image_paths as $imgPath) {
+                        $imgStmt = $pdo->prepare("INSERT INTO images (entity_type, loco_id, s_no, image_path, created_at) VALUES (?, ?, ?, ?, NOW())");
+                        $imgStmt->execute(['radio_power', $locoId, $s_no, $imgPath]);
+                    }
                 }
             }
         }
