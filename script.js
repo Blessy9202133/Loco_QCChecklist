@@ -361,6 +361,8 @@ async function showSection(section) {
 <option value="Barddhaman(BWNX)" data-division="ER" ${locoInfo && locoInfo.shedName === "Barddhaman(BWNX)" ? "selected" : ""}>Barddhaman(BWNX)</option>
 <option value="CLW-Dankuni" data-division="ER" ${locoInfo && locoInfo.shedName === "CLW-Dankuni" ? "selected" : ""}>CLW-Dankuni</option>
 <option value="SSE/DLS-Andal(UDL)" data-division="ER" ${locoInfo && locoInfo.shedName === "SSE/DLS-Andal(UDL)" ? "selected" : ""}>SSE/DLS-Andal(UDL)</option>
+<option value="Chittaranjan-CLW" data-division="ER" ${locoInfo && locoInfo.shedName === "Chittaranjan-CLW" ? "selected" : ""}>Chittaranjan-CLW</option>
+<option value="Ranaghat" data-division="ER" ${locoInfo && locoInfo.shedName === "Ranaghat" ? "selected" : ""}>Ranaghat</option>
                <!-- For WR Division -->
               <option value="Vadodara Loco Shed(BRC)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vadodara Loco Shed(BRC)" || locoInfo.shedName.toLowerCase().includes("vadodara") || locoInfo.shedName.toLowerCase().includes("vadodhara")) ? "selected" : ""}>Vadodara Loco Shed(BRC)</option>
               <option value="Vatva Loco Shed(VTA)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vatva Loco Shed(VTA)" || locoInfo.shedName.toLowerCase().includes("vatva")) ? "selected" : ""}>Vatva Loco Shed(VTA)</option>
