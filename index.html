@@ -261,14 +261,49 @@
     <h1>QA Audit Report</h1>
     <p>Select an option to proceed:</p>
     <div class="container">
-      <button onclick="createNewReport()">Create Report</button>
-      <button onclick="viewReport()">View/Edit Report</button>
+      <button onclick="showCreateReportModal()">Create Report</button>
+      <button onclick="showViewReportModal()">View/Edit Report</button>
       <!-- Manuals Button -->
       <button onclick="showManualModal()">Manuals</button>
       <!-- Check for Updates Button -->
       <button onclick="triggerDBMigration()" style="background-color: #6f42c1;">Check for Updates</button>
     </div>
   </div>
+
+  <!-- Modal for Create Report Selection -->
+  <div id="createReportModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 480px; padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+      <span class="close" onclick="hideCreateReportModal()">&times;</span>
+      <h2 style="color: #2c3e50; margin-bottom: 8px; font-size: 1.6rem;">Select Report Type</h2>
+      <p style="color: #7f8c8d; font-size: 0.95rem; margin-bottom: 25px;">Choose the checklist category to create:</p>
+      
+      <button class="pdf-option" onclick="createStandardReport()" style="background-color: #007bff; font-weight: bold; border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        QC Checklist (Electric / 3-Phase)
+      </button>
+
+      <button class="pdf-option" onclick="createHhpReport()" style="background-color: #d9534f; font-weight: bold; border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+         HHP LOCO Checklist
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal for View/Edit Report Selection -->
+  <div id="viewReportModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 480px; padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+      <span class="close" onclick="hideViewReportModal()">&times;</span>
+      <h2 style="color: #2c3e50; margin-bottom: 8px; font-size: 1.6rem;">View Reports</h2>
+      <p style="color: #7f8c8d; font-size: 0.95rem; margin-bottom: 25px;">Select which report dashboard to open:</p>
+      
+      <button class="pdf-option" onclick="window.location.href='viewReports.php'" style="background-color: #17a2b8; font-weight: bold; border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        📋 View QC Checklist Reports
+      </button>
+
+      <button class="pdf-option" onclick="window.location.href='viewHhpReports.php'" style="background-color: #d9534f; font-weight: bold; border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        🚂 View HHP LOCO Reports
+      </button>
+    </div>
+  </div>
+
 <!-- Modal for Manuals -->
 <div id="manualModal" class="modal" style="display: none;">
   <div class="modal-flex-container">
@@ -464,33 +499,46 @@
 
 
  
-function createNewReport() {
-  // Preserve the user ID and employee name before clearing storage.
-  const storedUserId = localStorage.getItem("user_id");
-  const storedEmployeeName = localStorage.getItem("employee_name");
+    function showCreateReportModal() {
+      document.getElementById('createReportModal').style.display = 'flex';
+    }
 
-  // Clear all storage.
-  sessionStorage.clear();
-  localStorage.clear();
+    function hideCreateReportModal() {
+      document.getElementById('createReportModal').style.display = 'none';
+    }
 
-  // Restore the preserved values.
-  if (storedUserId) {
-    localStorage.setItem("user_id", storedUserId);
-  }
-  if (storedEmployeeName) {
-    localStorage.setItem("employee_name", storedEmployeeName);
-  }
+    function showViewReportModal() {
+      document.getElementById('viewReportModal').style.display = 'flex';
+    }
 
-  // Redirect to create.html with the default section.
-  window.location.href = 'create.html#0.0';
-}
+    function hideViewReportModal() {
+      document.getElementById('viewReportModal').style.display = 'none';
+    }
 
+    function createStandardReport() {
+      const storedUserId = localStorage.getItem("user_id");
+      const storedEmployeeName = localStorage.getItem("employee_name");
 
+      sessionStorage.clear();
+      localStorage.clear();
 
+      if (storedUserId) localStorage.setItem("user_id", storedUserId);
+      if (storedEmployeeName) localStorage.setItem("employee_name", storedEmployeeName);
 
+      window.location.href = 'create.html#0.0';
+    }
 
-    function viewReport() {
-      window.location.href = 'viewReports.php';
+    function createHhpReport() {
+      const storedUserId = localStorage.getItem("user_id");
+      const storedEmployeeName = localStorage.getItem("employee_name");
+
+      sessionStorage.clear();
+      localStorage.clear();
+
+      if (storedUserId) localStorage.setItem("user_id", storedUserId);
+      if (storedEmployeeName) localStorage.setItem("employee_name", storedEmployeeName);
+
+      window.location.href = 'create_hhp.html#0.0';
     }
 
     function logout() {

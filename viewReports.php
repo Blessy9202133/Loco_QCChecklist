@@ -16,15 +16,16 @@ try {
     $pdo = new PDO("mysql:host=localhost;dbname=loco_info", 'root', 'Hbl@1234');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query based on role
+    // Query standard QC reports only (excluding HHP reports)
     if ($role === 'admin') {
         $stmt = $pdo->prepare("SELECT id, file_name, upload_date, DATE_FORMAT(upload_date, '%H:%i') AS upload_time, user_id 
                                FROM report 
+                               WHERE file_name NOT LIKE 'HHP_%' AND file_name NOT LIKE '%hhp%'
                                ORDER BY upload_date DESC");
     } else {
         $stmt = $pdo->prepare("SELECT id, file_name, upload_date, DATE_FORMAT(upload_date, '%H:%i') AS upload_time, user_id 
                                FROM report 
-                               WHERE user_id = :username 
+                               WHERE user_id = :username AND file_name NOT LIKE 'HHP_%' AND file_name NOT LIKE '%hhp%'
                                ORDER BY upload_date DESC");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     }

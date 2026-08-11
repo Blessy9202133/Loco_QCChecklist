@@ -1,0 +1,237 @@
+<?php
+session_start(); 
+if (isset($_SESSION['loco_id'])) {
+    $locoID = $_SESSION['loco_id'];
+    $locoType = $_SESSION['loco_type'];
+    $brakeType = $_SESSION['brake_type'];
+    $railwayDivision = $_SESSION['railway_division'];
+    $shedName = $_SESSION['shed_name'];
+    $inspectionDate = $_SESSION['inspection_date'];
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic QA Form - HHP LOCO</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="script_hhp.js?v=20260806" defer></script>
+  <!-- 3rd‑party libraries (all local) -->
+  <script src="libs/jquery-3.6.0.min.js"></script>
+  <script src="libs/zxing-browser.min.js"></script>
+  <script src="libs/jspdf.umd.min.js"></script>
+  <script src="libs/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    footer {
+      position: fixed;
+      bottom: 5px;
+      right: 20px;
+      z-index: 1000;
+    }
+    footer .action-buttons button {
+      padding: 10px 20px;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+    footer .action-buttons button:hover {
+      background-color: #c9302c;
+    }
+    .hhp-header-badge {
+      background-color: #d9534f;
+      color: white;
+      padding: 6px 14px;
+      font-weight: bold;
+      border-radius: 4px;
+      display: inline-block;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo and Logout -->
+  <div class="logo-container">
+    <img src="hbl_logo.jpg" alt="Logo" class="logo">
+    <span class="hhp-header-badge">HHP LOCO Checklist</span>
+  </div>
+  <div class="acto-buttons">
+    <button class="logout-button" type="button" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="sidebar">
+    <button class="button" onclick="showSection('0.0')" id="loco-info-button">Loco Info</button>
+    <button class="button" onclick="showSection('1_0')" id="button-1" disabled>1.0 Document Verification</button>
+    <button class="button" onclick="showSection('2.0')" id="button-2" disabled>2.0 Verify Serial Numbers Of Equipment as per IC</button>
+    <button class="button" onclick="showSection('3.0')" id="button-3" disabled>3.0 Loco Kavach</button>
+    <button class="button" onclick="showSection('4.0')" id="button-4" disabled>4.0 EMI Filter Box</button>
+    <button class="button" onclick="showSection('5.0')" id="button-5" disabled>5.0 RIB & CAB INPUT BOX</button>
+    <button class="button" onclick="showSection('6.0')" id="button-6" disabled>6.0 DMI (LP-OCIP)</button>
+    <button class="button" onclick="showSection('7.0')" id="button-7" disabled>7.0 RFID PS Unit</button>
+    <button class="button" onclick="showSection('8.0')" id="button-8" disabled>8.0 LOCO Antenna and GPS_GSM Antenna</button>
+    <button class="button" onclick="showSection('9.0')" id="button-9" disabled>9.0 Pneumatic Fittings and Ep Valve,Cocks Fixing</button>
+    <button class="button" onclick="showSection('10.0')" id="button-10" disabled>10.0 Pressure sensors Installation in LOCO</button>
+    <button class="button" onclick="showSection('11.0')" id="button-11" disabled>11.0 IRU (Faviely) Units Fixing For E70 Type Loco</button>
+    <button class="button" onclick="showSection('12.0')" id="button-12" disabled>12.0 PSJB, TPM Units Fixing For CCB Type Loco</button>
+    <button class="button" onclick="showSection('13.0')" id="button-13" disabled>13.0 IRAB (Indian Railway Air-Break)</button>
+    <button class="button" onclick="showSection('14.0')" id="button-14" disabled>14.0 SPEEDO METER UNITS</button>
+    <button class="button" onclick="showSection('15.0')" id="button-15" disabled>15.0 PG SENSOR AND SPEEDO METER UNITS</button>
+    <button class="button" onclick="showSection('16.0')" id="button-16" disabled>16.0 RFID Reader Assembly</button>
+    <button class="button" onclick="showSection('17.0')" id="button-17" disabled>17.0 Auto Horn Installation</button>
+  </div>
+
+  <script>
+    function getStandardShedName(shedName) {
+      if (!shedName) return "";
+      const lowerShed = shedName.toLowerCase();
+      if (lowerShed.includes("vadodara") || lowerShed.includes("vadodhara")) {
+        return "Vadodara Loco Shed(BRC)";
+      }
+      if (lowerShed.includes("vatva")) {
+        return "Vatva Loco Shed(VTA)";
+      }
+      return shedName;
+    }
+
+    window.addEventListener('load', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const locoId = urlParams.get("loco_id");
+
+      if (locoId) {
+        fetch(`getHhpReportById.php?loco_id=${encodeURIComponent(locoId)}`)
+          .then(response => response.json())
+          .then(res => {
+            if (res.success && res.data && res.data.locoDetails) {
+              const details = res.data.locoDetails;
+              localStorage.setItem("hhp_locoDetails", JSON.stringify(details));
+              localStorage.setItem("hhp_selectedLocoId", locoId);
+              
+              showSection("0.0").then(() => {
+                if (document.getElementById("loco-id")) document.getElementById("loco-id").value = details.locoID || "";
+                if (document.getElementById("loco-type")) document.getElementById("loco-type").value = details.locoType || "";
+                if (document.getElementById("brake-type")) document.getElementById("brake-type").value = details.brakeType || "";
+                if (document.getElementById("railway-division")) document.getElementById("railway-division").value = details.railwayDivision || "";
+                if (typeof window.updateShedNames === 'function') window.updateShedNames();
+                if (document.getElementById("shed-name")) document.getElementById("shed-name").value = getStandardShedName(details.shedName || "");
+                if (document.getElementById("date")) document.getElementById("date").value = details.inspectionDate || "";
+
+                getDetails();
+              });
+            } else {
+              alert(res.message || "Failed to load HHP locomotive details.");
+              showSection("0.0");
+            }
+          })
+          .catch(error => {
+            console.error("Fetch error:", error);
+            showSection("0.0");
+          });
+      } else {
+        const storedLocoInfo = sessionStorage.getItem("hhp_locoInfo") || localStorage.getItem("hhp_locoDetails");
+        
+        if (storedLocoInfo) {
+          const details = JSON.parse(storedLocoInfo);
+          const normalized = {
+            locoID: details.locoID || details.locoId || details.loco_id || "",
+            locoType: details.locoType || details.loco_type || "",
+            brakeType: details.brakeType || details.brake_type || "",
+            railwayDivision: details.railwayDivision || details.railway_division || "",
+            shedName: details.shedName || details.shed_name || "",
+            inspectionDate: details.inspectionDate || details.inspection_date || details.inspection_Date || ""
+          };
+
+          const hash = window.location.hash || "#0.0";
+          const sectionId = hash.substring(1);
+
+          showSection(sectionId).then(() => {
+            if (document.getElementById("loco-id")) document.getElementById("loco-id").value = normalized.locoID;
+            if (document.getElementById("loco-type")) document.getElementById("loco-type").value = normalized.locoType;
+            if (document.getElementById("brake-type")) document.getElementById("brake-type").value = normalized.brakeType;
+            if (document.getElementById("railway-division")) document.getElementById("railway-division").value = normalized.railwayDivision;
+            if (typeof window.updateShedNames === 'function') window.updateShedNames();
+            if (document.getElementById("shed-name")) document.getElementById("shed-name").value = getStandardShedName(normalized.shedName);
+            if (document.getElementById("date")) document.getElementById("date").value = normalized.inspectionDate;
+          });
+        } else {
+          sessionStorage.removeItem("hhp_locoDetails");
+          sessionStorage.removeItem("hhp_observationsData");
+          localStorage.removeItem("hhp_selectedLocoId");
+          localStorage.removeItem("hhp_locoDetails");
+          sessionStorage.removeItem("hhp_locoInfo");
+
+          const hash = window.location.hash || "#0.0";
+          const sectionId = hash.substring(1);
+          showSection(sectionId).then(() => {
+            const fieldIds = ["loco-id", "loco-type", "brake-type", "railway-division", "shed-name"];
+            fieldIds.forEach(id => {
+              const element = document.getElementById(id);
+              if (element) element.value = "";
+            });
+            const dateElem = document.getElementById("date");
+            if (dateElem) {
+              const now = new Date();
+              const year = now.getFullYear();
+              const month = String(now.getMonth() + 1).padStart(2, "0");
+              const day = String(now.getDate()).padStart(2, "0");
+              dateElem.value = `${year}-${month}-${day}`;
+            }
+          });
+        }
+      }
+    });
+  </script>
+
+  <!-- Success Modal -->
+  <div id="success-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #4CAF50; color: white; border-radius: 5px;">
+    HHP LOCO Data saved successfully!
+  </div>
+
+  <!-- Main Content Section -->
+  <div class="main-content">
+    <div id="main-content">
+      <div id="dynamic-content">
+        <p>Select a section from the left to view details.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer with Generate Report button -->
+  <footer>
+    <div class="action-buttons">
+      <button type="button" onclick="confirmGenerateReport()">Generate HHP Report</button>
+    </div>
+  </footer>
+
+  <script>
+    function confirmGenerateReport() {
+      const userConfirmed = confirm("Do you want to generate the HHP report?");
+      if (userConfirmed) {
+        generateReport();
+      }
+    }
+
+    function beforeUnloadHandler(event) {
+      event.returnValue = "Please generate report before closing.";
+      return event.returnValue;
+    }
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+
+    function logout() {
+      alert("Logging out...");
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  <div id="messageBox" style="color: green; font-weight: bold; margin-top: 10px;"></div>
+
+</body>
+</html>

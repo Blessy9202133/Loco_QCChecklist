@@ -469,7 +469,7 @@ async function showSection(section) {
       let dateValue =
         locoInfo && locoInfo.inspectionDate
           ? new Date(locoInfo.inspectionDate)
-          : new Date(currentDate);
+          : new Date();
 
       // Format the date as yyyy-MM-dd for the input field
       const year = dateValue.getFullYear();
@@ -8732,6 +8732,14 @@ async function updateObservation(section) {
 
     const remarks = row.querySelector(".remarks textarea")?.value.trim() || "";
     const observationStatus = row.querySelector("select")?.value || "";
+
+    if (section === "8_0" && ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"].includes(S_no) && observationStatus && observationStatus !== "Select" && (!heightValue || heightValue === "")) {
+      alert(`⚠️ Height is mandatory for row ${S_no}. Please enter height (mm).`);
+      const hInput = row.querySelector(".height-input");
+      if (hInput) hInput.focus();
+      return;
+    }
+
     if (observationStatus && observationStatus !== "Select") hasChanges = true;
     if (observationText || remarks || barcodeValue || heightValue) hasChanges = true;
     if (!observationStatus && !remarks && !barcodeValue && !heightValue && !observationText) continue;
@@ -9568,13 +9576,15 @@ const mandatoryImageRowsBySection = {
   "8_0": ["8.1", "8.2", "8.5", "8.7"],
   "9_0": ["9.2"],
   "10_0": ["10.1", "10.2"],
+  "12_0": ["12.2", "12.4", "12.5", "12.6", "12.9"],
+  "12.0": ["12.2", "12.4", "12.5", "12.6", "12.9"],
   "14_0": ["14.1", "14.16", "14.17", "14.19", "14.21", "14.22"],
   "15_0": ["15.1", "15.3", "15.4", "15.9", "15.10", "15.6"]
-
 };
 function validateMandatoryImages(sectionID) {
-  const mandatory = mandatoryImageRowsBySection[sectionID] || [];
-  const tbody = document.querySelector(`#observations-tbody-${sectionID}`);
+  const normKey = (sectionID || "").replace(/\./g, "_");
+  const mandatory = mandatoryImageRowsBySection[normKey] || mandatoryImageRowsBySection[sectionID] || [];
+  const tbody = document.querySelector(`#observations-tbody-${normKey}`) || document.querySelector(`#observations-tbody-${sectionID}`);
   const missing = [];
 
   if (!tbody) return true;
