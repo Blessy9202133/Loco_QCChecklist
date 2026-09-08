@@ -451,6 +451,14 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Tuglakabad(TKDE)</option>
+                <option value="New Katni Junction - Diesel" data-division="WCR" ${locoInfo && locoInfo.shedName === "New Katni Junction - Diesel"
+      ? "selected"
+      : ""
+    }>New Katni Junction - Diesel</option>
+                <option value="New Katni Junction - Electric" data-division="WCR" ${locoInfo && locoInfo.shedName === "New Katni Junction - Electric "
+      ? "selected"
+      : ""
+    }>New Katni Junction - Electric</option>
               </select>
             </td>
                         
