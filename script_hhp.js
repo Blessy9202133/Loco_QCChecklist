@@ -6372,7 +6372,7 @@ CAB1) are installed on allotted axles of locomotives on left and right side</td>
     </tr>
     <tr id="row-92">
       <td>15.3</td>
-      <td class="observation_text">Ensure Speedometer bearing should be fixed properly with M and nm torque.</td>
+      <td class="observation_text">Ensure Speedometer bearing should be fixed properly with 24M and nm torque.</td>
       <td class="select">
         <select id="status-dropdown" onchange="highlightSelect(this)">
           <option value="Select">Select</option>
