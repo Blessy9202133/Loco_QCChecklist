@@ -440,6 +440,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>KR Puram Loco Shed</option>
+                 <option value="Hubli" data-division="SWR" ${locoInfo && locoInfo.shedName === "Hubli"
+      ? "selected"
+      : ""
+    }>Hubli</option>
                  
 
                 <!-- For WCR Division -->
