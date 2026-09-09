@@ -262,7 +262,7 @@ async function showSection(section) {
       <option value="WDG-3" ${locoInfo && locoInfo.locoType === "WDG-3" ? "selected" : ""}>WDG-3</option>
       <option value="WDG-3A" ${locoInfo && locoInfo.locoType === "WDG-3A" ? "selected" : ""}>WDG-3A</option>
       <option value="EMU" ${locoInfo && locoInfo.locoType === "EMU" ? "selected" : ""}>EMU</option>
-      <option value="EMU" ${locoInfo && locoInfo.locoType === "MEMU" ? "selected" : ""}>MEMU</option>
+      <option value="MEMU" ${locoInfo && locoInfo.locoType === "MEMU" ? "selected" : ""}>MEMU</option>
       <option value="Vande Bharat" ${locoInfo && locoInfo.locoType === "Vande Bharat" ? "selected" : ""}>Vande Bharat</option>
       <option value="Amrit Bharat" ${locoInfo && locoInfo.locoType === "Amrit Bharat" ? "selected" : ""}>Amrit Bharat</option>
       <option value="WDM" ${locoInfo && locoInfo.locoType === "WDM" ? "selected" : ""}>WDM</option>
