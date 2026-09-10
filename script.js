@@ -379,6 +379,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Tatanagar(TATE)</option>
+                 <option value="Bondamunda (BNDM)" data-division="SER" ${locoInfo && locoInfo.shedName === "Bondamunda (BNDM)"
+      ? "selected"
+      : ""
+    }>Bondamunda (BNDM)</option>
 
                 <!-- For ECR Division -->
                 <option value="Deen Dayal Upadhyay(DDUE)" data-division="ECR" ${locoInfo && locoInfo.shedName === "Deen Dayal Upadhyay(DDUE)"
