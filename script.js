@@ -335,6 +335,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>SWR</option>
+                  <option value="SR"  ${locoInfo && locoInfo.railwayDivision === "SR"
+      ? "selected"
+      : ""
+    }>SR</option>
                 </select>
             </td>
             
@@ -451,6 +455,12 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Hubli</option>
+             
+                  <!-- For SR Division -->
+                <option value="Arakkonam" data-division="SR" ${locoInfo && locoInfo.shedName === "Arakkonam"
+      ? "selected"
+      : ""
+    }>Arakkonam</option>
                  
 
                 <!-- For WCR Division -->
