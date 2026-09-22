@@ -408,6 +408,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Patratu(PTRX)</option>
+                <option value="Vishakapatnam" data-division="ECR" ${locoInfo && locoInfo.shedName === "Vishakapatnam"
+      ? "selected"
+      : ""
+    }>Vishakapatnam</option>
 
                 <!-- For NR Division -->
                 <option value="Ludhiana(LDHE)" data-division="NR" ${locoInfo && locoInfo.shedName === "Ludhiana(LDHE)"
