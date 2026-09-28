@@ -371,6 +371,7 @@ async function showSection(section) {
 <option value="Narkeldanga EMU" data-division="ER" ${locoInfo && locoInfo.shedName === "Narkeldanga EMU" ? "selected" : ""}>Narkeldanga EMU</option>
 <option value="Howrah EMU" data-division="ER" ${locoInfo && locoInfo.shedName === "Howrah EMU" ? "selected" : ""}>Howrah EMU</option>
 <option value="Bandel EMU" data-division="ER" ${locoInfo && locoInfo.shedName === "Bandel EMU" ? "selected" : ""}>Bandel EMU</option>
+<option value="Barasat EMU" data-division="ER" ${locoInfo && locoInfo.shedName === "Barasat EMU" ? "selected" : ""}>Barasat EMU</option>
                <!-- For WR Division -->
               <option value="Vadodara Loco Shed(BRC)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vadodara Loco Shed(BRC)" || locoInfo.shedName.toLowerCase().includes("vadodara") || locoInfo.shedName.toLowerCase().includes("vadodhara")) ? "selected" : ""}>Vadodara Loco Shed(BRC)</option>
               <option value="Vatva Loco Shed(VTA)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vatva Loco Shed(VTA)" || locoInfo.shedName.toLowerCase().includes("vatva")) ? "selected" : ""}>Vatva Loco Shed(VTA)</option>
