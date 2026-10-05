@@ -356,6 +356,11 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Kalyan(KYNE)</option>
+               <option value="SANPADA" data-division="CR" ${locoInfo && locoInfo.shedName === "SANPADA"
+      ? "selected"
+      : ""
+    }>SANPADA</option>
+                
 
                 <!-- For ER Division -->
                <!-- For ER Division -->
@@ -414,6 +419,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Vishakapatnam</option>
+                <option value="GAYA" data-division="ECR" ${locoInfo && locoInfo.shedName === "GAYA"
+      ? "selected"
+      : ""
+    }>GAYA</option>
 
                 <!-- For NR Division -->
                 <option value="Ludhiana(LDHE)" data-division="NR" ${locoInfo && locoInfo.shedName === "Ludhiana(LDHE)"
@@ -451,6 +460,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Jhansi(JHSD)</option>
+                  <option value="Kanpur" data-division="NCR" ${locoInfo && locoInfo.shedName === "Kanpur"
+      ? "selected"
+      : ""
+    }>Kanpur</option>
 
                   <!-- For SWR Division -->
                 <option value="KR Puram Loco Shed" data-division="SWR" ${locoInfo && locoInfo.shedName === "KR Puram Loco Shed"
