@@ -449,6 +449,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Kapurthala(RCF)</option>
+                <option value="MCF_NR_Raebarelly" data-division="NR" ${locoInfo && locoInfo.shedName === "MCF_NR_Raebarelly"
+      ? "selected"
+      : ""
+    }>MCF_NR_Raebarelly</option>
 
 
                 <!-- For NCR Division -->
