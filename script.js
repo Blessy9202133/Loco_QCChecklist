@@ -269,6 +269,7 @@ async function showSection(section) {
       <option value="WDM-3" ${locoInfo && locoInfo.locoType === "WDM-3" ? "selected" : ""}>WDM-3</option>
       <option value="WDS-6" ${locoInfo && locoInfo.locoType === "WDS-6" ? "selected" : ""}>WDS-6</option>
        <option value="EF-9K" ${locoInfo && locoInfo.locoType === "EF-9K" ? "selected" : ""}>EF-9K</option>
+       <option value="EF-12K" ${locoInfo && locoInfo.locoType === "EF-12K" ? "selected" : ""}>EF-12K</option>
     
                 </select>
                 </div>
