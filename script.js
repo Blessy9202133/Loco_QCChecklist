@@ -270,7 +270,7 @@ async function showSection(section) {
       <option value="WDS-6" ${locoInfo && locoInfo.locoType === "WDS-6" ? "selected" : ""}>WDS-6</option>
        <option value="EF-9K" ${locoInfo && locoInfo.locoType === "EF-9K" ? "selected" : ""}>EF-9K</option>
        <option value="EF-12K" ${locoInfo && locoInfo.locoType === "EF-12K" ? "selected" : ""}>EF-12K</option>
-    
+       <option value="D-9" ${locoInfo && locoInfo.locoType === "D-9" ? "selected" : ""}>D-9</option>
                 </select>
                 </div>
               </td>
@@ -382,7 +382,8 @@ async function showSection(section) {
                <!-- For WR Division -->
               <option value="Vadodara Loco Shed(BRC)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vadodara Loco Shed(BRC)" || locoInfo.shedName.toLowerCase().includes("vadodara") || locoInfo.shedName.toLowerCase().includes("vadodhara")) ? "selected" : ""}>Vadodara Loco Shed(BRC)</option>
               <option value="Vatva Loco Shed(VTA)" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Vatva Loco Shed(VTA)" || locoInfo.shedName.toLowerCase().includes("vatva")) ? "selected" : ""}>Vatva Loco Shed(VTA)</option>
-                
+              <option value="Dahod" data-division="WR" ${locoInfo && locoInfo.shedName && (locoInfo.shedName === "Dahod" || locoInfo.shedName.toLowerCase().includes("Dahod")) ? "selected" : ""}>Dahod</option>
+                  
               <!-- For NFR Division -->
                 <option value="Malda(MLDD)" data-division="NFR" ${locoInfo && locoInfo.shedName === "Malda(MLDD)"
       ? "selected"
