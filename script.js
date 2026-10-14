@@ -111,23 +111,28 @@ async function showSection(section) {
       "16.0": "16_0",
     }
 
-    const locoId = document.getElementById("loco-id").value;
-    const responseTime = await fetch("checkInitialTiming.php",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          "locoId": locoId,
-          "sectionId": sectionMapping[section],
-        }),
-      });
+    try {
+      const locoIdElem = document.getElementById("loco-id");
+      const locoId = locoIdElem ? locoIdElem.value : "";
+      const targetSec = sectionMapping[section] || section;
+      const responseTime = await fetch("checkInitialTiming.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "locoId": locoId,
+            "sectionId": targetSec,
+          }),
+        });
 
-    const data = await responseTime.json();
-
-    console.log(data.message);
-    console.log(data.initial_time);
+      const data = await responseTime.json();
+      console.log(data.message);
+      console.log(data.initial_time);
+    } catch (timingErr) {
+      console.warn("checkInitialTiming non-fatal warning:", timingErr);
+    }
   }
 
 
@@ -7595,6 +7600,41 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
       </div>
     ;`
   }
+
+  // Auto-populate observations for this section if they were already fetched
+  if (section !== "0.0") {
+    const secMap = {
+      "1_0": "1_0", "2.0": "2_0", "3.0": "3_0", "4.0": "4_0", "5.0": "5_0", "6.0": "6_0", "7.0": "7_0", "8.0": "8_0", "9.0": "9_0", "10.0": "10_0", "11.0": "11_0", "12.0": "12_0", "13.0": "13_0", "14.0": "14_0", "15.0": "15_0", "16.0": "16_0"
+    };
+    const mappedSecId = secMap[section] || section;
+
+    if (window.allObservations && window.allObservations.length > 0) {
+      const tbody = document.getElementById(`observations-tbody-${mappedSecId}`);
+      if (tbody) {
+        let completeSnoList = Array.from(tbody.querySelectorAll("tr"))
+          .map(tr => tr.querySelector("td:first-child")?.innerText.trim())
+          .filter(Boolean);
+        if (typeof updateSections === "function") {
+          updateSections(window.allObservations, mappedSecId, completeSnoList);
+        }
+
+        const updateBtn = document.getElementById(`update-btn-${mappedSecId}`) || document.getElementById('update-btn');
+        if (updateBtn) {
+          updateBtn.disabled = false;
+        }
+
+        setTimeout(() => {
+          window.allObservations.forEach((observation) => {
+            if (observation.section_id === mappedSecId && observation.images && observation.images.length > 0) {
+              if (typeof displayImagesWithDelete === "function") {
+                displayImagesWithDelete(observation.images, observation.rowId || observation.S_no);
+              }
+            }
+          });
+        }, 100);
+      }
+    }
+  }
 }
 
 // Function to handle the logout
@@ -8639,6 +8679,9 @@ function getDetails() {
 
       populateLocoDetails(response.locoDetails);
 
+      // Permanently store all fetched observations so clicking any section populates it immediately
+      window.allObservations = response.observations || [];
+
       let sectionWiseSno = {};
 
       response.observations.forEach((observation) => {
@@ -8679,9 +8722,14 @@ function getDetails() {
 
       await checkAndHighlightSections(locoID, shedName, railwayDivision);
 
-      // Hide Save button and show Update button when Get Details is clicked
-      document.getElementById('save-btn').style.display = 'none';
-      document.getElementById('update-btn').style.display = 'inline-block'; // Show Update button
+      // Hide Save button and show Update button if they exist in the current DOM
+      const saveBtnElem = document.getElementById('save-btn');
+      if (saveBtnElem) saveBtnElem.style.display = 'none';
+      const updateBtnElem = document.getElementById('update-btn');
+      if (updateBtnElem) updateBtnElem.style.display = 'inline-block';
+
+      // Ensure all section buttons are unlocked
+      enableButtons();
     },
     error: function (xhr, status, error) {
       console.error("❌ Error fetching data from server:", status, error);
