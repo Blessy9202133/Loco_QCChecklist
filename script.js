@@ -7622,16 +7622,6 @@ Is other end of the Chain/Sling securely fastened to RFID reader by using bolt p
         if (updateBtn) {
           updateBtn.disabled = false;
         }
-
-        setTimeout(() => {
-          window.allObservations.forEach((observation) => {
-            if (observation.section_id === mappedSecId && observation.images && observation.images.length > 0) {
-              if (typeof displayImagesWithDelete === "function") {
-                displayImagesWithDelete(observation.images, observation.rowId || observation.S_no);
-              }
-            }
-          });
-        }, 100);
       }
     }
   }
@@ -8738,21 +8728,24 @@ function getDetails() {
   });
 }
 
-// Modified displayImages function to include delete icon
+// Display images with red cross icon only (no green button)
 function displayImagesWithDelete(images, rowId) {
   const imageContainer = document.getElementById(`image-container-${rowId}`);
   if (imageContainer) {
+    if (imageContainer.querySelectorAll('img').length > 0) {
+      return; // Already rendered with red cross icon
+    }
     images.forEach((imgPath, idx) => {
       const imgHTML = `
-        <div class="image-container">
+        <div class="image-container" style="position: relative; display: inline-block;">
           <img
             id="captured-image-${rowId}-${idx}"
             src="${imgPath}"
             alt="Uploaded Image"
             width="100"
-            style="display:block; margin:5px;"
+            style="margin:5px;"
             onerror="console.error('Error loading image:', this.src)">
-          <button type="button" onclick="deleteImage('${rowId}', '${imgPath}')">Delete</button>
+          <span style="position:absolute; top:0; right:0; cursor:pointer; color:red; font-weight:bold;" onclick="deleteImage(event, '', '${rowId}', '${imgPath}')">&times;</span>
         </div>
       `;
       imageContainer.innerHTML += imgHTML;
