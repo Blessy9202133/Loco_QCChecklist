@@ -290,6 +290,8 @@ async function showSection(section) {
     }>RCCB</option>
                   <option value="ESCORT" ${locoInfo && locoInfo.brakeType === "ESCORT" ? "selected" : ""
     }>ESCORT</option>
+                   <option value="Train-18" ${locoInfo && locoInfo.brakeType === "Train-18" ? "selected" : ""
+    }>Train-18</option>
                </select>
              </td>
              <td>
