@@ -491,6 +491,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>Arakkonam</option>
+                <option value="Tiruchirappalli" data-division="SR" ${locoInfo && locoInfo.shedName === "Tiruchirappalli"
+      ? "selected"
+      : ""
+    }>Tiruchirappalli</option>
                  
 
                 <!-- For WCR Division -->
