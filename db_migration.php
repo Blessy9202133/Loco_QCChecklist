@@ -8,6 +8,12 @@
 $host = 'localhost';
 $user = 'root';
 $pass = 'Hbl@1234';
+$directRun = isset($_SERVER['SCRIPT_FILENAME']) && realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__;
+$migrationErrors = [];
+
+if ($directRun) {
+  header('Content-Type: text/plain; charset=utf-8');
+}
 
 try {
     $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $user, $pass, [
@@ -60,14 +66,32 @@ try {
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
 
-    // Copy users from loco_info.loginpage if hhp loginpage is empty
-    $count = $pdo->query("SELECT COUNT(*) FROM `hhp_loco_info`.`loginpage`")->fetchColumn();
-    if ($count == 0) {
-        // Check if loco_info.loginpage exists
+    // Copying users is optional; a mismatch in the source schema must not block table creation.
+    try {
+      $count = $pdo->query("SELECT COUNT(*) FROM `hhp_loco_info`.`loginpage`")->fetchColumn();
+      if ($count == 0) {
         $check = $pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'loco_info' AND table_name = 'loginpage'")->fetchColumn();
         if ($check > 0) {
-            $pdo->exec("INSERT IGNORE INTO `hhp_loco_info`.`loginpage` SELECT * FROM `loco_info`.`loginpage`");
+          $columns = $pdo->query("SELECT destination.COLUMN_NAME
+            FROM information_schema.COLUMNS destination
+            INNER JOIN information_schema.COLUMNS source
+              ON source.COLUMN_NAME = destination.COLUMN_NAME
+            WHERE destination.TABLE_SCHEMA = 'hhp_loco_info'
+              AND destination.TABLE_NAME = 'loginpage'
+              AND source.TABLE_SCHEMA = 'loco_info'
+              AND source.TABLE_NAME = 'loginpage'
+            ORDER BY destination.ORDINAL_POSITION")->fetchAll(PDO::FETCH_COLUMN);
+
+          if ($columns) {
+            $columnList = '`' . implode('`, `', $columns) . '`';
+            $pdo->exec("INSERT IGNORE INTO `hhp_loco_info`.`loginpage` ($columnList)
+              SELECT $columnList FROM `loco_info`.`loginpage`");
+          }
         }
+        }
+    } catch (PDOException $e) {
+      $migrationErrors[] = 'loginpage user copy: ' . $e->getMessage();
+      error_log('HHP DB Migration Error: ' . end($migrationErrors));
     }
 
     // ==========================================
@@ -141,7 +165,18 @@ try {
           KEY `idx_loco_id` (`loco_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
-        $pdo->exec($sql);
+        try {
+          $pdo->exec($sql);
+          if ($directRun) {
+            echo "Created/verified table: $tbl\n";
+          }
+        } catch (PDOException $e) {
+          $migrationErrors[] = "$tbl: " . $e->getMessage();
+          error_log('HHP DB Migration Error: ' . end($migrationErrors));
+          if ($directRun) {
+            echo "FAILED table: $tbl - " . $e->getMessage() . "\n";
+          }
+        }
     }
 
     // Migration completed silently (called from update_version.php)
@@ -149,5 +184,10 @@ try {
 } catch (PDOException $e) {
     // Log error silently - don't break the update process
     error_log("HHP DB Migration Error: " . $e->getMessage());
+      $migrationErrors[] = $e->getMessage();
 }
+
+    if ($directRun) {
+      echo $migrationErrors ? "\nMigration completed with errors. See details above.\n" : "\nMigration completed successfully.\n";
+    }
 ?>
