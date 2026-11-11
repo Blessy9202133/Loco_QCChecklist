@@ -345,6 +345,10 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>SR</option>
+                  <option value="SCR"  ${locoInfo && locoInfo.railwayDivision === "SCR"
+      ? "selected"
+      : ""
+    }>SCR</option>
                 </select>
             </td>
             
@@ -514,6 +518,12 @@ async function showSection(section) {
       ? "selected"
       : ""
     }>New Katni Junction - Electric</option>
+
+                <!-- For SCR Division -->
+                <option value="Lalaguda" data-division="SCR" ${locoInfo && locoInfo.shedName === "Lalaguda"
+      ? "selected"
+      : ""
+    }>Lalaguda</option>
               </select>
             </td>
                         
