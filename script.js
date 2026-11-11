@@ -520,10 +520,26 @@ async function showSection(section) {
     }>New Katni Junction - Electric</option>
 
                 <!-- For SCR Division -->
-                <option value="Lalaguda" data-division="SCR" ${locoInfo && locoInfo.shedName === "Lalaguda"
+                <option value="Lallaguda" data-division="SCR" ${locoInfo && locoInfo.shedName === "Lallaguda"
       ? "selected"
       : ""
-    }>Lalaguda</option>
+    }>Lallaguda</option>
+                <option value="Moula Ali" data-division="SCR" ${locoInfo && locoInfo.shedName === "Moula Ali"
+      ? "selected"
+      : ""
+    }>Moula Ali</option>
+                <option value="Guntakal" data-division="SCR" ${locoInfo && locoInfo.shedName === "Guntakal"
+      ? "selected"
+      : ""
+    }>Guntakal</option>
+                <option value="Kazipet" data-division="SCR" ${locoInfo && locoInfo.shedName === "Kazipet"
+      ? "selected"
+      : ""
+    }>Kazipet</option>
+                <option value="Vijayawada" data-division="SCR" ${locoInfo && locoInfo.shedName === "Vijayawada"
+      ? "selected"
+      : ""
+    }>Vijayawada</option>
               </select>
             </td>
                         
